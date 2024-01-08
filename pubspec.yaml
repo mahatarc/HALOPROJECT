@@ -42,7 +42,7 @@ dependencies:
   cloud_firestore: ^4.13.2
   firebase_auth: ^4.14.1
   firebase_storage: ^11.5.2
->>>>>>> Stashed changes
+
 
 dev_dependencies:
   flutter_test:
@@ -75,7 +75,7 @@ flutter:
   assets:
      - images/logo.png
      - images/seed.png
->>>>>>> Stashed changes
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
