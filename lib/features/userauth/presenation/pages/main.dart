@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/app/splash_screen/splash.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/home.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/sign_up.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/home_page.dart';
+//import 'package:flutterproject/features/userauth/presenation/pages/home_page.dart';
 //import 'package:flutterproject/features/userauth/presenation/pages/homepage.dart';
 
 Future<void> main() async {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
             ),
         '/login': (context) => const LoginPage(),
         '/signUp': (context) => const SignUppage(),
-        '/home': (context) => const Homepage(),
+        '/home': (context) => Homepage(),
       },
     );
   }

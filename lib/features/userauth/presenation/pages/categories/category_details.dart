@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/homepage/product_details.dart';
-import 'package:flutter_application_1/consts/lists.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
+//import 'package:flutter_application_1/homepage/product_details.dart';
+//import 'package:flutter_application_1/consts/lists.dart';
 
 class CategoryDetails extends StatefulWidget {
   final String? title;

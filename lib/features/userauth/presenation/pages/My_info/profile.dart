@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/drawer/My_info/editprofile.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/My_info/editprofile.dart';
+//import 'package:flutter_application_1/drawer/My_info/editprofile.dart';
 
 class User {
   final String name;

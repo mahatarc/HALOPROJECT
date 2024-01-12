@@ -1,12 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/homepage/product_details.dart';
-import 'package:flutter_application_1/consts/lists.dart';
-import 'package:flutter_application_1/drawer.dart';
-import 'package:flutter_application_1/homepage/home_icons/newsfeed.dart';
-import 'package:flutter_application_1/homepage/home_icons/wishlist.dart';
-import 'package:flutter_application_1/homepage/categories/category.dart';
-import 'package:flutter_application_1/homepage/categories/category_details.dart';
+//import 'package:flutter_application_1/homepage/product_details.dart';
+//import 'package:flutter_application_1/consts/lists.dart';
+//import 'package:flutter_application_1/drawer.dart';
+//import 'package:flutter_application_1/homepage/home_icons/newsfeed.dart';
+//import 'package:flutter_application_1/homepage/home_icons/wishlist.dart';
+//import 'package:flutter_application_1/homepage/categories/category.dart';
+//import 'package:flutter_application_1/homepage/categories/category_details.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/categories/category.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/categories/category_details.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/drawer_a.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/home_icons/newsfeed.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/home_icons/wishlist.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
 
 class Homepage extends StatefulWidget {
   @override

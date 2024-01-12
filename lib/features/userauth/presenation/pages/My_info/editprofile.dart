@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/drawer/My_info/profile.dart';
+//import 'package:flutter_application_1/drawer/My_info/profile.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/My_info/profile.dart';
 
 class EditProfilePage extends StatefulWidget {
   final PersonalInformation personalInfo;
