@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+//port 'package:flutter_application_1/drawer/My_info/profile.dart';
+//import 'package:flutter_application_1/login.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/My_info/profile.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
 
 class Mydrawer extends StatelessWidget {
@@ -15,10 +18,21 @@ class Mydrawer extends StatelessWidget {
           accountEmail: Text(" archanamahat@gmail.com"),
           currentAccountPicture: Icon(Icons.person_2_rounded, size: 50),
         ),
-        const ListTile(
-          leading: Icon(Icons.info),
-          title: Text("My Information"),
-          //trailing: Icon(Icons.edit),
+        GestureDetector(
+          onTap: () {
+            // Navigate to the information page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(),
+              ),
+            );
+          },
+          child: ListTile(
+            leading: Icon(Icons.info),
+            title: Text("My Information"),
+            //trailing: Icon(Icons.edit),
+          ),
         ),
         const ListTile(
           leading: Icon(Icons.settings),
@@ -50,8 +64,8 @@ class Mydrawer extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const LoginPage()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => LoginPage()));
           },
           child: Container(
             // width: 100,
