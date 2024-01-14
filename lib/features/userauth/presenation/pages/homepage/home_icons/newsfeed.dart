@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/forum.dart';
-//import 'package:flutter_application_1/homepage/home_icons/forum.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -14,7 +13,7 @@ class _NewsFeedState extends State<NewsFeed> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.green[200],
         title: const Text("Feed"),
         elevation: 2.0,
       ),
@@ -24,7 +23,7 @@ class _NewsFeedState extends State<NewsFeed> {
         },
         tooltip: 'Compose Post',
         child: const Icon(Icons.edit),
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.green[100],
       ),
       body: PostsListView(),
       bottomNavigationBar: BottomNavigationBar(
@@ -39,6 +38,7 @@ class _NewsFeedState extends State<NewsFeed> {
             }
           });
         },
+        backgroundColor: Colors.green[200],
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -67,7 +67,7 @@ class _NewsFeedState extends State<NewsFeed> {
               width: avatarDiameter,
               height: avatarDiameter,
               decoration: BoxDecoration(
-                color: Colors.teal[400],
+                color: Colors.green[100],
                 shape: BoxShape.circle,
               ),
               child: ClipRRect(

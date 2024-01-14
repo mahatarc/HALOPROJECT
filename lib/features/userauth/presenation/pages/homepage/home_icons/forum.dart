@@ -5,7 +5,7 @@ class ForumHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.green[200],
         elevation: 2.0,
         title: Text('Forum Topics'),
       ),
@@ -27,7 +27,7 @@ class ForumTopicsList extends StatelessWidget {
       margin: EdgeInsets.all(16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.teal[100],
+        color: Colors.green[100],
         borderRadius: BorderRadius.circular(16.0),
       ),
       child: Column(
@@ -69,7 +69,7 @@ class ForumThreadList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.green[200],
         elevation: 2.0,
         title: Text(topic),
       ),
@@ -77,7 +77,7 @@ class ForumThreadList extends StatelessWidget {
         margin: EdgeInsets.all(16.0),
         padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Colors.teal[100],
+          color: Colors.green[100],
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: Column(
@@ -142,7 +142,7 @@ class PostDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.green[200],
         elevation: 2.0,
         title: Text('Post Details'),
       ),
@@ -150,7 +150,7 @@ class PostDetailsScreen extends StatelessWidget {
         margin: EdgeInsets.all(16.0),
         padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Colors.teal[100],
+          color: Colors.green[100],
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: Column(
@@ -244,7 +244,7 @@ class _CommentItemState extends State<CommentItem> {
         children: [
           CircleAvatar(
             radius: 24.0,
-            backgroundColor: Colors.teal[400], // Avatar border color
+            backgroundColor: Colors.green[400], // Avatar border color
             child: CircleAvatar(
               radius: 22.0,
               backgroundImage: AssetImage(widget.comment.user.profilePicture),
@@ -367,7 +367,7 @@ class CommentInput extends StatelessWidget {
             },
             child: Text('Submit'),
             style: ElevatedButton.styleFrom(
-              primary: Colors.teal[400],
+              primary: Colors.green[400],
               onPrimary: Colors.white,
             ),
           ),

@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterproject/features/userauth/firebaseauth/firebaseauth.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/home.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
-//import 'package:flutterproject/features/userauth/presenation/pages/home_page.dart';
 import 'package:flutterproject/features/userauth/presenation/widgets/formcontainer.dart';
-//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignUppage extends StatefulWidget {
   const SignUppage({super.key});

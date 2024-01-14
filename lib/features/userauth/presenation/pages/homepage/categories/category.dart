@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_application_1/consts/lists.dart';
-//import 'package:flutter_application_1/homepage/categories/category_details.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/categories/category_details.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
 

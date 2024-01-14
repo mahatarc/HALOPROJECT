@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-//port 'package:flutter_application_1/drawer/My_info/profile.dart';
-//import 'package:flutter_application_1/login.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/My_info/profile.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/drawer/My_info/profile.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/drawer/settings.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
 
 class Mydrawer extends StatelessWidget {
@@ -34,10 +33,20 @@ class Mydrawer extends StatelessWidget {
             //trailing: Icon(Icons.edit),
           ),
         ),
-        const ListTile(
-          leading: Icon(Icons.settings),
-          title: Text("Settings"),
-          // trailing: Icon(Icons.settings),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SettingsScreen(),
+              ),
+            );
+          },
+          child: ListTile(
+            leading: Icon(Icons.settings),
+            title: Text("Settings"),
+            //trailing: Icon(Icons.edit),
+          ),
         ),
         const ListTile(
           leading: Icon(Icons.payment_rounded),
