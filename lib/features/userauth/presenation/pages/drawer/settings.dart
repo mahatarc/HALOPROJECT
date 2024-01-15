@@ -73,30 +73,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
       children: [
-        SwitchListTile(
+        ListTile(
           title: Text('Seller Mode'),
-          value: sellerModeEnabled,
-          onChanged: (value) {
-            setState(() {
-              if (value) {
-                // If enabling 'Seller Mode', disable 'Driver Mode'
-                driverModeEnabled = false;
-              }
-              sellerModeEnabled = value;
-            });
+          onTap: () {
+            // Navigate to the SellerModeScreen
+            Navigator.pushNamed(context, '/seller_mode');
           },
         ),
-        SwitchListTile(
+        ListTile(
           title: Text('Driver Mode'),
-          value: driverModeEnabled,
-          onChanged: (value) {
-            setState(() {
-              if (value) {
-                // If enabling 'Driver Mode', disable 'Seller Mode'
-                sellerModeEnabled = false;
-              }
-              driverModeEnabled = value;
-            });
+          onTap: () {
+            // Navigate to the DriverModeScreen
+            Navigator.pushNamed(context, '/driver_mode');
           },
         ),
       ],
