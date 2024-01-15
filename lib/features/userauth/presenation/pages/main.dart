@@ -5,6 +5,7 @@ import 'package:flutterproject/features/userauth/presenation/pages/homepage/home
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/sign_up.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
