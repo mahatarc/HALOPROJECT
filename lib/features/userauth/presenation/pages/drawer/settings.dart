@@ -13,9 +13,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final ThemeData theme =
-    // darkModeEnabled ? ThemeData.dark() : ThemeData.light();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
