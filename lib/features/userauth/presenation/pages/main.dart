@@ -4,7 +4,6 @@ import 'package:flutterproject/features/app/splash_screen/splash.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/sign_up.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/home_page.dart';
-//import 'package:flutterproject/features/userauth/presenation/pages/homepage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
