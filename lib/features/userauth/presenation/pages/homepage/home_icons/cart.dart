@@ -41,7 +41,7 @@ class _CartPageState extends State<CartPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                       const Color.fromARGB(255, 156, 199, 107), // Set the button color to green
+                      Colors.green, // Set the button color to green
                 ),
                 child: Text('Checkout'),
               ),
