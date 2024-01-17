@@ -4,6 +4,7 @@ import 'package:flutterproject/features/userauth/presenation/pages/homepage/home
 import 'package:flutterproject/features/userauth/presenation/pages/sign_up.dart';
 import 'package:flutterproject/features/userauth/presenation/widgets/formcontainer.dart';
 import 'package:flutterproject/features/userauth/firebaseauth/firebaseauth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -151,7 +152,9 @@ class _LoginPageState extends State<LoginPage> {
                     height: 20,
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      launch('https://www.facebook.com');
+                    },
                     child: Container(
                       height: 50,
                       decoration: BoxDecoration(

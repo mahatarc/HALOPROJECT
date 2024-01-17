@@ -169,8 +169,8 @@ class _SignUpPageState extends State<SignUppage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      launch(
-                          'https://www.facebook.com'); // Replace with your URL
+                      print('Tapped');
+                      launch('https://www.facebook.com');
                     },
                     child: Container(
                       height: 50,
