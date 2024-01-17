@@ -7,9 +7,9 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List<CartItem> cartItems = [
-    CartItem("Sprayer", "images/sprayer.jpg", 1, 10.0),
-    CartItem("Garden Fork", "images/gardenfork.webp", 2, 15.0),
-    CartItem("Shovel", "images/shovel.jpg", 3, 12.0),
+    CartItem("Sprayer", "images/sprayer.jpg", 1, 100.0),
+    CartItem("Garden Fork", "images/gardenfork.webp", 2, 150.0),
+    CartItem("Shovel", "images/shovel.jpg", 3, 200.0),
   ];
 
   @override
@@ -17,20 +17,7 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-              icon: Icon(
-                Icons.card_giftcard_rounded,
-              ),
-              onPressed: () {}),
-        ],
-        title: const Text("My Cart"),
+        title: Text('My Cart'),
       ),
       body: ListView.builder(
         itemCount: cartItems.length,
@@ -40,11 +27,12 @@ class _CartPageState extends State<CartPage> {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Total: \$${calculateTotal()}'),
+              Text('Total: \रु${calculateTotal()}'),
+              Text('Delivery Charge: रु50'),
               ElevatedButton(
                 onPressed: () {
                   // Implement your checkout logic here
@@ -52,7 +40,8 @@ class _CartPageState extends State<CartPage> {
                   print('Checkout pressed');
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green, // Set the button color to green
+                  backgroundColor:
+                      Colors.green, // Set the button color to green
                 ),
                 child: Text('Checkout'),
               ),
@@ -124,7 +113,7 @@ class _CartPageState extends State<CartPage> {
               ],
             ),
             // Display the price of the item
-            Text('Price: \$${item.price}'),
+            Text('Price: \रु${item.price}'),
           ],
         ),
       ),
@@ -137,6 +126,7 @@ class _CartPageState extends State<CartPage> {
     for (var item in cartItems) {
       total += item.quantity * item.price;
     }
+    total += 50;
     return total;
   }
 }
