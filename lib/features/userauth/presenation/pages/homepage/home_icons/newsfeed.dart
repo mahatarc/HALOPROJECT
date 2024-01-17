@@ -96,7 +96,7 @@ class _NewsFeedState extends State<NewsFeed> {
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: Image.asset(
-        'images/machineries.jpg',
+        'images/agro.png',
         fit: BoxFit.cover,
       ),
     );

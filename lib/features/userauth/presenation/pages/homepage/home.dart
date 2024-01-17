@@ -5,7 +5,7 @@ import 'package:flutterproject/features/userauth/presenation/pages/homepage/cate
 import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/drawer/drawer_a.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/newsfeed.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/wishlist.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/cart.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
 
 class Homepage extends StatefulWidget {
@@ -303,14 +303,14 @@ class single_prod extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               title: Text(
-                "\₹$prod_price",
+                "\रु$prod_price",
                 style: TextStyle(
                   color: Colors.brown,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               subtitle: Text(
-                "\₹$prod_old_price",
+                "\रु$prod_old_price",
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
