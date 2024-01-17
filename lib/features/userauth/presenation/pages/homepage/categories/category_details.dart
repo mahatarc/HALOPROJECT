@@ -1,56 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/homepage/home.dart';
 
 class CategoryDetails extends StatefulWidget {
-  final String? title;
-  CategoryDetails({Key? key, required this.title}) : super(key: key);
+  final String title;
+// final String? selectedCategory;
+  final String selectedCategory;
+  CategoryDetails({required this.selectedCategory, required this.title});
 
   @override
   State<CategoryDetails> createState() => _CategoryDetailsState();
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
+  late String selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedCategory = widget.selectedCategory;
+  }
+
+  void changeCategory(String categoryname) {
+    setState(() {
+      selectedCategory = categoryname;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // List<ProductModel> productList = getProductList(title);
+    List<dynamic> selectedList;
+
+    switch (selectedCategory) {
+      case 'Crops':
+        selectedList = Crops_list;
+        break;
+      case 'Tools':
+        selectedList = tools_list;
+        break;
+      case 'Machineries':
+        selectedList = machineries;
+        break;
+      case 'Books':
+        selectedList = books_list;
+        break;
+      default:
+        selectedList = Crops_list;
+    }
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green[200],
-          title: Text(widget.title ??
-              'Category Details'), // Display the category name in the AppBar
+      appBar: AppBar(
+        backgroundColor: Colors.green[200],
+        title: Text(widget.title),
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(12),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: selectedList.length,
+          gridDelegate:
+              new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          itemBuilder: (BuildContext context, int index) {
+            return single_prod(
+              product_name: selectedList[index]['name'],
+              product_picture: selectedList[index]['picture'],
+              prod_old_price: selectedList[index]['old_price'],
+              prod_price: selectedList[index]['price'],
+            );
+          },
         ),
-        body: Container(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Expanded(
-                  child: GridView.builder(
-                shrinkWrap: true,
-                itemCount: categoryImages.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  mainAxisExtent: 200,
-                ),
-                itemBuilder: (context, index) {
-                  return single_prod(
-                    product_name: Crops_list[index]['name'],
-                    product_picture: Crops_list[index]['picture'],
-                    prod_old_price: Crops_list[index]['old_price'],
-                    prod_price: Crops_list[index]['price'],
-                  );
-                },
-              ))
-            ],
-          ),
-        ));
+      ),
+    );
   }
 }
 
-class single_prod extends StatelessWidget {
+/*class single_prod extends StatelessWidget {
+  // const single_prod({super.key});
   final product_name;
   final product_picture;
   final prod_old_price;
@@ -108,3 +134,4 @@ class single_prod extends StatelessWidget {
     );
   }
 }
+*/

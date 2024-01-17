@@ -5,7 +5,7 @@ import 'package:flutterproject/features/userauth/presenation/pages/homepage/cate
 import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/drawer/drawer_a.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/newsfeed.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/wishlist.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/cart.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
 
 class Homepage extends StatefulWidget {
@@ -20,6 +20,7 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
+        foregroundColor: Colors.brown,
         actions: [
           IconButton(
             icon: Icon(
@@ -65,7 +66,7 @@ class _HomepageState extends State<Homepage> {
               ImageCarouselSlider(),
               SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -106,7 +107,7 @@ class _HomepageState extends State<Homepage> {
                 height: 100.0,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: categoriesList.length,
+                  itemCount: 4,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -133,7 +134,7 @@ class _HomepageState extends State<Homepage> {
           ),
         ),
       ),
-      drawer: const Mydrawer(),
+      drawer: Mydrawer(),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (index) {
           setState(() {
@@ -158,7 +159,7 @@ class _HomepageState extends State<Homepage> {
         backgroundColor: Colors.green[100],
         destinations: [
           NavigationDestination(icon: const Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.newspaper), label: 'Feed'),
+          NavigationDestination(icon: Icon(Icons.newspaper), label: 'NewsFeed'),
           NavigationDestination(
               icon: Icon(Icons.add_shopping_cart), label: 'Cart'),
         ],
@@ -219,6 +220,7 @@ class Category extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => CategoryDetails(
+              selectedCategory: categoryName,
               title: categoryName,
             ),
           ),
