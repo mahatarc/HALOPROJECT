@@ -46,7 +46,7 @@ var Crops_list = [
   },
 ];
 
-var machineries_list = [
+var machineries = [
   {
     "name": "Axe",
     "picture": "images/machineries.jpg",
