@@ -9,10 +9,14 @@ class Mydrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      
         child: ListView(
       padding: const EdgeInsets.all(0),
       children: <Widget>[
         const UserAccountsDrawerHeader(
+          decoration: BoxDecoration(
+              color: Color.fromRGBO(165, 214, 167, 1), // Set the background color of the top section
+            ),
           accountName: Text("Archana"),
           accountEmail: Text(" archanamahat@gmail.com"),
           currentAccountPicture: Icon(Icons.person_2_rounded, size: 50),
@@ -80,7 +84,7 @@ class Mydrawer extends StatelessWidget {
             // width: 100,
             height: 50,
             decoration: BoxDecoration(
-              color: const Color(0xFFB2FF59),
+              color: const Color.fromARGB(255, 156, 199, 107),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Center(

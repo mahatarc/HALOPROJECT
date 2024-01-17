@@ -304,14 +304,14 @@ class single_prod extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               title: Text(
-                "\₹$prod_price",
+                "\रु$prod_price",
                 style: TextStyle(
                   color: Colors.brown,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               subtitle: Text(
-                "\₹$prod_old_price",
+                "\रु$prod_old_price",
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w800,

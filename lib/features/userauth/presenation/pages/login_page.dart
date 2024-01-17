@@ -44,15 +44,15 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 10,
             ),
-            Image.asset('images/logo.png', width: 100, height: 100),
-            const SizedBox(
-              height: 5,
-            ),
+            Image.asset('images/logo.png', width: 150, height: 150),
+           // const SizedBox(
+             // height: 5,
+           // ),
             const SizedBox(
               height: 30,
             ),
             Container(
-              height: 350,
+              height: 300,
               width: 325,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -68,13 +68,13 @@ class _LoginPageState extends State<LoginPage> {
                     'Namaste !!',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(
-                    height: 10,
+                 const SizedBox(
+                    height: 20,
                   ),
-                  const Text(
+                  /*const Text(
                     'Please Login To Your Account',
                     style: TextStyle(fontSize: 15, color: Colors.grey),
-                  ),
+                  ),*/
                   Formcontainerwidget(
                     controller: _emailController,
                     hinttext: "Email Address",
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                       // width: 100,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 156, 199, 107),
+                        color:   const Color.fromARGB(255, 156, 199, 107),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Center(
@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                              color:   const Color.fromARGB(255, 156, 199, 107), fontWeight: FontWeight.bold),
                         ),
                       )
                     ],

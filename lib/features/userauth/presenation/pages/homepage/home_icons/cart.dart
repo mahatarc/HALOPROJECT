@@ -40,8 +40,8 @@ class _CartPageState extends State<CartPage> {
                   print('Checkout pressed');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green, // Set the button color to green
+                  backgroundColor: const Color.fromARGB(
+                      255, 156, 199, 107), // Set the button color to green
                 ),
                 child: Text('Checkout'),
               ),

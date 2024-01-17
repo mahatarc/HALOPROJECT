@@ -44,7 +44,7 @@ class _SignUpPageState extends State<SignUppage> {
             SizedBox(
               height: 10,
             ),
-            Image.asset('images/logo.png', width: 100, height: 100),
+            Image.asset('images/logo.png', width: 150, height: 150),
             SizedBox(
               height: 5,
             ),
@@ -110,7 +110,7 @@ class _SignUpPageState extends State<SignUppage> {
                       // width: 100,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: Color(0xFFB2FF59),
+                        color: const Color.fromARGB(255, 156, 199, 107),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -140,7 +140,7 @@ class _SignUpPageState extends State<SignUppage> {
                         child: Text(
                           'Login',
                           style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                              color:  const Color.fromARGB(255, 156, 199, 107), fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
