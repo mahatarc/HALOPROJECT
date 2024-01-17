@@ -20,7 +20,6 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
-        foregroundColor: Colors.brown,
         actions: [
           IconButton(
             icon: Icon(
