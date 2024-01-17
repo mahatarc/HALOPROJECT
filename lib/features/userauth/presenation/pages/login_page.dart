@@ -45,14 +45,14 @@ class _LoginPageState extends State<LoginPage> {
               height: 10,
             ),
             Image.asset('images/logo.png', width: 150, height: 150),
-           // const SizedBox(
-             // height: 5,
-           // ),
+            // const SizedBox(
+            // height: 5,
+            // ),
             const SizedBox(
               height: 30,
             ),
             Container(
-              height: 300,
+              height: 600,
               width: 325,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                     'Namaste !!',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                 const SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   /*const Text(
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                     isPasswordField: false,
                   ),*/
                   const SizedBox(
-                    height: 30,
+                    height: 25,
                   ),
                   GestureDetector(
                     onTap: _signin,
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                       // width: 100,
                       height: 50,
                       decoration: BoxDecoration(
-                        color:   const Color.fromARGB(255, 156, 199, 107),
+                        color: const Color.fromARGB(255, 156, 199, 107),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Center(
@@ -119,6 +119,74 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: 20)),
                       ),
                     ),
+                  ),
+                  /*const SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 249, 250, 249),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors
+                              .black, // You can set the color of the border here
+                          width:
+                              1.0, // You can set the width of the border here
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text("Sign in with Google",
+                            // icons: Icons.google,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20)),
+                      ),
+                    ),
+                  ),*/
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors
+                              .black, // You can set the color of the border here
+                          width:
+                              1.0, // You can set the width of the border here
+                        ),
+                      ),
+                      child: Center(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.facebook,
+                                color: Colors.black,
+                              ),
+                              SizedBox(
+                                  width:
+                                      8.0), // Adjust the spacing between icon and text
+                              Text("LOGIN WITH FACEBOOK",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  )),
+                            ]),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -138,11 +206,12 @@ class _LoginPageState extends State<LoginPage> {
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(
-                              color:   const Color.fromARGB(255, 156, 199, 107), fontWeight: FontWeight.bold),
+                              color: const Color.fromARGB(255, 156, 199, 107),
+                              fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
             )

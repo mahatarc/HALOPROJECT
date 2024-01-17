@@ -143,7 +143,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             ),
           ),
           // Related Products Section
-          Padding(
+          /* Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +155,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                 SizedBox(height: 8.0),
               ],
             ),
-          ),
+          ),*/
         ],
       ),
       bottomNavigationBar: BottomAppBar(

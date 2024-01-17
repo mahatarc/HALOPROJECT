@@ -4,6 +4,7 @@ import 'package:flutterproject/features/userauth/firebaseauth/firebaseauth.dart'
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/home.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
 import 'package:flutterproject/features/userauth/presenation/widgets/formcontainer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUppage extends StatefulWidget {
   const SignUppage({super.key});
@@ -48,13 +49,10 @@ class _SignUpPageState extends State<SignUppage> {
             ),
             Image.asset('images/logo.png', width: 150, height: 150),
             SizedBox(
-              height: 5,
-            ),
-            SizedBox(
               height: 30,
             ),
             Container(
-              height: 500,
+              height: 650,
               width: 325,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -83,8 +81,33 @@ class _SignUpPageState extends State<SignUppage> {
                   SizedBox(
                     height: 10,
                   ),*/
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 160,
+                        child: Formcontainerwidget(
+                          controller: _firstnameController,
+                          hinttext: "First Name",
+                          // width: 100,
 
-                  Formcontainerwidget(
+                          isPasswordField: false,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 2,
+                      ),
+                      Container(
+                        width: 160,
+                        child: Formcontainerwidget(
+                          controller: _lastnameController,
+                          hinttext: "Last Name",
+                          isPasswordField: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                  /* Formcontainerwidget(
                     controller: _firstnameController,
                     hinttext: "First Name",
                     isPasswordField: false,
@@ -96,7 +119,7 @@ class _SignUpPageState extends State<SignUppage> {
                     controller: _lastnameController,
                     hinttext: "Last Name",
                     isPasswordField: false,
-                  ),
+                  ),*/
                   SizedBox(
                     height: 10,
                   ),
@@ -140,6 +163,50 @@ class _SignUpPageState extends State<SignUppage> {
                                 fontSize: 20)),
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      launch(
+                          'https://www.facebook.com'); // Replace with your URL
+                    },
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: Colors
+                              .black, // You can set the color of the border here
+                          width:
+                              1.0, // You can set the width of the border here
+                        ),
+                      ),
+                      child: Center(
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.facebook,
+                                color: Colors.black,
+                              ),
+                              SizedBox(
+                                  width:
+                                      8.0), // Adjust the spacing between icon and text
+                              Text("SIGNUP WITH FACEBOOK",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  )),
+                            ]),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
