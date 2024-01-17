@@ -15,6 +15,8 @@ class _SignUpPageState extends State<SignUppage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   TextEditingController _emailController = TextEditingController();
+  TextEditingController _firstnameController = TextEditingController();
+  TextEditingController _lastnameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   @override
   void dispose() {
@@ -52,7 +54,7 @@ class _SignUpPageState extends State<SignUppage> {
               height: 30,
             ),
             Container(
-              height: 400,
+              height: 500,
               width: 325,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -69,14 +71,31 @@ class _SignUpPageState extends State<SignUppage> {
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  Text(
+                  /* Text(
                     'Please Sign Up To Your Account',
                     style: TextStyle(fontSize: 15, color: Colors.grey),
                   ),
                   SizedBox(
                     height: 10,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),*/
+
+                  Formcontainerwidget(
+                    controller: _firstnameController,
+                    hinttext: "First Name",
+                    isPasswordField: false,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Formcontainerwidget(
+                    controller: _lastnameController,
+                    hinttext: "Last Name",
+                    isPasswordField: false,
                   ),
                   SizedBox(
                     height: 10,
@@ -90,17 +109,17 @@ class _SignUpPageState extends State<SignUppage> {
                     height: 10,
                   ),
                   Formcontainerwidget(
+                    hinttext: "Phone Number",
+                    isPasswordField: false,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Formcontainerwidget(
                     controller: _passwordController,
                     hinttext: "Password",
                     isPasswordField: true,
                   ),
-                  /*  SizedBox(
-                    height: 10,
-                  ),
-                  Formcontainerwidget(
-                    hinttext: "Phone Number",
-                    isPasswordField: false,
-                  ),*/
                   SizedBox(
                     height: 30,
                   ),
@@ -140,7 +159,8 @@ class _SignUpPageState extends State<SignUppage> {
                         child: Text(
                           'Login',
                           style: TextStyle(
-                              color:  const Color.fromARGB(255, 156, 199, 107), fontWeight: FontWeight.bold),
+                              color: const Color.fromARGB(255, 156, 199, 107),
+                              fontWeight: FontWeight.bold),
                         ),
                       )
                     ],
