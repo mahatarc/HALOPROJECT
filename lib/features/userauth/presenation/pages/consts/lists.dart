@@ -9,37 +9,37 @@ const categoryImages = [
 
 var Crops_list = [
   {
-    "name": "Axe",
+    "name": "Maize",
     "picture": "images/crops.png",
     "old_price": 500,
     "price": 400,
   },
   {
-    "name": "Sickle",
+    "name": "Maize",
     "picture": "images/crops.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Maize",
     "picture": "images/crops.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Maize",
     "picture": "images/crops.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Maize",
     "picture": "images/crops.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Maize",
     "picture": "images/crops.png",
     "old_price": 300,
     "price": 250,
@@ -48,37 +48,37 @@ var Crops_list = [
 
 var machineries = [
   {
-    "name": "Axe",
+    "name": "Tractor",
     "picture": "images/machineries.jpg",
     "old_price": 500,
     "price": 400,
   },
   {
-    "name": "Sickle",
+    "name": "Tractor",
     "picture": "images/machineries.jpg",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Tractor",
     "picture": "images/machineries.jpg",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Tractor",
     "picture": "images/machineries.jpg",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Tractor",
     "picture": "images/machineries.jpg",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Tractor",
     "picture": "images/machineries.jpg",
     "old_price": 300,
     "price": 250,
@@ -87,37 +87,37 @@ var machineries = [
 
 var books_list = [
   {
-    "name": "Axe",
+    "name": "Book",
     "picture": "images/books.png",
     "old_price": 500,
     "price": 400,
   },
   {
-    "name": "Sickle",
+    "name": "Book",
     "picture": "images/books.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Book",
     "picture": "images/books.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Book",
     "picture": "images/books.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Book",
     "picture": "images/books.png",
     "old_price": 300,
     "price": 250,
   },
   {
-    "name": "Sickle",
+    "name": "Book",
     "picture": "images/books.png",
     "old_price": 300,
     "price": 250,

@@ -19,10 +19,13 @@ class _SignUpPageState extends State<SignUppage> {
   TextEditingController _firstnameController = TextEditingController();
   TextEditingController _lastnameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  //TextEditingController _phoneNumberController = TextEditingController();
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    // _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -134,6 +137,15 @@ class _SignUpPageState extends State<SignUppage> {
                   Formcontainerwidget(
                     hinttext: "Phone Number",
                     isPasswordField: false,
+                    //keyboardType: TextInputType.phone, // Set keyboard type to phone
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Phone number is required';
+                      } else if (value.length != 10) {
+                        return 'Phone number must be 10 digits';
+                      }
+                      return null; // Return null if validation passes
+                    },
                   ),
                   SizedBox(
                     height: 10,
@@ -244,6 +256,14 @@ class _SignUpPageState extends State<SignUppage> {
   void _signUp() async {
     String email = _emailController.text;
     String password = _passwordController.text;
+    // String phoneNumber = _phoneNumberController.text;
+
+    /*String? phoneNumberError = _validatePhoneNumber(phoneNumber);
+    if (phoneNumberError != null) {
+      // Show an error message or handle the invalid phone number case
+      debugPrint(phoneNumberError);
+      return;
+    }*/
 
     User? user = await _auth.signupwithEmailandPassword(email, password);
     if (user != null) {
@@ -254,4 +274,13 @@ class _SignUpPageState extends State<SignUppage> {
       debugPrint("Error, Try again!!");
     }
   }
+
+  /*String? _validatePhoneNumber(String value) {
+    if (value.isEmpty) {
+      return 'Phone number required';
+    } else if (value.length != 10) {
+      return 'Phone number must be 10 digits';
+    }
+    return null; // Return null if validation passes
+  }*/
 }
