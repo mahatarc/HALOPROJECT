@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/seller_registration.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -76,15 +77,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ListTile(
           title: Text('Seller Mode'),
           onTap: () {
-            // Navigate to the SellerModeScreen
-            Navigator.pushNamed(context, '/seller_mode');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SellerRegistrationForm()));
+            // builder: (context) => SellerDashboard()));
           },
         ),
         ListTile(
           title: Text('Driver Mode'),
           onTap: () {
-            // Navigate to the DriverModeScreen
-            Navigator.pushNamed(context, '/driver_mode');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SellerRegistrationForm()));
           },
         ),
       ],
