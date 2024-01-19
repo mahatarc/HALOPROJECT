@@ -80,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _emailController,
                     hinttext: "Email Address",
                     isPasswordField: false,
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(
                     height: 10,
@@ -88,6 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _passwordController,
                     hinttext: "Password",
                     isPasswordField: true,
+                    keyboardType: TextInputType.visiblePassword,
                   ),
                   const SizedBox(
                     height: 10,
@@ -98,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                     isPasswordField: false,
                   ),*/
                   const SizedBox(
-                    height: 25,
+                    height: 15,
                   ),
                   GestureDetector(
                     onTap: _signin,
