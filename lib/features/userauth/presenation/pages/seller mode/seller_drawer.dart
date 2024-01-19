@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/drawer/My_info/profile.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/drawer/settings.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/seller_settings.dart';
 
-class Mydrawer extends StatelessWidget {
-  const Mydrawer({super.key});
+class SellerDrawer extends StatelessWidget {
+  const SellerDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class Mydrawer extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SettingsScreen(),
+                builder: (context) => SellerSettings(),
               ),
             );
           },
@@ -52,7 +52,7 @@ class Mydrawer extends StatelessWidget {
             //trailing: Icon(Icons.edit),
           ),
         ),
-        const ListTile(
+        /* const ListTile(
           leading: Icon(Icons.payment_rounded),
           title: Text("Payments"),
           // trailing: Icon(Icons.settings),
@@ -66,7 +66,7 @@ class Mydrawer extends StatelessWidget {
           leading: Icon(Icons.delivery_dining),
           title: Text("Delivery"),
           // trailing: Icon(Icons.settings),
-        ),
+        ),*/
         const ListTile(
           leading: Icon(Icons.support),
           title: Text("Help and support"),

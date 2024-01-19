@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/add_products.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/seller_drawer.dart';
+
 class SellerDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -8,6 +11,7 @@ class SellerDashboard extends StatelessWidget {
         backgroundColor: Colors.green[200],
         title: Text('Seller Dashboard'),
       ),
+      drawer: SellerDrawer(),
       body: Container(
         height: 900,
         margin: EdgeInsets.all(16.0),
@@ -42,7 +46,10 @@ class SellerDashboard extends StatelessWidget {
                         SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () {
-                            // Implement add product logic here
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddProduct()));
                           },
                           style: ElevatedButton.styleFrom(
                               primary: Color.fromARGB(255, 224, 246,
