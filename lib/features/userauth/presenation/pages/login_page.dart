@@ -30,16 +30,6 @@ class _LoginPageState extends State<LoginPage> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          /*  decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-              colors: [
-                Color(0xFFCCFF90),
-                Color(0xFFB2FF59),
-                Color(0xFF4CAF50),
-              ]
-          )),*/
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             const SizedBox(
@@ -72,10 +62,6 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  /*const Text(
-                    'Please Login To Your Account',
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
-                  ),*/
                   Formcontainerwidget(
                     controller: _emailController,
                     hinttext: "Email Address",
@@ -94,19 +80,11 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  /*  Formcontainerwidget(
-                    controller: _passwordController,
-                    hinttext: "Phone Number",
-                    isPasswordField: false,
-                  ),*/
                   const SizedBox(
                     height: 15,
                   ),
                   GestureDetector(
                     onTap: _signin,
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => Homepage()));
-                    //  }
                     child: Container(
                       // width: 100,
                       height: 50,
