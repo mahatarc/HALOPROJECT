@@ -1,122 +1,168 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/add_products.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/seller_drawer.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/orders.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/seller_settings.dart';
+import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/your_products.dart';
 
-class SellerDashboard extends StatelessWidget {
+class SellerDashboard extends StatefulWidget {
+  @override
+  State<SellerDashboard> createState() => _SellerDashboardState();
+}
+
+class _SellerDashboardState extends State<SellerDashboard> {
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
         title: Text('Seller Dashboard'),
+        automaticallyImplyLeading: false,
       ),
-      drawer: SellerDrawer(),
-      body: Container(
-        height: 900,
-        margin: EdgeInsets.all(16.0),
-        padding: EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.green[100],
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (index) {
+          setState(() {
+            currentIndex = index;
+            if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => yourProducts()),
+              );
+            }
+            if (index == 2) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Order()),
+              );
+            }
+            if (index == 3) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SellerSettings()),
+              );
+            }
+          });
+        },
+        height: 70,
+        elevation: 0,
+        backgroundColor: Colors.green[100],
+        destinations: [
+          NavigationDestination(
+              icon: const Icon(Icons.home), label: 'Dashboard'),
+          NavigationDestination(
+              icon: Icon(Icons.newspaper), label: 'Your Products'),
+          NavigationDestination(
+              icon: Icon(Icons.add_shopping_cart), label: 'Orders'),
+          NavigationDestination(
+              icon: const Icon(Icons.settings), label: 'Settings'),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
-                  width: 500,
-                  margin: EdgeInsets.only(bottom: 16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Products',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddProduct()));
-                          },
-                          style: ElevatedButton.styleFrom(
-                              primary: Color.fromARGB(255, 224, 246,
-                                  220), // Change the background color
-                              onPrimary: const Color.fromARGB(
-                                  255, 11, 3, 3), // Change the text color
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              )),
-                          child: Text('+ Add Product'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                /*  Container(
-                  child: Text(
-                    'Order Management',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('View Orders'),
-                ),
-                SizedBox(height: 32),
-                Text(
-                  'Product Management',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to product listing screen
-                    /* Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProductListingScreen()),
-                    );*/
-                  },
-                  child: Text('Manage Products'),
-                ),
-                SizedBox(height: 32),
-                Text(
-                  'Analytics',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    // Navigate to analytics screen
-                    /*   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AnalyticsScreen()),
-                    );*/
-                  },
-                  child: Text('View Analytics'),
-                ),
-                SizedBox(height: 32),*/
+                _buildInfoBox(
+                    'Products', 100, Icons.shopping_cart, Colors.green),
+                _buildInfoBox('Orders', 50, Icons.shopping_bag, Colors.green),
               ],
             ),
-          ),
+            SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildInfoBox('Rating', 4, Icons.star, Colors.green),
+                _buildInfoBox(
+                    'Total Sales', 1000, Icons.monetization_on, Colors.green),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            // Container for adding products
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Add your products here!',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddProduct()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color.fromARGB(
+                          255, 224, 246, 220), // Change the background color
+                      onPrimary: const Color.fromARGB(
+                          255, 11, 3, 3), // Change the text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Text('+ Add Product'),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
-// Remaining screen classes remain unchanged.
+  Widget _buildInfoBox(String title, int count, IconData icon, Color color) {
+    return Container(
+      width: 150, // Adjust the width as needed
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      ),
+      padding: EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                count.toString(),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 30.0,
+          ),
+        ],
+      ),
+    );
+  }
+}

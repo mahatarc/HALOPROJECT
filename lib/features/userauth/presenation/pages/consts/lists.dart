@@ -201,3 +201,42 @@ var product_list = [
     "price": 250,
   },
 ];
+
+var your_products = [
+  {
+    "name": "Axe",
+    "picture": "images/axe.png",
+    "old_price": 500,
+    "price": 400,
+  },
+  {
+    "name": "Sickle",
+    "picture": "images/sickle.png",
+    "old_price": 300,
+    "price": 250,
+  },
+  {
+    "name": "Hoe",
+    "picture": "images/hoe.png",
+    "old_price": 300,
+    "price": 250,
+  },
+  {
+    "name": "Shovel",
+    "picture": "images/shovel.jpg",
+    "old_price": 300,
+    "price": 250,
+  },
+  {
+    "name": "Sprayer",
+    "picture": "images/sprayer.jpg",
+    "old_price": 300,
+    "price": 250,
+  },
+  {
+    "name": "Sickle",
+    "picture": "images/sickle.png",
+    "old_price": 300,
+    "price": 250,
+  },
+];
