@@ -18,6 +18,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 243, 247, 238),
       appBar: AppBar(
         backgroundColor: Colors.green[200],
         actions: [
@@ -45,7 +46,8 @@ class _HomepageState extends State<Homepage> {
               Container(
                 //  width: MediaQuery.of(context).size.width / 1.12,
                 decoration: BoxDecoration(
-                  color: Colors.green[100],
+                  border: Border.all(color: Color.fromARGB(255, 233, 240, 233)),
+                  color: Colors.white70,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextFormField(
@@ -64,45 +66,72 @@ class _HomepageState extends State<Homepage> {
               SizedBox(height: 20),
               ImageCarouselSlider(),
               SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Categories',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textScaleFactor: 1.5,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CategoryScreen(),
+              Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Categories',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            textScaleFactor: 1.5,
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 239, 244,
-                              249), // Change the background color
-                          onPrimary: const Color.fromARGB(
-                              255, 11, 3, 3), // Change the text color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          )),
-                      child: Text(
-                        'View More',
-                        style: TextStyle(
-                          fontSize: 16, // Adjust text size
-                          fontWeight: FontWeight.bold,
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CategoryScreen(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(255, 239, 244,
+                                    249), // Change the background color
+                                onPrimary: const Color.fromARGB(
+                                    255, 11, 3, 3), // Change the text color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
+                            child: Text(
+                              'View More',
+                              style: TextStyle(
+                                fontSize: 16, // Adjust text size
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        height: 100.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 4,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Category(
+                                imagePath: categoryImages[index],
+                                categoryName: categoriesList[index],
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              Container(
+              SizedBox(height: 20),
+
+              /* Container(
                 height: 100.0,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
@@ -117,18 +146,27 @@ class _HomepageState extends State<Homepage> {
                     );
                   },
                 ),
-              ),
+              ),*/
 
               // Recommended Section
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Recommended for you',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textScaleFactor: 1.5,
+              Container(
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Recommended for you',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textScaleFactor: 1.5,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Products(),
+                  ],
                 ),
               ),
-              Products(),
             ],
           ),
         ),
