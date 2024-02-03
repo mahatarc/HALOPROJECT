@@ -210,7 +210,8 @@ class _LoginPageState extends State<LoginPage> {
     User? user = await _auth.signInwithEmailandPassword(email, password);
     if (user != null) {
       debugPrint("Process Successful");
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Homepage()));
     } else {
       debugPrint("Error, Try again!!");
     }

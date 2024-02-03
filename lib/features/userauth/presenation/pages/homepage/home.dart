@@ -8,14 +8,14 @@ import 'package:flutterproject/features/userauth/presenation/pages/homepage/home
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/cart.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Homepage> createState() => _HomepageState();
 }
 
-class _HomeState extends State<Home> {
+class _HomepageState extends State<Homepage> {
   int currentIndex = 0;
   List<Widget> pages = [
     Homepage(),
@@ -80,13 +80,14 @@ class _HomeState extends State<Home> {
   }
 }
 
-class Homepage extends StatefulWidget {
+class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<Home> createState() => _HomeState();
 }
 
-class _HomepageState extends State<Homepage> {
-  //int currentIndex = 0;
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
