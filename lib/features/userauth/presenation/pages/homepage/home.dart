@@ -8,13 +8,85 @@ import 'package:flutterproject/features/userauth/presenation/pages/homepage/home
 import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/cart.dart';
 import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
 
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int currentIndex = 0;
+  List<Widget> pages = [
+    Homepage(),
+    NewsFeed(),
+    CartPage(),
+  ];
+  List<IconData> iconlist = [
+    Icons.home,
+    Icons.feed_rounded,
+    Icons.add_shopping_cart,
+  ];
+  List label = ['Home', 'Newsfeed', 'Cart'];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      /*appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label[currentIndex],
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 24),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.green,
+      ),*/
+      body: IndexedStack(
+        index: currentIndex,
+        children: pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type:
+            BottomNavigationBarType.fixed, // Set type to fixed for even spacing
+        selectedItemColor: Colors.brown,
+        unselectedItemColor: Colors.black.withOpacity(.5),
+        currentIndex: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.feed_rounded),
+            label: 'Newsfeed',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_shopping_cart),
+            label: 'Cart',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class Homepage extends StatefulWidget {
   @override
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
-  int currentIndex = 0;
+  //int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,7 +226,7 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
       drawer: Mydrawer(),
-      bottomNavigationBar: NavigationBar(
+      /* bottomNavigationBar: NavigationBar(
         onDestinationSelected: (index) {
           setState(() {
             currentIndex = index;
@@ -182,7 +254,7 @@ class _HomepageState extends State<Homepage> {
           NavigationDestination(
               icon: Icon(Icons.add_shopping_cart), label: 'Cart'),
         ],
-      ),
+      ),*/
     );
   }
 }

@@ -27,7 +27,8 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // automaticallyImplyLeading: false,
+        toolbarHeight: 0,
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.green[200],
         bottom: TabBar(
           controller: _tabController,
