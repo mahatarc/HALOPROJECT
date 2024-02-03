@@ -6,27 +6,53 @@ class NewsFeed extends StatefulWidget {
   State<NewsFeed> createState() => _NewsFeedState();
 }
 
-class _NewsFeedState extends State<NewsFeed> {
-  int currentIndex = 0;
+class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
+  //int currentIndex = 0;
+  late TabController _tabController;
+  @override
+  void initState() {
+    super.initState();
+    _tabController =
+        TabController(length: 2, vsync: this); // 2 tabs: Feed and Chat
+  }
+
+  @override
+  void dispose() {
+    _tabController
+        .dispose(); // Dispose of the TabController to prevent memory leaks
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // automaticallyImplyLeading: false,
         backgroundColor: Colors.green[200],
-        title: const Text("Feed"),
-        elevation: 2.0,
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorWeight: 2.0,
+          tabs: [
+            Tab(
+              icon: Icon(Icons.feed),
+              text: "Feed",
+            ),
+            Tab(
+              icon: Icon(Icons.chat_bubble),
+              text: "Forum",
+            )
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add functionality for the FloatingActionButton
-        },
-        tooltip: 'Compose Post',
-        child: const Icon(Icons.edit),
-        backgroundColor: Colors.green[100],
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          PostsListView(),
+          ForumHomeScreen(),
+        ],
       ),
-      body: PostsListView(),
-      bottomNavigationBar: BottomNavigationBar(
+
+      /*bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           setState(() {
             currentIndex = index;
@@ -49,7 +75,7 @@ class _NewsFeedState extends State<NewsFeed> {
             label: "Forum",
           ),
         ],
-      ),
+      ),*/
     );
   }
 

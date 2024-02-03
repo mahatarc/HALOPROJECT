@@ -130,24 +130,6 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               SizedBox(height: 20),
-
-              /* Container(
-                height: 100.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Category(
-                        imagePath: categoryImages[index],
-                        categoryName: categoriesList[index],
-                      ),
-                    );
-                  },
-                ),
-              ),*/
-
               // Recommended Section
               Container(
                 color: Colors.white,
@@ -201,43 +183,6 @@ class _HomepageState extends State<Homepage> {
               icon: Icon(Icons.add_shopping_cart), label: 'Cart'),
         ],
       ),
-      /*bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewsFeed()),
-              );
-            }
-            if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CartPage()),
-              );
-            }
-          });
-        },
-        //height: 80,
-        elevation: 0,
-
-        backgroundColor: Colors.green[100],
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
-            label: "NewsFeed",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_shopping_cart),
-            label: "Cart",
-          ),
-        ],
-      ),*/
     );
   }
 }
