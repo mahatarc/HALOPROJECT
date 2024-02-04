@@ -18,7 +18,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int currentIndex = 0;
   List<Widget> pages = [
-    Homepage(),
+    Home(),
     NewsFeed(),
     CartPage(),
   ];
@@ -53,8 +53,9 @@ class _HomepageState extends State<Homepage> {
       bottomNavigationBar: BottomNavigationBar(
         type:
             BottomNavigationBarType.fixed, // Set type to fixed for even spacing
-        selectedItemColor: Colors.brown,
-        unselectedItemColor: Colors.black.withOpacity(.5),
+        selectedItemColor: Color.fromARGB(255, 64, 64, 64),
+        // unselectedItemColor: Colors.black.withOpacity(.5),
+        backgroundColor: Colors.green[100],
         currentIndex: currentIndex,
         onTap: (index) {
           setState(() {
