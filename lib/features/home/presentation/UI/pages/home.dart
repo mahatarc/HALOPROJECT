@@ -1,12 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
-import 'package:flutterproject/features/consts/lists.dart';
+import 'package:flutterproject/consts/lists.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer_a.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
+import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -15,192 +17,187 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   int currentIndex = 0;
+  late HomePageBloc homePageBloc;
+  @override
+  void initState() {
+    homePageBloc = BlocProvider.of<HomePageBloc>(context);
+    homePageBloc.add(HomePageInitialEvent());
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[200],
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-              icon: Icon(
-                Icons.card_giftcard_rounded,
-              ),
-              onPressed: () {}),
-        ],
-        title: const Text("Halo"),
-      ),
-      body: SingleChildScrollView(
-        //scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                //  width: MediaQuery.of(context).size.width / 1.12,
-                decoration: BoxDecoration(
-                  color: Colors.green[100],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    label: Text("Search your product..."),
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 30,
-                      color: Colors.green[200],
+    return BlocConsumer<HomePageBloc, HomePageState>(
+        bloc: homePageBloc,
+        listenWhen: (previous, current) => current is HomePageActionState,
+        buildWhen: (previous, current) => current is! HomePageActionState,
+        builder: (context, state) {
+          if (state is HomePageInitialState) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.green[200],
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.notifications,
                     ),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                      icon: Icon(
+                        Icons.card_giftcard_rounded,
+                      ),
+                      onPressed: () {}),
+                ],
+                title: const Text("Halo"),
+              ),
+              body: SingleChildScrollView(
+                //scrollDirection: Axis.vertical,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        //  width: MediaQuery.of(context).size.width / 1.12,
+                        decoration: BoxDecoration(
+                          color: Colors.green[100],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            label: Text("Search your product..."),
+                            border: InputBorder.none,
+                            prefixIcon: Icon(
+                              Icons.search,
+                              size: 30,
+                              color: Colors.green[200],
+                            ),
+                          ),
+                        ),
+                      ),
+                      // SizedBox to create some space between the search bar and carousel
+                      SizedBox(height: 20),
+                      ImageCarouselSlider(),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Categories',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                              textScaleFactor: 1.5,
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                homePageBloc.add(CategoriesPressedEvent());
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 239, 244,
+                                      249), // Change the background color
+                                  onPrimary: const Color.fromARGB(
+                                      255, 11, 3, 3), // Change the text color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                              child: Text(
+                                'View More',
+                                style: TextStyle(
+                                  fontSize: 16, // Adjust text size
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 100.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 4,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Category(
+                                imagePath: categoryImages[index],
+                                categoryName: categoriesList[index],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      // Recommended Section
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Recommended for you',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textScaleFactor: 1.5,
+                        ),
+                      ),
+                      Products(),
+                    ],
                   ),
                 ),
               ),
-              // SizedBox to create some space between the search bar and carousel
-              SizedBox(height: 20),
-              ImageCarouselSlider(),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Categories',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textScaleFactor: 1.5,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CategoryScreen(),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: Color.fromARGB(255, 239, 244,
-                              249), // Change the background color
-                          onPrimary: const Color.fromARGB(
-                              255, 11, 3, 3), // Change the text color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          )),
-                      child: Text(
-                        'View More',
-                        style: TextStyle(
-                          fontSize: 16, // Adjust text size
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              drawer: Mydrawer(),
+              bottomNavigationBar: NavigationBar(
+                onDestinationSelected: (index) {
+                  setState(() {
+                    currentIndex = index;
+                    if (index == 1) {
+                      homePageBloc.add(NewsFeedIconPressedEvent());
+                    }
+                    if (index == 2) {
+                      homePageBloc.add(CartIconPressedEvent());
+                    }
+                  });
+                },
+                height: 70,
+                elevation: 0,
+                //selectedIndex: myIndex,
+                backgroundColor: Colors.green[100],
+                destinations: [
+                  NavigationDestination(
+                      icon: const Icon(Icons.home), label: 'Home'),
+                  NavigationDestination(
+                      icon: Icon(Icons.newspaper), label: 'NewsFeed'),
+                  NavigationDestination(
+                      icon: Icon(Icons.add_shopping_cart), label: 'Cart'),
+                ],
               ),
-              Container(
-                height: 100.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Category(
-                        imagePath: categoryImages[index],
-                        categoryName: categoriesList[index],
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              // Recommended Section
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Recommended for you',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textScaleFactor: 1.5,
-                ),
-              ),
-              Products(),
-            ],
-          ),
-        ),
-      ),
-      drawer: Mydrawer(),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (index) {
-          setState(() {
-            currentIndex = index;
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewsFeed()),
-              );
-            }
-            if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CartPage()),
-              );
-            }
-          });
+            );
+          } else {
+            return const Scaffold();
+          }
         },
-        height: 70,
-        elevation: 0,
-        //selectedIndex: myIndex,
-        backgroundColor: Colors.green[100],
-        destinations: [
-          NavigationDestination(icon: const Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.newspaper), label: 'NewsFeed'),
-          NavigationDestination(
-              icon: Icon(Icons.add_shopping_cart), label: 'Cart'),
-        ],
-      ),
-      /*bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewsFeed()),
-              );
-            }
-            if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CartPage()),
-              );
-            }
-          });
-        },
-        //height: 80,
-        elevation: 0,
-
-        backgroundColor: Colors.green[100],
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
-            label: "NewsFeed",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_shopping_cart),
-            label: "Cart",
-          ),
-        ],
-      ),*/
-    );
+        listener: (context, state) {
+          if (state is HomeToCategoriesNavigateState) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryScreen(),
+              ),
+            );
+          }
+          if (state is HomeToCartNavigateState) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CartPage()),
+            );
+          }
+          if (state is HomeToNewsFeedNavigateState) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NewsFeed()),
+            );
+          }
+        });
   }
 }
 

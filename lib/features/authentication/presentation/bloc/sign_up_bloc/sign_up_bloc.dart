@@ -20,7 +20,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       SignUpButtonPressedEvent event, Emitter<SignUpState> emit) async {
     try {
       emit(SignUpLoadingState());
-      final credential =
+      final UserCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: event.email,
         password: event.password,

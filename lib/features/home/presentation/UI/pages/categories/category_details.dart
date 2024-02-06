@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/consts/lists.dart';
+import 'package:flutterproject/consts/lists.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 
 class CategoryDetails extends StatefulWidget {

@@ -5,6 +5,7 @@ import 'package:flutterproject/features/authentication/presentation/bloc/sign_up
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/sign_up_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
+import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 //import 'package:flutterproject/features/userauth/firebaseauth/firebaseauth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -90,7 +91,9 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  signInBloc.add(SignInButtonPressedEvent(email: _emailController.text, password: _passwordController.text));
+                                  signInBloc.add(SignInButtonPressedEvent(
+                                      email: _emailController.text,
+                                      password: _passwordController.text));
                                 },
                                 child: Container(
                                   height: 50,
@@ -154,10 +157,13 @@ class _LoginPageState extends State<LoginPage> {
                         )));
           } else if (state is SignInNavigateToHomePageActionState) {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Homepage()));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                          create: (context) => HomePageBloc(),
+                          child: Homepage(),
+                        )));
           }
         });
   }
 }
-
-  
