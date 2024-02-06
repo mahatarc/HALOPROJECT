@@ -1,12 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/categories/category.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/categories/category_details.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/drawer/drawer_a.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/newsfeed.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/cart.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/product_details.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/categories/category.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
+import 'package:flutterproject/features/consts/lists.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer_a.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
+import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 
 class Homepage extends StatefulWidget {
   @override

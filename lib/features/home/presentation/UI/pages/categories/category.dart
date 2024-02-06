@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/categories/category_details.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
+import 'package:flutterproject/features/consts/lists.dart';
 
 class CategoryScreen extends StatelessWidget {
   const CategoryScreen({Key? key});

@@ -1,16 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/app/splash_screen/splash.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/sign_up.dart';
+import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
+import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
+import 'package:flutterproject/features/authentication/presentation/UI/pages/sign_up_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: LoginPage(),
+    home: BlocProvider<SignInBloc>(
+          create: (context) => SignInBloc(),
+          child: const LoginPage(),),
     theme: ThemeData(
       primarySwatch: Colors.lightGreen,
     ),
