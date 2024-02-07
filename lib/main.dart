@@ -15,13 +15,16 @@ Future<void> main() async {
         debugShowCheckedModeBanner: false,
         home: BlocProvider<SignInBloc>(
           create: (context) => SignInBloc(),
-          child: const LoginPage(),
-        ),
-        theme: ThemeData(
-          primarySwatch: Colors.lightGreen,
-        )),
-  );
-}
+
+        
+       
+          child: const LoginPage(),),
+    theme: ThemeData(
+      primarySwatch: Colors.lightGreen,
+    ),
+  ));
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
