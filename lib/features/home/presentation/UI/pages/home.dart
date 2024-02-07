@@ -97,12 +97,14 @@ class _HomeState extends State<Home> {
           if (state is HomePageInitialState) {
             return Scaffold(
               appBar: AppBar(
+             
                 title: Text('Halo'),
                 backgroundColor:Colors.green[100],
                  actions: [
                   Icon(Icons.notification_add),
                 ],
                 
+
               ),
               body: SingleChildScrollView(
                 child: Padding(

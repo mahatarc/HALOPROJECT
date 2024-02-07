@@ -10,16 +10,21 @@ import 'package:flutterproject/features/authentication/presentation/UI/pages/sig
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: BlocProvider<SignInBloc>(
+  runApp(
+    MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: BlocProvider<SignInBloc>(
           create: (context) => SignInBloc(),
+
+        
+       
           child: const LoginPage(),),
     theme: ThemeData(
       primarySwatch: Colors.lightGreen,
     ),
   ));
-}
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
