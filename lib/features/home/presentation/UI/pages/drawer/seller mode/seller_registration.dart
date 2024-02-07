@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/seller.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/seller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 

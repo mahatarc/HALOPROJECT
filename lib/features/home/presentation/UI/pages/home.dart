@@ -10,7 +10,6 @@ import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
-
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
 
@@ -35,7 +34,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: IndexedStack(
         index: currentIndex,
         children: pages,
@@ -88,18 +86,24 @@ class _HomeState extends State<Home> {
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-        return BlocConsumer<HomePageBloc, HomePageState>(
+    return BlocConsumer<HomePageBloc, HomePageState>(
         bloc: homePageBloc,
         listenWhen: (previous, current) => current is HomePageActionState,
         buildWhen: (previous, current) => current is! HomePageActionState,
         builder: (context, state) {
           if (state is HomePageInitialState) {
             return Scaffold(
-           
+              appBar: AppBar(
+                title: Text("Halo"),
+                backgroundColor: Colors.green[100],
+                actions: [
+                  Icon(Icons.notification_add),
+                ],
+              ),
               body: SingleChildScrollView(
-               
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
@@ -192,7 +196,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
               drawer: Mydrawer(),
-             
             );
           } else {
             return const Scaffold();
@@ -221,10 +224,7 @@ class _HomeState extends State<Home> {
           }
         });
   }
-  }
-
-
-
+}
 
 class Category extends StatelessWidget {
   final String imagePath;

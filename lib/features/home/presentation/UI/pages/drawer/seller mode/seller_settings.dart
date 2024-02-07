@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 
 class SellerSettings extends StatefulWidget {
   const SellerSettings({Key? key});

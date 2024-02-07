@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/edit_product.dart';
+import 'package:flutterproject/consts/lists.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/edit_product.dart';
 
 class yourProducts extends StatefulWidget {
   const yourProducts({Key? key});
@@ -18,7 +18,7 @@ class _yourProductsState extends State<yourProducts> {
         title: Text('Your Products'),
       ),
       body: ListView.builder(
-        itemCount: your_products.length,
+        //itemCount: your_products.length,
         itemBuilder: (BuildContext context, int index) {
           return SingleProduct(
             product_name: product_list[index]['name'],

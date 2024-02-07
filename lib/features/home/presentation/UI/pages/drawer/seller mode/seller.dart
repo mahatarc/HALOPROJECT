@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/add_products.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/orders.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/seller_settings.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/seller%20mode/your_products.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/add_products.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/orders.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/seller_settings.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/your_products.dart';
 
 class SellerDashboard extends StatefulWidget {
   @override

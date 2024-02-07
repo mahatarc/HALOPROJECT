@@ -90,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                             controller: _emailController,
                             hinttext: "Email Address",
                             isPasswordField: false,
+                            keyboardType: TextInputType.emailAddress,
                           ),
                         ),
                         Padding(
@@ -98,6 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                             controller: _passwordController,
                             hinttext: "Password",
                             isPasswordField: true,
+                            keyboardType: TextInputType.visiblePassword,
                           ),
                         ),
                         Padding(
@@ -141,7 +143,10 @@ class _LoginPageState extends State<LoginPage> {
                               width: 5,
                             ),
                             GestureDetector(
-                              onTap: () {signInBloc.add(SignUpButtonPressedNavigateEvent());},
+                              onTap: () {
+                                signInBloc
+                                    .add(SignUpButtonPressedNavigateEvent());
+                              },
                               child: const Text(
                                 'Sign Up',
                                 style: TextStyle(

@@ -92,6 +92,7 @@ class _SignUpPageState extends State<SignUppage> {
                                 controller: _firstnameController,
                                 hinttext: "First Name",
                                 isPasswordField: false,
+                                keyboardType: TextInputType.visiblePassword,
                               ),
                               SizedBox(
                                 height: 10,
@@ -100,6 +101,7 @@ class _SignUpPageState extends State<SignUppage> {
                                 controller: _lastnameController,
                                 hinttext: "Last Name",
                                 isPasswordField: false,
+                                keyboardType: TextInputType.name,
                               ),
                               SizedBox(
                                 height: 10,
@@ -108,6 +110,7 @@ class _SignUpPageState extends State<SignUppage> {
                                 controller: _phoneNoController,
                                 hinttext: "Phone Number",
                                 isPasswordField: false,
+                                keyboardType: TextInputType.visiblePassword,
                               ),
                               SizedBox(
                                 height: 10,
@@ -116,6 +119,7 @@ class _SignUpPageState extends State<SignUppage> {
                                 controller: _emailController,
                                 hinttext: "Email Address",
                                 isPasswordField: false,
+                                keyboardType: TextInputType.visiblePassword,
                               ),
                               SizedBox(
                                 height: 10,
@@ -124,6 +128,7 @@ class _SignUpPageState extends State<SignUppage> {
                                 controller: _passwordController,
                                 hinttext: "Password",
                                 isPasswordField: true,
+                                keyboardType: TextInputType.visiblePassword,
                               ),
                               SizedBox(
                                 height: 30,
