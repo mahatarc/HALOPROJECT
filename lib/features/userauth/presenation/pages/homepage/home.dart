@@ -16,6 +16,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  List myCart = [];
   int currentIndex = 0;
   List<Widget> pages = [
     Home(),
