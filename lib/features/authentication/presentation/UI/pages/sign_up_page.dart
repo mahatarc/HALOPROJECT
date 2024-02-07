@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/authentication/model/usermodel.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
@@ -14,10 +15,12 @@ class SignUppage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUppage> {
-  // final FirebaseAuthService _auth = FirebaseAuthService();
-
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _firstnameController = TextEditingController();
+  TextEditingController _lastnameController = TextEditingController();
+  TextEditingController _phoneNoController = TextEditingController();
+
   late SignUpBloc signUpBloc;
   void initState() {
     signUpBloc = BlocProvider.of<SignUpBloc>(context);
@@ -28,6 +31,9 @@ class _SignUpPageState extends State<SignUppage> {
 
   @override
   void dispose() {
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _phoneNoController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -59,7 +65,7 @@ class _SignUpPageState extends State<SignUppage> {
                           height: 30,
                         ),
                         Container(
-                          height: 400,
+                          height: 450,
                           width: 325,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -83,6 +89,30 @@ class _SignUpPageState extends State<SignUppage> {
                                 height: 10,
                               ),
                               Formcontainerwidget(
+                                controller: _firstnameController,
+                                hinttext: "First Name",
+                                isPasswordField: false,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Formcontainerwidget(
+                                controller: _lastnameController,
+                                hinttext: "Last Name",
+                                isPasswordField: false,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Formcontainerwidget(
+                                controller: _phoneNoController,
+                                hinttext: "Phone Number",
+                                isPasswordField: false,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Formcontainerwidget(
                                 controller: _emailController,
                                 hinttext: "Email Address",
                                 isPasswordField: false,
@@ -99,7 +129,16 @@ class _SignUpPageState extends State<SignUppage> {
                                 height: 30,
                               ),
                               GestureDetector(
-                                onTap: () {signUpBloc.add(SignUpButtonPressedEvent(email:_emailController.text, password: _passwordController.text));},
+                                onTap: () {
+                                  signUpBloc.add(SignUpButtonPressedEvent(
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                      user: UserModel(
+                                          email: _emailController.text,
+                                          password: _passwordController.text,
+                                          firstname: _firstnameController.text,
+                                          lastname: _lastnameController.text)));
+                                },
                                 child: Container(
                                   // width: 100,
                                   height: 50,
