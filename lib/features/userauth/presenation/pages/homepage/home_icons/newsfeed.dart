@@ -7,19 +7,17 @@ class NewsFeed extends StatefulWidget {
 }
 
 class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
-  //int currentIndex = 0;
   late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
-    _tabController =
-        TabController(length: 2, vsync: this); // 2 tabs: Feed and Chat
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
-    _tabController
-        .dispose(); // Dispose of the TabController to prevent memory leaks
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -52,31 +50,6 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
           ForumHomeScreen(),
         ],
       ),
-
-      /*bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ForumHomeScreen()),
-              );
-            }
-          });
-        },
-        backgroundColor: Colors.green[200],
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Feed",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.text_decrease_rounded),
-            label: "Forum",
-          ),
-        ],
-      ),*/
     );
   }
 
@@ -145,40 +118,53 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
   }
 
   Widget PostView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        PostAuthorRow(),
-        PostCaption(),
-        PostImage(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PostDetailScreen()),
+        );
+      },
+      child: Card(
+        elevation: 4,
+        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(
-              icon: Icon(Icons.thumb_up),
-              onPressed: () {
-                // Add functionality for liking the post
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.comment),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CommentsScreen()),
-                );
-              },
+            PostAuthorRow(),
+            PostCaption(),
+            PostImage(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.thumb_up),
+                  onPressed: () {
+                    // Add functionality for liking the post
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.comment),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CommentsScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 
   Widget PostsListView() {
     return ListView.separated(
       itemCount: 3,
-      separatorBuilder: (context, index) => Divider(color: Colors.grey[300]),
+      separatorBuilder: (context, index) => SizedBox(height: 16),
       itemBuilder: (context, index) {
         return PostView();
       },
@@ -289,7 +275,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
       comment: 'Interesting!',
       user: User(name: 'Alice Smith', profilePicture: 'images/profile.jpg'),
     ),
-    // Add more comments as needed
   ];
 
   @override
@@ -311,6 +296,20 @@ class _CommentsScreenState extends State<CommentsScreen> {
           ),
           CommentInput(),
         ],
+      ),
+    );
+  }
+}
+
+class PostDetailScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Post Detail'),
+      ),
+      body: Center(
+        child: Text('Full post description goes here'),
       ),
     );
   }
