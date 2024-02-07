@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/consts/lists.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home.dart';
+import 'package:flutterproject/consts/lists.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 
 class CategoryDetails extends StatefulWidget {
   final String title;

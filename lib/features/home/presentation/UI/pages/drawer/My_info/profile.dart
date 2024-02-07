@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/drawer/My_info/editprofile.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/editprofile.dart';
+import 'package:image_picker/image_picker.dart';
 
 class User {
   final String name;
@@ -124,3 +129,32 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+Future<void> pickImage() async {
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+  if (pickedFile != null) {
+    // Process the picked image
+    // Implement Firebase upload here
+  }
+}
+
+
+Future<void> uploadImageToStorage(String imagePath) async {
+  final Reference storageReference =
+      FirebaseStorage.instance.ref().child('images/').child(imagePath);
+
+  await storageReference.putFile(File(imagePath));
+  String downloadURL = await storageReference.getDownloadURL();
+
+  // Now you can use the downloadURL as needed (e.g., store it in Firestore)
+}
+
+
+Future<void> storeImageUrlInFirestore(String imageUrl) async {
+  await FirebaseFirestore.instance
+      .collection('images')
+      .add({'url': imageUrl});
+}
+
+

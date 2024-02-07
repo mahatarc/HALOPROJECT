@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/forum.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/forum.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
