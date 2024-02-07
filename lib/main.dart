@@ -15,9 +15,8 @@ Future<void> main() async {
     home: BlocProvider<SignInBloc>(
           create: (context) => SignInBloc(),
           child: const LoginPage(),),
-    theme: ThemeData(
-      primarySwatch: Colors.lightGreen,
-    ),
+    
+    
   ));
 }
 

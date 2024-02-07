@@ -10,13 +10,76 @@ import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
+
 class Homepage extends StatefulWidget {
+  const Homepage({super.key});
+
   @override
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
+  List myCart = [];
   int currentIndex = 0;
+  List<Widget> pages = [
+    Home(),
+    NewsFeed(),
+    CartPage(),
+  ];
+  List<IconData> iconlist = [
+    Icons.home,
+    Icons.feed_rounded,
+    Icons.add_shopping_cart,
+  ];
+  List label = ['Home', 'Newsfeed', 'Cart'];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+     
+      body: IndexedStack(
+        index: currentIndex,
+        children: pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type:
+            BottomNavigationBarType.fixed, // Set type to fixed for even spacing
+        selectedItemColor: Color.fromARGB(255, 64, 64, 64),
+        // unselectedItemColor: Colors.black.withOpacity(.5),
+        backgroundColor: Colors.green[100],
+        currentIndex: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.feed_rounded),
+            label: 'Newsfeed',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_shopping_cart),
+            label: 'Cart',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  // int currentIndex = 0;
   late HomePageBloc homePageBloc;
   @override
   void initState() {
@@ -25,35 +88,18 @@ class _HomepageState extends State<Homepage> {
 
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomePageBloc, HomePageState>(
+        return BlocConsumer<HomePageBloc, HomePageState>(
         bloc: homePageBloc,
         listenWhen: (previous, current) => current is HomePageActionState,
         buildWhen: (previous, current) => current is! HomePageActionState,
         builder: (context, state) {
           if (state is HomePageInitialState) {
             return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.green[200],
-                actions: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.notifications,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                      icon: Icon(
-                        Icons.card_giftcard_rounded,
-                      ),
-                      onPressed: () {}),
-                ],
-                title: const Text("Halo"),
-              ),
+           
               body: SingleChildScrollView(
-                //scrollDirection: Axis.vertical,
+               
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
@@ -146,31 +192,7 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
               drawer: Mydrawer(),
-              bottomNavigationBar: NavigationBar(
-                onDestinationSelected: (index) {
-                  setState(() {
-                    currentIndex = index;
-                    if (index == 1) {
-                      homePageBloc.add(NewsFeedIconPressedEvent());
-                    }
-                    if (index == 2) {
-                      homePageBloc.add(CartIconPressedEvent());
-                    }
-                  });
-                },
-                height: 70,
-                elevation: 0,
-                //selectedIndex: myIndex,
-                backgroundColor: Colors.green[100],
-                destinations: [
-                  NavigationDestination(
-                      icon: const Icon(Icons.home), label: 'Home'),
-                  NavigationDestination(
-                      icon: Icon(Icons.newspaper), label: 'NewsFeed'),
-                  NavigationDestination(
-                      icon: Icon(Icons.add_shopping_cart), label: 'Cart'),
-                ],
-              ),
+             
             );
           } else {
             return const Scaffold();
@@ -199,7 +221,10 @@ class _HomepageState extends State<Homepage> {
           }
         });
   }
-}
+  }
+
+
+
 
 class Category extends StatelessWidget {
   final String imagePath;
