@@ -98,7 +98,11 @@ class _HomeState extends State<Home> {
             return Scaffold(
               appBar: AppBar(
                 title: Text('Halo'),
-                backgroundColor:Colors.green[100]
+                backgroundColor:Colors.green[100],
+                 actions: [
+                  Icon(Icons.notification_add),
+                ],
+                
               ),
               body: SingleChildScrollView(
                 child: Padding(
