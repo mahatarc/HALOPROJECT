@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/seller_registration.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SellerSettings extends StatefulWidget {
+  const SellerSettings({Key? key});
+
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  State<SellerSettings> createState() => _SellerSettingsState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SellerSettingsState extends State<SellerSettings> {
   bool notificationsEnabled = true;
-  // bool darkModeEnabled = false;
+  bool darkModeEnabled = false;
   bool sellerModeEnabled = false;
   bool driverModeEnabled = false;
 
@@ -75,12 +77,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       children: [
         ListTile(
-          title: Text('Seller Mode'),
+          title: Text('Customer Mode'),
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SellerRegistrationForm()));
+                context, MaterialPageRoute(builder: (context) => Homepage()));
             // builder: (context) => SellerDashboard()));
           },
         ),

@@ -13,8 +13,9 @@ Future<void> main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     home: BlocProvider<SignInBloc>(
-          create: (context) => SignInBloc(),
-          child: const LoginPage(),),
+      create: (context) => SignInBloc(),
+      child: const LoginPage(),
+    ),
     theme: ThemeData(
       primarySwatch: Colors.lightGreen,
     ),
