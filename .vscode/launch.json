@@ -25,7 +25,7 @@
             "name": "Flutter (lib\\features\\userauth\\presenation\\pages\\main.dart)",
             "type": "dart",
             "request": "launch",
-            "program": "lib\\features\\userauth\\presenation\\pages\\main.dart"
+            "program": "lib\\main.dart"
         },
         
     ]

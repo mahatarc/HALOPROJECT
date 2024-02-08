@@ -4,11 +4,11 @@ class ForumHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         backgroundColor: Colors.green[200],
         elevation: 2.0,
         title: Text('Forum Topics'),
-      ),
+      ),*/
       body: ForumTopicsList(),
     );
   }

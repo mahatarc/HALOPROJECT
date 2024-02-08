@@ -44,8 +44,8 @@ class ProfilePage extends StatefulWidget {
 
 // ignore: must_be_immutable
 class _ProfilePageState extends State<ProfilePage> {
-  User user = User(
-      "Bill Gates", "bill.gates@example.com", "assets/images/billgates.jpg");
+  User user =
+      User("Bill Gates", "bill.gates@example.com", "images/profile.jpg");
   PersonalInformation personalInfo = PersonalInformation(
       "Bill Gates", "bill.gates@example.com", "Kathmandu, Nepal", "9867898086");
 
