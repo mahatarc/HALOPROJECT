@@ -18,7 +18,7 @@ class _yourProductsState extends State<yourProducts> {
         title: Text('Your Products'),
       ),
       body: ListView.builder(
-        //itemCount: your_products.length,
+        itemCount: your_products.length,
         itemBuilder: (BuildContext context, int index) {
           return SingleProduct(
             product_name: product_list[index]['name'],
