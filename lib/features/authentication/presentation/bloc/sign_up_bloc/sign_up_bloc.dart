@@ -38,6 +38,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   FutureOr<void> loginButtonPressedEvent(
       LoginButtonPressedEvent event, Emitter<SignUpState> emit) {
     emit(LoginPressedNavigateToLoginActionState());
+    
   }
 }
 
@@ -47,3 +48,4 @@ Future addUserDetails(String uid, UserModel user) async {
       .doc(uid)
       .set(user.toJson());
 }
+

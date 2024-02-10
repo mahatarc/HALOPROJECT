@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/sign_up_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/seller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,7 +16,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late SignInBloc signInBloc;
@@ -67,7 +68,8 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset('images/logo.png', width: 200, height: 150),
+                          Image.asset('images/logo.png',
+                              width: 200, height: 150),
                           const SizedBox(
                             height: 5,
                           ),
@@ -114,7 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                                 // width: 100,
                                 height: 50,
                                 decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 156, 199, 107),
+                                  color:
+                                      const Color.fromARGB(255, 156, 199, 107),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: const Center(
@@ -161,48 +164,16 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   )
                 ],
-                /* child: SizedBox(
-          //height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            /* const SizedBox(
-              height: 10,
-            ),*/
-            
-           /* Container(
-              width: w,
-              height: h * 0.3,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("images/logo.png"), fit: BoxFit.cover),
-              ),
-            ),*/
-            //  Image.asset('images/logo.png', width: 150, height: 150),
-            // const SizedBox(
-            // height: 5,
-            // ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              height: 600,
-              width: 325,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-
-            )
-          ]),
-        ),*/
               ),
             );
           } else if (state is SignInErrorState) {
             return const Scaffold();
-          } else {
-            return const Scaffold();
-          }
+          } else if (state is SignInNavigateToBuyerHomePageActionState) {
+            return Homepage();
+          } else if (state is SignInNavigateToSellerHomePageActionState) {
+            return SellerDashboard();
+          } else
+            return Scaffold();
         },
         listener: (context, state) {
           if (state is SignUpPressedNavigateToSignUpActionState) {
@@ -213,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                           create: (context) => SignUpBloc(),
                           child: SignUppage(),
                         )));
-          } else if (state is SignInNavigateToHomePageActionState) {
+          } else if (state is SignInNavigateToBuyerHomePageActionState) {
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -221,6 +192,11 @@ class _LoginPageState extends State<LoginPage> {
                           create: (context) => HomePageBloc(),
                           child: Homepage(),
                         )));
+          } else if (state is SignInNavigateToSellerHomePageActionState) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SellerDashboard()),
+            );
           }
         });
   }

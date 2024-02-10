@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/add_products.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/orders.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/seller_settings.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/your_products.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/add_products.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/orders.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/seller_drawer.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/seller_settings.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/your_products.dart';
 
 class SellerDashboard extends StatefulWidget {
   @override
@@ -18,46 +19,9 @@ class _SellerDashboardState extends State<SellerDashboard> {
       appBar: AppBar(
         backgroundColor: Colors.green[200],
         title: Text('Seller Dashboard'),
-        automaticallyImplyLeading: false,
+       // automaticallyImplyLeading: false,
       ),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (index) {
-          setState(() {
-            currentIndex = index;
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => yourProducts()),
-              );
-            }
-            if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Order()),
-              );
-            }
-            if (index == 3) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SellerSettings()),
-              );
-            }
-          });
-        },
-        height: 70,
-        elevation: 0,
-        backgroundColor: Colors.green[100],
-        destinations: [
-          NavigationDestination(
-              icon: const Icon(Icons.home), label: 'Dashboard'),
-          NavigationDestination(
-              icon: Icon(Icons.newspaper), label: 'Your Products'),
-          NavigationDestination(
-              icon: Icon(Icons.add_shopping_cart), label: 'Orders'),
-          NavigationDestination(
-              icon: const Icon(Icons.settings), label: 'Settings'),
-        ],
-      ),
+      drawer: SellerDrawer(), // Add the drawer here
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -122,6 +86,42 @@ class _SellerDashboardState extends State<SellerDashboard> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (index) {
+          setState(() {
+            currentIndex = index;
+            if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => yourProducts()),
+              );
+            }
+            if (index == 2) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Order()),
+              );
+            }
+            if (index == 3) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SellerSettings()),
+              );
+            }
+          });
+        },
+        height: 70,
+        elevation: 0,
+        backgroundColor: Colors.green[100],
+        destinations: [
+          NavigationDestination(
+              icon: const Icon(Icons.home), label: 'Dashboard'),
+          NavigationDestination(
+              icon: Icon(Icons.newspaper), label: 'Your Products'),
+          NavigationDestination(
+              icon: Icon(Icons.add_shopping_cart), label: 'Orders'),
+        ]
       ),
     );
   }
