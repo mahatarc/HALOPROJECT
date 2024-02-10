@@ -15,7 +15,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.green[100],
         title: Text("Feed"),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -34,7 +34,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
           final postDocs = snapshot.data!.docs;
           return ListView.separated(
             itemCount: postDocs.length,
-            separatorBuilder: (context, index) => SizedBox(height: 16),
+            separatorBuilder: (context, index) => SizedBox(height: 15),
             itemBuilder: (context, index) {
               final post = postDocs[index];
 
@@ -90,7 +90,7 @@ class _PostViewState extends State<PostView> {
       child: Card(
         elevation: 4,
         margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -123,11 +123,16 @@ class _PostViewState extends State<PostView> {
                 ),
                 IconButton(
                   icon: Icon(Icons.report),
-                  color: isReported ? Colors.yellow : null,
+                  color: isReported ? Colors.red : null,
                   onPressed: () {
                     setState(() {
                       isReported = !isReported;
                     });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Success!'),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -150,6 +155,7 @@ class _PostViewState extends State<PostView> {
             if (loadingProgress == null) {
               return child;
             }
+
             return Center(
               child: CircularProgressIndicator(
                 value: loadingProgress.expectedTotalBytes != null
@@ -187,7 +193,7 @@ class PostDetailScreen extends StatelessWidget {
 }
 
 class AddPost extends StatefulWidget {
-  const AddPost({super.key});
+  const AddPost({Key? key}) : super(key: key);
 
   @override
   State<AddPost> createState() => _AddPostState();
@@ -203,16 +209,20 @@ class _AddPostState extends State<AddPost> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Post'),
+        backgroundColor: Colors.green[100],
       ),
-      body: SingleChildScrollView(
-        // Wrap the Column with SingleChildScrollView
-        child: Column(
-          children: [
-            _buildPostField(),
-            _buildImagePreview(),
-            _buildSubmitButton(),
-            //  _buildPostList(),
-          ],
+      backgroundColor: Colors.white, // Set background color
+      body: Padding(
+        padding: const EdgeInsets.all(16.0), // Add padding
+        child: SingleChildScrollView(
+          // Wrap the Column with SingleChildScrollView
+          child: Column(
+            children: [
+              _buildPostField(),
+              _buildImagePreview(),
+              _buildSubmitButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -225,9 +235,17 @@ class _AddPostState extends State<AddPost> {
         controller: _textEditingController,
         decoration: InputDecoration(
           hintText: 'What\'s on your mind?',
-          border: OutlineInputBorder(),
+
+          border: OutlineInputBorder(
+            //borderSide: BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.circular(0.0), // Increase border radius
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.0, vertical: 80.0), // Increase content padding
         ),
-        maxLines: null, // Allows multiline input
+        maxLines: null,
       ),
     );
   }
@@ -237,7 +255,13 @@ class _AddPostState extends State<AddPost> {
         ? SizedBox.shrink()
         : Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Image.file(_image!),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.green), // Add border
+                borderRadius: BorderRadius.circular(10.0), // Add border radius
+              ),
+              child: Image.file(_image!),
+            ),
           );
   }
 
@@ -247,14 +271,40 @@ class _AddPostState extends State<AddPost> {
       children: [
         ElevatedButton.icon(
           onPressed: _submitPost,
-          icon: Icon(Icons.send),
-          label: Text('Post'),
+          icon: Icon(
+            Icons.send,
+            color: Colors.white,
+          ),
+          label: Text(
+            'Post',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 153, 231, 156),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+            elevation: 4.0,
+          ),
         ),
         SizedBox(width: 16),
         ElevatedButton.icon(
           onPressed: _getImage,
-          icon: Icon(Icons.image),
-          label: Text('Add Photo'),
+          icon: Icon(
+            Icons.image,
+            color: Colors.white,
+          ),
+          label: Text(
+            'Add Photo',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 153, 231, 156),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+            elevation: 0.0,
+          ),
         ),
       ],
     );
@@ -263,16 +313,32 @@ class _AddPostState extends State<AddPost> {
   Future<void> _submitPost() async {
     try {
       final String content = _textEditingController.text;
-      final String imageUrl = await _uploadImage();
+      final String imageUrl = _image != null ? await _uploadImage() : '';
+
+      if (content.isEmpty && imageUrl.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('The post cannot be empty.'),
+          ),
+        );
+        return;
+      }
+
       await _firestore.collection('posts').add({
         'content': content,
         'image_url': imageUrl,
-        'timestamp': Timestamp.now(),
       });
+
       _textEditingController.clear();
       setState(() {
         _image = null;
       });
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Post Added Successfully!'),
+        ),
+      );
     } catch (e) {
       print('Error submitting post: $e');
     }
