@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/feed/presentation/UI/pages/forum.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NewsFeed extends StatefulWidget {
@@ -11,52 +10,44 @@ class NewsFeed extends StatefulWidget {
 }
 
 class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 0,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.green[200],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorWeight: 2.0,
-          tabs: [
-            Tab(
-              icon: Icon(Icons.feed),
-              text: "Feed",
-            ),
-            Tab(
-              icon: Icon(Icons.chat_bubble),
-              text: "Forum",
-            )
-          ],
-        ),
+        title: Text("Feed"),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          PostsListView(),
-          ForumHomeScreen(),
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          final postDocs = snapshot.data!.docs;
+          return ListView.separated(
+            itemCount: postDocs.length,
+            separatorBuilder: (context, index) => SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              final post = postDocs[index];
+
+              return PostView(
+                content: post['content'],
+                imageUrl: post['image_url'],
+              );
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to the screen where users can create a new post
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddPost()),
@@ -65,40 +56,6 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
         child: Icon(Icons.add),
         backgroundColor: Colors.green[100],
       ),
-    );
-  }
-}
-
-class PostsListView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        }
-        final postDocs = snapshot.data!.docs;
-        return ListView.separated(
-          itemCount: postDocs.length,
-          separatorBuilder: (context, index) => SizedBox(height: 16),
-          itemBuilder: (context, index) {
-            final post = postDocs[index];
-
-            return PostView(
-              content: post['content'],
-              imageUrl: post['image_url'],
-            );
-          },
-        );
-      },
     );
   }
 }
