@@ -1,23 +1,22 @@
 class ProductModel {
-  final product_name;
-  final product_picture;
- // final prod_old_price;
-  final prod_price;
-
+  final String productname;
+  final String productpicture;
+  // final double prod_old_price;
+  final String productprice;
 
   ProductModel({
-    this.product_name,
-    this.product_picture,
-   // this.prod_old_price,
-    this.prod_price,
+    required this.productname,
+    required this.productpicture,
+    // this.prod_old_price,
+    required this.productprice,
   });
-  // Factory method to create Product object from a map
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      product_name: map['name'],
-      product_picture: map['image_url'],
-      prod_price: map['price'],
+      productname: map['name'],
+      productpicture: map['image_url'],
+      productprice: map['price'],
+      // prod_old_price: map['old_price'],
     );
   }
 }
