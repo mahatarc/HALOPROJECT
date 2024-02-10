@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/forum.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -50,74 +54,75 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
           ForumHomeScreen(),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to the screen where users can create a new post
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddPost()),
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green[100],
+      ),
     );
   }
+}
 
-  Widget PostAuthorRow() {
-    const double avatarDiameter = 72;
-    return GestureDetector(
-      onTap: () {
-        // Add functionality for tapping on the author row
+class PostsListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+        final postDocs = snapshot.data!.docs;
+        return ListView.separated(
+          itemCount: postDocs.length,
+          separatorBuilder: (context, index) => SizedBox(height: 16),
+          itemBuilder: (context, index) {
+            final post = postDocs[index];
+
+            return PostView(
+              content: post['content'],
+              imageUrl: post['image_url'],
+            );
+          },
+        );
       },
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
-              width: avatarDiameter,
-              height: avatarDiameter,
-              decoration: BoxDecoration(
-                color: Colors.green[100],
-                shape: BoxShape.circle,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(avatarDiameter / 2),
-                child: Image.asset(
-                  'images/profile.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Text(
-            'Alphawave',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.teal[400],
-            ),
-          )
-        ],
-      ),
     );
   }
+}
 
-  Widget PostImage() {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Image.asset(
-        'images/agro.png',
-        fit: BoxFit.cover,
-      ),
-    );
-  }
+class PostView extends StatefulWidget {
+  final String content;
+  final String? imageUrl;
 
-  Widget PostCaption() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
-      child: Text(
-        'Hello World!',
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
+  const PostView({
+    required this.content,
+    this.imageUrl,
+  });
 
-  Widget PostView() {
+  @override
+  State<PostView> createState() => _PostViewState();
+}
+
+class _PostViewState extends State<PostView> {
+  bool isLiked = false;
+  bool isDisliked = false;
+  bool isReported = false;
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -132,25 +137,40 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PostAuthorRow(),
-            PostCaption(),
-            PostImage(),
+            // Your post UI components (author row, caption, etc.)
+            ListTile(
+              title: Text(widget.content),
+            ),
+            // Call the function to conditionally build the image container
+            _buildImageContainer(context),
+            SizedBox(height: 8),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                   icon: Icon(Icons.thumb_up),
+                  color: isLiked ? Colors.blue : null,
                   onPressed: () {
-                    // Add functionality for liking the post
+                    setState(() {
+                      isLiked = !isLiked;
+                      if (isDisliked) {
+                        isDisliked = false;
+                      }
+                    });
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.comment),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.report),
+                  color: isReported ? Colors.yellow : null,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CommentsScreen()),
-                    );
+                    setState(() {
+                      isReported = !isReported;
+                    });
                   },
                 ),
               ],
@@ -161,143 +181,37 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
     );
   }
 
-  Widget PostsListView() {
-    return ListView.separated(
-      itemCount: 3,
-      separatorBuilder: (context, index) => SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        return PostView();
-      },
-    );
-  }
-}
-
-class User {
-  final String name;
-  final String profilePicture;
-
-  User({required this.name, required this.profilePicture});
-}
-
-class CommentItem extends StatelessWidget {
-  final String comment;
-  final User user;
-
-  CommentItem({required this.comment, required this.user});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0),
-      padding: EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20.0,
-            backgroundImage: AssetImage(user.profilePicture),
-          ),
-          SizedBox(width: 8.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                user.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal[400],
-                ),
+  Widget _buildImageContainer(BuildContext context) {
+    if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
+      return Container(
+        width: double.infinity, // Make image fill the width of the card
+        height: 200, // Adjust height as needed
+        child: Image.network(
+          widget.imageUrl!,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
               ),
-              SizedBox(height: 8.0),
-              Text(comment),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CommentInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Add a comment...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-              ),
-            ),
-          ),
-          SizedBox(width: 8.0),
-          ElevatedButton(
-            onPressed: () {
-              // Add functionality to send the comment
-            },
-            child: Text('Post'),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.teal[400],
-              onPrimary: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CommentsScreen extends StatefulWidget {
-  @override
-  _CommentsScreenState createState() => _CommentsScreenState();
-}
-
-class _CommentsScreenState extends State<CommentsScreen> {
-  final List<CommentItem> comments = [
-    CommentItem(
-      comment: 'This is a comment.',
-      user: User(name: 'John Doe', profilePicture: 'images/profile.jpg'),
-    ),
-    CommentItem(
-      comment: 'Great post!',
-      user: User(name: 'Jane Doe', profilePicture: 'images/profile.jpg'),
-    ),
-    CommentItem(
-      comment: 'Interesting!',
-      user: User(name: 'Alice Smith', profilePicture: 'images/profile.jpg'),
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal[400],
-        title: Text('Comments'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: comments.length,
-              itemBuilder: (context, index) {
-                return comments[index];
-              },
-            ),
-          ),
-          CommentInput(),
-        ],
-      ),
-    );
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Text('Error loading image');
+          },
+        ),
+      );
+    } else {
+      print("Invalid imageUrl: ${widget.imageUrl}"); // Debug print statement
+      return SizedBox
+          .shrink(); // Return an empty SizedBox if imageUrl is null or empty
+    }
   }
 }
 
@@ -312,5 +226,119 @@ class PostDetailScreen extends StatelessWidget {
         child: Text('Full post description goes here'),
       ),
     );
+  }
+}
+
+class AddPost extends StatefulWidget {
+  const AddPost({super.key});
+
+  @override
+  State<AddPost> createState() => _AddPostState();
+}
+
+class _AddPostState extends State<AddPost> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final TextEditingController _textEditingController = TextEditingController();
+  File? _image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Post'),
+      ),
+      body: SingleChildScrollView(
+        // Wrap the Column with SingleChildScrollView
+        child: Column(
+          children: [
+            _buildPostField(),
+            _buildImagePreview(),
+            _buildSubmitButton(),
+            //  _buildPostList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPostField() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: _textEditingController,
+        decoration: InputDecoration(
+          hintText: 'What\'s on your mind?',
+          border: OutlineInputBorder(),
+        ),
+        maxLines: null, // Allows multiline input
+      ),
+    );
+  }
+
+  Widget _buildImagePreview() {
+    return _image == null
+        ? SizedBox.shrink()
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.file(_image!),
+          );
+  }
+
+  Widget _buildSubmitButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          onPressed: _submitPost,
+          icon: Icon(Icons.send),
+          label: Text('Post'),
+        ),
+        SizedBox(width: 16),
+        ElevatedButton.icon(
+          onPressed: _getImage,
+          icon: Icon(Icons.image),
+          label: Text('Add Photo'),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _submitPost() async {
+    try {
+      final String content = _textEditingController.text;
+      final String imageUrl = await _uploadImage();
+      await _firestore.collection('posts').add({
+        'content': content,
+        'image_url': imageUrl,
+        'timestamp': Timestamp.now(),
+      });
+      _textEditingController.clear();
+      setState(() {
+        _image = null;
+      });
+    } catch (e) {
+      print('Error submitting post: $e');
+    }
+  }
+
+  Future<String> _uploadImage() async {
+    if (_image == null) return '';
+
+    final Reference storageRef =
+        FirebaseStorage.instance.ref().child('post_images');
+    final TaskSnapshot uploadTask = await storageRef.putFile(_image!);
+    final String imageUrl = await uploadTask.ref.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  Future<void> _getImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 }
