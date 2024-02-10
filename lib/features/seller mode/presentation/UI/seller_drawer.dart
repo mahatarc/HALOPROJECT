@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/seller%20mode/seller_settings.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/seller_settings.dart';
 
 class SellerDrawer extends StatelessWidget {
   const SellerDrawer({super.key});

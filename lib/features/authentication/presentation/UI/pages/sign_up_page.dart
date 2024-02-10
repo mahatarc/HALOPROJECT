@@ -142,7 +142,9 @@ class _SignUpPageState extends State<SignUppage> {
                                           email: _emailController.text,
                                           password: _passwordController.text,
                                           firstname: _firstnameController.text,
-                                          lastname: _lastnameController.text)));
+                                          lastname: _lastnameController.text,
+                                          role:'buyer',
+                                          )));
                                 },
                                 child: Container(
                                   // width: 100,

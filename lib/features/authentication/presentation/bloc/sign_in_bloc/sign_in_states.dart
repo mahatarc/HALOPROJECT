@@ -8,7 +8,9 @@ class SignInInitialState extends SignInStates {}
 
 class SignInLoadingState extends SignInStates {}
 
-class SignInNavigateToHomePageActionState extends SignInActionState {}
+class SignInNavigateToBuyerHomePageActionState extends SignInActionState {}
+
+class SignInNavigateToSellerHomePageActionState extends SignInActionState {}
 
 class SignUpPressedNavigateToSignUpActionState extends SignInActionState {}
 
