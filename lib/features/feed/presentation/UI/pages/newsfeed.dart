@@ -88,7 +88,7 @@ class _PostViewState extends State<PostView> {
         );
       },
       child: Card(
-        elevation: 4,
+        elevation: 1,
         margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
         child: Column(
