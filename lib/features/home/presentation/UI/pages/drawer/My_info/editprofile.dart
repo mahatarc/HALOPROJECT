@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
+
+import 'profile.dart';
 
 class EditProfilePage extends StatefulWidget {
   final PersonalInformation personalInfo;
-
-  EditProfilePage(this.personalInfo);
+  const EditProfilePage({Key? key, required this.personalInfo})
+      : super(key: key);
 
   @override
   _EditProfilePageState createState() => _EditProfilePageState();
@@ -20,11 +22,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Initialize the controllers with the current values
-    nameController.text = widget.personalInfo.name;
+
+    nameController.text = widget.personalInfo.firstName;
     emailController.text = widget.personalInfo.email;
-    locationController.text = widget.personalInfo.location;
-    phoneNumberController.text = widget.personalInfo.phoneNumber;
+
+    // Initialize other controllers with existing data if needed.
   }
 
   @override
@@ -44,8 +46,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               _buildTextField('Name', nameController),
               _buildTextField('Email', emailController),
-              _buildTextField('Location', locationController),
-              _buildTextField('Phone Number', phoneNumberController),
+              // Add other fields as needed for editing other information.
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -57,16 +58,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Text('Cancel'),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      // Save the updated information
-                      PersonalInformation updatedInfo = PersonalInformation(
-                        nameController.text,
-                        emailController.text,
-                        locationController.text,
-                        phoneNumberController.text,
-                      );
-                      // Navigate back to the profile page and pass the updated information as a result
-                      Navigator.pop(context, updatedInfo);
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Save the updated information
+                        PersonalInformation updatedInfo = PersonalInformation(
+                          firstName: nameController.text,
+                          lastName: widget.personalInfo.lastName,
+                          email: emailController.text,
+                          role: widget.personalInfo.role,
+                        );
+                        Navigator.pop(context, updatedInfo);
+
+                        // Update Firestore document with the new information
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(/* Provide user ID here */)
+                            .update({
+                          'firstName': updatedInfo.firstName,
+                          'email': updatedInfo.email,
+                          // Update other fields as needed.
+                        });
+
+                        // Navigate back to the profile page and pass the updated information as a result
+                        Navigator.pop(context, updatedInfo);
+                      }
                     },
                     child: Text('Save'),
                   ),
@@ -82,11 +97,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
+      child: TextFormField(
         decoration: InputDecoration(
           labelText: label,
         ),
         controller: controller,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter a $label';
+          }
+          return null;
+        },
       ),
     );
   }
