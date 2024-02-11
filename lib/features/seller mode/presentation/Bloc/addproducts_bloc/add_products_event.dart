@@ -12,6 +12,6 @@ class AddProductsButtonPressedEvent extends AddProductsEvent {
   AddProductsButtonPressedEvent({
     required this.name,
     required this.price,
-    required this.image,
+    required this.image, String? imagePath,
   });
 }

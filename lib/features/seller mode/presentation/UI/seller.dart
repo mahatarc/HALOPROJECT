@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/Bloc/your_products_bloc/your_products_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/add_products.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/orders.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/seller_drawer.dart';
-import 'package:flutterproject/features/seller%20mode/presentation/UI/seller_settings.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/your_products.dart';
 
 class SellerDashboard extends StatefulWidget {
@@ -94,19 +95,16 @@ class _SellerDashboardState extends State<SellerDashboard> {
             if (index == 1) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => yourProducts()),
-              );
+                MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                          create: (context) => YourProductsBloc(),
+                          child: YourProducts(),
+                        )));
             }
             if (index == 2) {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Order()),
-              );
-            }
-            if (index == 3) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SellerSettings()),
               );
             }
           });
