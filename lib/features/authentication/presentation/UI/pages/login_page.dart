@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/authentication/presentation/bloc/forgot_bloc/forgot_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
@@ -8,6 +8,7 @@ import 'package:flutterproject/features/authentication/presentation/UI/pages/sig
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/seller.dart';
+import 'package:flutterproject/forgot.dart/forgot_pass_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -128,6 +129,29 @@ class _LoginPageState extends State<LoginPage> {
                                           fontSize: 20)),
                                 ),
                               ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              //BlocProvider.of<ForgotPasswordBloc>(context).add(
+                              //ForgetPasswordButtonPressedNavigateEvent());
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                            create: (context) =>
+                                                ForgotPasswordBloc(),
+                                            child: ForgotPasswordScreen(),
+                                          )));
+                            },
+                            child: const Text(
+                              ' Forgot Password?',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 156, 199, 107),
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                           const SizedBox(
