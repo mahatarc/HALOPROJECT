@@ -3,6 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? getCurrentUserId() {
+    final User? user = _auth.currentUser;
+    if (user != null) {
+      return user.uid;
+    } else {
+      return null; // User is not signed in
+    }
+  }
+
   Future<User?> signupwithEmailandPassword(
       String email, String password) async {
     try {
@@ -30,8 +39,6 @@ class FirebaseAuthService {
   }
 }
 
-
-
 // Function to update user role in Firestore
 Future<void> updateUserRole(String userId, String newRole) async {
   try {
@@ -47,4 +54,3 @@ Future<void> updateUserRole(String userId, String newRole) async {
     throw error; // Throw error to handle it in the calling function
   }
 }
-
