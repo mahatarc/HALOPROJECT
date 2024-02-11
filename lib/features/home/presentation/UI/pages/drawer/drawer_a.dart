@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/settings.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
@@ -93,8 +95,13 @@ class Mydrawer extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                                create: (context) => SignInBloc(),
+                                child: LoginPage(),
+                              )));
                 },
                 child: Container(
                   height: 50,
