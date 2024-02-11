@@ -1,42 +1,20 @@
-// ignore_for_file: unused_local_variable
-
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterproject/features/authentication/services/firebaseauth.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/editprofile.dart';
-import 'package:image_picker/image_picker.dart';
-
-class User {
-  final String name;
-  final String email;
-  final String profilePicture;
-
-  User(this.name, this.email, this.profilePicture);
-}
 
 class PersonalInformation {
-  final String name;
+  final String firstName;
+  final String lastName;
   final String email;
-  final String location;
-  final String phoneNumber;
+  final String role;
 
-  PersonalInformation(this.name, this.email, this.location, this.phoneNumber);
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Profile',
-      home: ProfilePage(),
-      theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromARGB(
-            255, 223, 245, 202), // Set the background color to light green
-      ),
-    );
-  }
+  PersonalInformation({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.role,
+  });
 }
 
 class ProfilePage extends StatefulWidget {
@@ -44,12 +22,14 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-// ignore: must_be_immutable
 class _ProfilePageState extends State<ProfilePage> {
-  User user =
-      User("Bill Gates", "bill.gates@example.com", "images/profile.jpg");
-  PersonalInformation personalInfo = PersonalInformation(
-      "Bill Gates", "bill.gates@example.com", "Kathmandu, Nepal", "9867898086");
+  late CollectionReference _usersCollection;
+  final _authService = FirebaseAuthService();
+  @override
+  void initState() {
+    super.initState();
+    _usersCollection = FirebaseFirestore.instance.collection('users');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,54 +39,74 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 172, 229, 142),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Center the content vertically
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage(user.profilePicture),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream:
+            _usersCollection.doc(_authService.getCurrentUserId()).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+          var userData = snapshot.data?.data() as Map<String, dynamic>?;
+
+          if (userData == null) {
+            return Text('No user data found.');
+          }
+
+          var personalInfo = PersonalInformation(
+            firstName: userData['firstName'] ?? '',
+            lastName: userData['lastName'] ?? '',
+            email: userData['email'] ?? '',
+            role: userData['role'] ?? '',
+          );
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: userData['profilePicture'] != null
+                      ? NetworkImage(userData['profilePicture'])
+                      : AssetImage('images/profile.jpg')
+                          as ImageProvider<Object>?,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  '${personalInfo.firstName} ${personalInfo.lastName}',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  personalInfo.email,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(
+                          personalInfo: personalInfo,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Edit Profile'),
+                ),
+                SizedBox(height: 32),
+                _buildSectionTitle('My Personal Information'),
+                _buildPersonalInfoTile('Name', personalInfo.firstName),
+                _buildPersonalInfoTile('Email', personalInfo.email),
+                _buildPersonalInfoTile('Role', personalInfo.role),
+              ],
             ),
-            SizedBox(height: 16),
-            Text(
-              personalInfo.name,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              personalInfo.email,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () async {
-                final updatedInfo = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(
-                        personalInfo), // Navigate to the edit profile screen (you can implement this)
-                  ),
-                );
-                // Handle the result returned from EditProfilePage
-                if (updatedInfo != null && updatedInfo is PersonalInformation) {
-                  // Update the personalInfo with the new information
-                  setState(() {
-                    personalInfo = updatedInfo;
-                  });
-                }
-              },
-              child: Text('Edit Profile'),
-            ),
-            SizedBox(height: 32),
-            _buildSectionTitle('My Personal Information'),
-            _buildPersonalInfoTile('Name', personalInfo.name),
-            _buildPersonalInfoTile('Email', personalInfo.email),
-            _buildPersonalInfoTile('Location', personalInfo.location),
-            _buildPersonalInfoTile('Phone Number', personalInfo.phoneNumber),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -131,32 +131,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-Future<void> pickImage() async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-  if (pickedFile != null) {
-    // Process the picked image
-    // Implement Firebase upload here
-  }
-}
-
-
-Future<void> uploadImageToStorage(String imagePath) async {
-  final Reference storageReference =
-      FirebaseStorage.instance.ref().child('images/').child(imagePath);
-
-  await storageReference.putFile(File(imagePath));
-  String downloadURL = await storageReference.getDownloadURL();
-
-  // Now you can use the downloadURL as needed (e.g., store it in Firestore)
-}
-
-
-Future<void> storeImageUrlInFirestore(String imageUrl) async {
-  await FirebaseFirestore.instance
-      .collection('images')
-      .add({'url': imageUrl});
-}
-
-

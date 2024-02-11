@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +38,6 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
             separatorBuilder: (context, index) => SizedBox(height: 15),
             itemBuilder: (context, index) {
               final post = postDocs[index];
-
               return PostView(
                 content: post['content'],
                 imageUrl: post['image_url'],
@@ -60,7 +60,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
   }
 }
 
-class PostView extends StatefulWidget {
+class PostView extends StatelessWidget {
   final String content;
   final String? imageUrl;
 
@@ -70,35 +70,23 @@ class PostView extends StatefulWidget {
   });
 
   @override
-  State<PostView> createState() => _PostViewState();
-}
-
-class _PostViewState extends State<PostView> {
-  bool isLiked = false;
-  bool isDisliked = false;
-  bool isReported = false;
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PostDetailScreen()),
-        );
-      },
-      child: Card(
-        elevation: 1,
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+    return Card(
+      elevation: 1,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Your post UI components (author row, caption, etc.)
-            ListTile(
-              title: Text(widget.content),
+            _buildUserInfo(),
+            SizedBox(height: 8),
+            Text(
+              content,
+              style: TextStyle(color: Colors.black87),
             ),
-            // Call the function to conditionally build the image container
+            SizedBox(height: 8),
             _buildImageContainer(context),
             SizedBox(height: 8),
             Divider(),
@@ -107,15 +95,7 @@ class _PostViewState extends State<PostView> {
               children: [
                 IconButton(
                   icon: Icon(Icons.thumb_up),
-                  color: isLiked ? Colors.blue : null,
-                  onPressed: () {
-                    setState(() {
-                      isLiked = !isLiked;
-                      if (isDisliked) {
-                        isDisliked = false;
-                      }
-                    });
-                  },
+                  onPressed: () {},
                 ),
                 IconButton(
                   icon: Icon(Icons.comment),
@@ -123,17 +103,7 @@ class _PostViewState extends State<PostView> {
                 ),
                 IconButton(
                   icon: Icon(Icons.report),
-                  color: isReported ? Colors.red : null,
-                  onPressed: () {
-                    setState(() {
-                      isReported = !isReported;
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Success!'),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                 ),
               ],
             ),
@@ -143,19 +113,53 @@ class _PostViewState extends State<PostView> {
     );
   }
 
+  Widget _buildUserInfo() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox.shrink();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        final userData = snapshot.data!.data() as Map?;
+        return Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: userData != null &&
+                      userData['profilePicture'] != null
+                  ? NetworkImage(userData['profilePicture'])
+                  : AssetImage('images/profile.jpg') as ImageProvider<Object>?,
+            ),
+            SizedBox(width: 8),
+            Text(
+              userData != null
+                  ? '${userData["firstName"]} ${userData["lastName"]}'
+                  : 'Unknown User',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildImageContainer(BuildContext context) {
-    if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
       return Container(
-        width: double.infinity, // Make image fill the width of the card
-        height: 200, // Adjust height as needed
+        width: double.infinity,
+        height: 200,
         child: Image.network(
-          widget.imageUrl!,
+          imageUrl!,
           fit: BoxFit.cover,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) {
               return child;
             }
-
             return Center(
               child: CircularProgressIndicator(
                 value: loadingProgress.expectedTotalBytes != null
@@ -171,24 +175,9 @@ class _PostViewState extends State<PostView> {
         ),
       );
     } else {
-      print("Invalid imageUrl: ${widget.imageUrl}"); // Debug print statement
-      return SizedBox
-          .shrink(); // Return an empty SizedBox if imageUrl is null or empty
+      print("Invalid imageUrl: $imageUrl");
+      return SizedBox.shrink();
     }
-  }
-}
-
-class PostDetailScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Post Detail'),
-      ),
-      body: Center(
-        child: Text('Full post description goes here'),
-      ),
-    );
   }
 }
 
@@ -200,7 +189,6 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _textEditingController = TextEditingController();
   File? _image;
 
@@ -211,11 +199,10 @@ class _AddPostState extends State<AddPost> {
         title: Text('Add Post'),
         backgroundColor: Colors.green[100],
       ),
-      backgroundColor: Colors.white, // Set background color
+      backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16.0), // Add padding
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          // Wrap the Column with SingleChildScrollView
           child: Column(
             children: [
               _buildPostField(),
@@ -235,15 +222,13 @@ class _AddPostState extends State<AddPost> {
         controller: _textEditingController,
         decoration: InputDecoration(
           hintText: 'What\'s on your mind?',
-
           border: OutlineInputBorder(
-            //borderSide: BorderSide(color: Colors.green),
-            borderRadius: BorderRadius.circular(0.0), // Increase border radius
+            borderRadius: BorderRadius.circular(0.0),
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.0, vertical: 80.0), // Increase content padding
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 16.0, vertical: 80.0),
         ),
         maxLines: null,
       ),
@@ -257,8 +242,8 @@ class _AddPostState extends State<AddPost> {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.green), // Add border
-                borderRadius: BorderRadius.circular(10.0), // Add border radius
+                border: Border.all(color: Colors.green),
+                borderRadius: BorderRadius.circular(10.0),
               ),
               child: Image.file(_image!),
             ),
@@ -266,47 +251,23 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildSubmitButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton.icon(
-          onPressed: _submitPost,
-          icon: Icon(
-            Icons.send,
-            color: Colors.white,
-          ),
-          label: Text(
-            'Post',
-            style: TextStyle(color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
-            ),
-            elevation: 4.0,
-          ),
+    return ElevatedButton.icon(
+      onPressed: _submitPost,
+      icon: Icon(
+        Icons.send,
+        color: Colors.white,
+      ),
+      label: Text(
+        'Post',
+        style: TextStyle(color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(
+        primary: Color.fromARGB(255, 153, 231, 156),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0.0),
         ),
-        SizedBox(width: 16),
-        ElevatedButton.icon(
-          onPressed: _getImage,
-          icon: Icon(
-            Icons.image,
-            color: Colors.white,
-          ),
-          label: Text(
-            'Add Photo',
-            style: TextStyle(color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
-            ),
-            elevation: 0.0,
-          ),
-        ),
-      ],
+        elevation: 4.0,
+      ),
     );
   }
 
@@ -324,7 +285,7 @@ class _AddPostState extends State<AddPost> {
         return;
       }
 
-      await _firestore.collection('posts').add({
+      await FirebaseFirestore.instance.collection('posts').add({
         'content': content,
         'image_url': imageUrl,
       });
