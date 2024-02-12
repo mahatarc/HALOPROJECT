@@ -17,13 +17,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController locationController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
+  //TextEditingController phoneNumberController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    nameController.text = widget.personalInfo.firstName;
+    nameController.text = widget.personalInfo.name;
     emailController.text = widget.personalInfo.email;
 
     // Initialize other controllers with existing data if needed.
@@ -62,8 +62,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       if (_formKey.currentState!.validate()) {
                         // Save the updated information
                         PersonalInformation updatedInfo = PersonalInformation(
-                          firstName: nameController.text,
-                          lastName: widget.personalInfo.lastName,
+                          //  phoneNo: phoneNumberController.text,
+                          name: nameController.text,
+                          //  lastName: widget.personalInfo.lastName,
                           email: emailController.text,
                           role: widget.personalInfo.role,
                         );
@@ -74,7 +75,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             .collection('users')
                             .doc(/* Provide user ID here */)
                             .update({
-                          'firstName': updatedInfo.firstName,
+                          'firstName': updatedInfo.name,
                           'email': updatedInfo.email,
                           // Update other fields as needed.
                         });

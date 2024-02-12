@@ -4,14 +4,12 @@ import 'package:flutterproject/features/authentication/services/firebaseauth.dar
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/editprofile.dart';
 
 class PersonalInformation {
-  final String firstName;
-  final String lastName;
+  final String name;
   final String email;
   final String role;
 
   PersonalInformation({
-    required this.firstName,
-    required this.lastName,
+    required this.name,
     required this.email,
     required this.role,
   });
@@ -56,8 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
           }
 
           var personalInfo = PersonalInformation(
-            firstName: userData['firstName'] ?? '',
-            lastName: userData['lastName'] ?? '',
+            name: userData['name'] ?? '',
             email: userData['email'] ?? '',
             role: userData['role'] ?? '',
           );
@@ -76,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  '${personalInfo.firstName} ${personalInfo.lastName}',
+                  personalInfo.name,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
@@ -100,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 SizedBox(height: 32),
                 _buildSectionTitle('My Personal Information'),
-                _buildPersonalInfoTile('Name', personalInfo.firstName),
+                _buildPersonalInfoTile('Name', personalInfo.name),
                 _buildPersonalInfoTile('Email', personalInfo.email),
                 _buildPersonalInfoTile('Role', personalInfo.role),
               ],

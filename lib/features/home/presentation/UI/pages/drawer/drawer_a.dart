@@ -41,8 +41,7 @@ class Mydrawer extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Color.fromRGBO(165, 214, 167, 1),
                 ),
-                accountName:
-                    Text("${userData['firstName']} ${userData['lastName']}"),
+                accountName: Text("${userData['name']}"),
                 accountEmail: Text("${userData['email']}"),
                 currentAccountPicture: Icon(Icons.person_2_rounded, size: 50),
               ),
@@ -73,10 +72,6 @@ class Mydrawer extends StatelessWidget {
                   leading: Icon(Icons.settings),
                   title: Text("Settings"),
                 ),
-              ),
-              const ListTile(
-                leading: Icon(Icons.payment_rounded),
-                title: Text("Payments"),
               ),
               const ListTile(
                 leading: Icon(Icons.history),

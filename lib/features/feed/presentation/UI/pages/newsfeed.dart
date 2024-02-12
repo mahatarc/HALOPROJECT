@@ -146,9 +146,7 @@ class PostView extends StatelessWidget {
             ),
             SizedBox(width: 8),
             Text(
-              userData != null
-                  ? '${userData["firstName"]} ${userData["lastName"]}'
-                  : 'Unknown User',
+              userData != null ? '${userData["name"]} ' : 'Unknown User',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
