@@ -4,6 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+Future<void> _launchUrl(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -231,6 +240,14 @@ class _AddPostState extends State<AddPost> {
               EdgeInsets.symmetric(horizontal: 16.0, vertical: 80.0),
         ),
         maxLines: null,
+        keyboardType: TextInputType.multiline,
+        onTap: () {
+          final text = _textEditingController.text;
+          final urls = RegExp(r'https?://[^\s]+').allMatches(text);
+          for (final match in urls) {
+            _launchUrl(match.group(0)!);
+          }
+        },
       ),
     );
   }
@@ -251,6 +268,46 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildSubmitButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          onPressed: _submitPost,
+          icon: Icon(
+            Icons.send,
+            color: Colors.white,
+          ),
+          label: Text(
+            'Post',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 153, 231, 156),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+          ),
+        ),
+        SizedBox(width: 16),
+        ElevatedButton.icon(
+          onPressed: _getImage,
+          icon: Icon(
+            Icons.image,
+            color: Colors.white,
+          ),
+          label: Text('Add Photo', style: TextStyle(color: Colors.white)),
+          style: ElevatedButton.styleFrom(
+            primary: Color.fromARGB(255, 153, 231, 156),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /*Widget _buildSubmitButton() {
     return ElevatedButton.icon(
       onPressed: _submitPost,
       icon: Icon(
@@ -269,8 +326,9 @@ class _AddPostState extends State<AddPost> {
         elevation: 4.0,
       ),
     );
-  }
 
+  }
+*/
   Future<void> _submitPost() async {
     try {
       final String content = _textEditingController.text;
@@ -285,9 +343,22 @@ class _AddPostState extends State<AddPost> {
         return;
       }
 
-      await FirebaseFirestore.instance.collection('posts').add({
+      // Add the post to the 'posts' collection
+      final newPostRef =
+          await FirebaseFirestore.instance.collection('posts').add({
         'content': content,
         'image_url': imageUrl,
+      });
+
+      // Get the current user's ID
+      final currentUserID = FirebaseAuth.instance.currentUser!.uid;
+
+      // Update the user's document with the new post ID
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserID)
+          .update({
+        'posts': FieldValue.arrayUnion([newPostRef.id]),
       });
 
       _textEditingController.clear();
