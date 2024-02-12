@@ -28,13 +28,6 @@ class _HomepageState extends State<Homepage> {
     CartPage(),
     FeedProfile(),
   ];
-  List<IconData> iconlist = [
-    Icons.home,
-    Icons.feed_rounded,
-    Icons.add_shopping_cart,
-    Icons.photo
-  ];
-  List label = ['Home', 'Newsfeed', 'Cart', 'Profile'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +78,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // int currentIndex = 0;
   late HomePageBloc homePageBloc;
   @override
   void initState() {
@@ -135,7 +127,6 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      // SizedBox to create some space between the search bar and carousel
                       SizedBox(height: 20),
                       ImageCarouselSlider(),
                       SizedBox(height: 20),
@@ -188,8 +179,6 @@ class _HomeState extends State<Home> {
                           },
                         ),
                       ),
-
-                      // Recommended Section
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -273,8 +262,6 @@ class Category extends StatelessWidget {
 }
 
 class Products extends StatefulWidget {
-  // const Products({super.key});
-
   @override
   State<Products> createState() => _ProductsState();
 }
@@ -300,7 +287,6 @@ class _ProductsState extends State<Products> {
 }
 
 class single_prod extends StatelessWidget {
-  // const single_prod({super.key});
   final product_name;
   final product_picture;
   final prod_old_price;
