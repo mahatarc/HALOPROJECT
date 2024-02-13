@@ -9,6 +9,14 @@ class FeedProfile extends StatefulWidget {
 }
 
 class _FeedProfileState extends State<FeedProfile> {
+  Future<void> _refresh() async {
+    // Simulate refreshing data
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      // Add logic to fetch updated data from Firebase or other data source
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,29 +44,32 @@ class _FeedProfileState extends State<FeedProfile> {
           final userData = snapshot.data!.data() as Map?;
           final List<dynamic> userPosts = userData?['posts'] ?? [];
 
-          return ListView.builder(
-            itemCount: userPosts.length,
-            itemBuilder: (context, index) {
-              return StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('posts')
-                    .doc(userPosts[index])
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox.shrink();
-                  }
-                  if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return SizedBox.shrink();
-                  }
-                  final postData = snapshot.data!.data() as Map?;
-                  return PostView(
-                    content: postData?['content'] ?? '',
-                    imageUrl: postData?['image_url'],
-                  );
-                },
-              );
-            },
+          return RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.builder(
+              itemCount: userPosts.length,
+              itemBuilder: (context, index) {
+                return StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('posts')
+                      .doc(userPosts[index])
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox.shrink();
+                    }
+                    if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return SizedBox.shrink();
+                    }
+                    final postData = snapshot.data!.data() as Map?;
+                    return PostView(
+                      content: postData?['content'] ?? '',
+                      imageUrl: postData?['image_url'],
+                    );
+                  },
+                );
+              },
+            ),
           );
         },
       ),
