@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/homepage/home_icons/cart.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/login_page.dart';
+import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
+import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 

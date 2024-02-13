@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/driver%20mode/driver_profile.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/driver%20mode/driverdashboard.dart';
-//import 'package:flutterproject/features/userauth/presenation/pages/driver%20mode/driver_profile.dart';
+import 'package:flutterproject/features/driver%20mode/driver_profile.dart';
+import 'package:flutterproject/features/driver%20mode/driverdashboard.dart';
+
 
 
 

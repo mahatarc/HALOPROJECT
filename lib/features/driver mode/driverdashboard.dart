@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/driver%20mode/CompletedOrdersScreen.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/driver%20mode/driver_profile.dart';
-import 'package:flutterproject/features/userauth/presenation/pages/driver%20mode/myearnings.dart';
+import 'package:flutterproject/features/driver%20mode/CompletedOrdersScreen.dart';
+import 'package:flutterproject/features/driver%20mode/driver_profile.dart';
+import 'package:flutterproject/features/driver%20mode/myearnings.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
