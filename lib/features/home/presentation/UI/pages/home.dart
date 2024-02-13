@@ -133,7 +133,6 @@ class _HomeState extends State<Home> {
                       SizedBox(height: 20),
 
                       ///Categoriess---------------------------------------------------------
-
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: Row(
@@ -235,63 +234,17 @@ class RecommendProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Card(
-    //   child: Material(
-    //       child: InkWell(
-    //     onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-    //         //passing the values of products of this page to product details page
-    //         builder: (context) => new ProductsDetails(
-    //               product_detail_name: product_name,
-    //               product_detail_price: prod_price,
-    //               product_detail_picture: product_picture,
-    //             ))),
-    //     child: GridTile(
-    //       footer: Container(
-    //         color: Colors.white70,
-    //         child: ListTile(
-    //           leading: Text(
-    //             product_name,
-    //             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-    //           ),
-    //           title: Text(
-    //             "\रु$prod_price",
-    //             style: TextStyle(
-    //               color: Colors.brown,
-    //               fontWeight: FontWeight.w800,
-    //             ),
-    //           ),
-    //           subtitle: Text(
-    //             "\रु",
-    //             style: TextStyle(
-    //                 color: Colors.black,
-    //                 fontWeight: FontWeight.w800,
-    //                 decoration: TextDecoration.lineThrough),
-    //           ),
-    //         ),
-    //       ),
-    //       child: Image.asset(
-    //         product_picture,
-    //         fit: BoxFit.cover,
-    //       ),
-    //     ),
-    //   )),
-    // );
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12),
       child: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance.collection('products').get(),
-        // future: FirebaseFirestore.instance
-        //     .collection('categories')
-        //     .doc(selectedCategory)
-        //     .collection('products')
-        //     .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print('LOadingggggggggggggggggg');
+            print('Loading');
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            print('Errorrrrrrrrrrr');
+            print('Errorr');
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (snapshot.connectionState == ConnectionState.done) {
@@ -299,24 +252,26 @@ class RecommendProduct extends StatelessWidget {
                 snapshot.data!.docs.cast<QueryDocumentSnapshot>();
             print(products.first);
             print('categories receieved');
-            return GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                var productData =
-                    products[index].data() as Map<String, dynamic>;
+            return Expanded(
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: products.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  var productData =
+                      products[index].data() as Map<String, dynamic>;
 
-                return SingleProduct(
-                  product_name: productData['name'],
-                  product_picture: productData['image_url'],
-                  prod_price: productData['price'],
-                  prod_details: productData['product_details'],
-                );
-              },
+                  return SingleProduct(
+                    product_name: productData['name'],
+                    product_picture: productData['image_url'],
+                    prod_price: productData['price'],
+                    prod_details: productData['product_details'],
+                  );
+                },
+              ),
             );
           }
           return Scaffold();
