@@ -3,7 +3,7 @@ const categoriesList = ['Seed', 'Tools', 'Plant'];
 const categoryImages = [
   'images/crops.png',
   'images/gardening.png',
-  'images/machineries.jpg',
+  'images/plants.png',
 ];
 
 var Crops_list = [
