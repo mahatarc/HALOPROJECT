@@ -65,130 +65,137 @@ class _LoginPageState extends State<LoginPage> {
                   Align(
                     alignment: Alignment.center,
                     child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset('images/logo.png',
-                              width: 250, height: 200),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          const Text(
-                            'Namaste !!',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 248, 249, 247),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            // padding: const EdgeInsets.all(16),
-                            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                            child: Formcontainerwidget(
-                              controller: _emailController,
-                              hinttext: "Email Address",
-                              isPasswordField: false,
-                              keyboardType: TextInputType.emailAddress,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset('images/logo.png',
+                                width: 200, height: 220),
+                            const SizedBox(
+                              height: 15,
                             ),
-                          ),
-                          Padding(
-                            // padding: const EdgeInsets.all(16),
-                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                            child: Formcontainerwidget(
-                              controller: _passwordController,
-                              hinttext: "Password",
-                              isPasswordField: true,
-                              keyboardType: TextInputType.visiblePassword,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                signInBloc.add(SignInButtonPressedEvent(
-                                    email: _emailController.text,
-                                    password: _passwordController.text));
-                              },
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  signInBloc.add(SignInButtonPressedEvent(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                  ));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary:
-                                      const Color.fromARGB(255, 156, 199, 107),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                  minimumSize: const Size(double.infinity, 50),
-                                ),
-                                child: const Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => BlocProvider(
-                                            create: (context) =>
-                                                ForgotPasswordBloc(),
-                                            child: const ForgotPasswordScreen(),
-                                          )));
-                            },
-                            child: const Text(
-                              'Forgot Password?',
+                            const Text(
+                              'Namaste !!',
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 156, 199, 107),
+                                  color: Color.fromARGB(255, 248, 249, 247),
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Don't have an account?",
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                              // padding: const EdgeInsets.all(16),
+                              padding:
+                                  const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                              child: Formcontainerwidget(
+                                controller: _emailController,
+                                hinttext: "Email Address",
+                                isPasswordField: false,
+                                keyboardType: TextInputType.emailAddress,
+                              ),
+                            ),
+                            Padding(
+                              // padding: const EdgeInsets.all(16),
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                              child: Formcontainerwidget(
+                                controller: _passwordController,
+                                hinttext: "Password",
+                                isPasswordField: true,
+                                keyboardType: TextInputType.visiblePassword,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  signInBloc.add(SignInButtonPressedEvent(
+                                      email: _emailController.text,
+                                      password: _passwordController.text));
+                                },
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    signInBloc.add(SignInButtonPressedEvent(
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                    ));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: const Color.fromARGB(
+                                        255, 156, 199, 107),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                    ),
+                                    minimumSize:
+                                        const Size(double.infinity, 50),
+                                  ),
+                                  child: const Text(
+                                    "Login",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BlocProvider(
+                                              create: (context) =>
+                                                  ForgotPasswordBloc(),
+                                              child:
+                                                  const ForgotPasswordScreen(),
+                                            )));
+                              },
+                              child: const Text(
+                                'Forgot Password?',
                                 style: TextStyle(
-                                    color: Color.fromARGB(255, 248, 249, 247),
+                                    color: Color.fromARGB(255, 156, 199, 107),
                                     fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  signInBloc
-                                      .add(SignUpButtonPressedNavigateEvent());
-                                },
-                                child: const Text(
-                                  'Sign Up',
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Don't have an account?",
                                   style: TextStyle(
-                                      color: Color.fromARGB(255, 156, 199, 107),
+                                      color: Color.fromARGB(255, 248, 249, 247),
                                       fontWeight: FontWeight.bold),
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    signInBloc.add(
+                                        SignUpButtonPressedNavigateEvent());
+                                  },
+                                  child: const Text(
+                                    'Sign Up',
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 156, 199, 107),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   )

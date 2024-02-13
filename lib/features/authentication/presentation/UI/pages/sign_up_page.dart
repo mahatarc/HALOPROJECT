@@ -57,7 +57,7 @@ class _SignUpPageState extends State<SignUppage> {
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
-                          const Color.fromARGB(255, 51, 76, 56),
+                          const Color.fromARGB(200, 51, 76, 56),
                           Colors.black.withOpacity(0.15)
                         ],
                             begin: Alignment.bottomCenter,
@@ -66,148 +66,155 @@ class _SignUpPageState extends State<SignUppage> {
                   Align(
                     alignment: Alignment.center,
                     child: SingleChildScrollView(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('images/logo.png',
-                                width: 250, height: 200),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Container(
-                              child: Text(
-                                'Please Sign Up To Your Account',
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset('images/logo.png',
+                                  width: 200, height: 220),
+                              SizedBox(
+                                height: 30,
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                              child: Formcontainerwidget(
-                                controller: _nameController,
-                                hinttext: "Name",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.visiblePassword,
+                              Container(
+                                child: Text(
+                                  'Please Sign Up To Your Account',
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.white),
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                              child: Formcontainerwidget(
-                                controller: _phoneNoController,
-                                hinttext: "Phone Number",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.phone,
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                              child: Formcontainerwidget(
-                                controller: _emailController,
-                                hinttext: "Email Address",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.emailAddress,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                child: Formcontainerwidget(
+                                  controller: _nameController,
+                                  hinttext: "Name",
+                                  isPasswordField: false,
+                                  keyboardType: TextInputType.visiblePassword,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                              child: Formcontainerwidget(
-                                controller: _passwordController,
-                                hinttext: "Password",
-                                isPasswordField: true,
-                                keyboardType: TextInputType.visiblePassword,
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                signUpBloc.add(
-                                  SignUpButtonPressedEvent(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    user: UserModel(
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                child: Formcontainerwidget(
+                                  controller: _phoneNoController,
+                                  hinttext: "Phone Number",
+                                  isPasswordField: false,
+                                  keyboardType: TextInputType.phone,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                                child: Formcontainerwidget(
+                                  controller: _emailController,
+                                  hinttext: "Email Address",
+                                  isPasswordField: false,
+                                  keyboardType: TextInputType.emailAddress,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                                child: Formcontainerwidget(
+                                  controller: _passwordController,
+                                  hinttext: "Password",
+                                  isPasswordField: true,
+                                  keyboardType: TextInputType.visiblePassword,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  signUpBloc.add(
+                                    SignUpButtonPressedEvent(
                                       email: _emailController.text,
-                                      name: _nameController.text,
-                                      role: 'buyer',
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    signUpBloc.add(
-                                      SignUpButtonPressedEvent(
+                                      password: _passwordController.text,
+                                      user: UserModel(
                                         email: _emailController.text,
-                                        password: _passwordController.text,
-                                        user: UserModel(
-                                          email: _emailController.text,
-                                          name: _nameController.text,
-                                          role: 'buyer',
-                                        ),
+                                        name: _nameController.text,
+                                        role: 'buyer',
                                       ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    primary: const Color.fromARGB(
-                                        255, 156, 199, 107),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0),
                                     ),
-                                    minimumSize:
-                                        const Size(double.infinity, 50),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      signUpBloc.add(
+                                        SignUpButtonPressedEvent(
+                                          email: _emailController.text,
+                                          password: _passwordController.text,
+                                          user: UserModel(
+                                            email: _emailController.text,
+                                            name: _nameController.text,
+                                            role: 'buyer',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: const Color.fromARGB(
+                                          255, 156, 199, 107),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(0),
+                                      ),
+                                      minimumSize:
+                                          const Size(double.infinity, 50),
+                                    ),
+                                    child: const Text(
+                                      "Sign Up",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
                                   ),
-                                  child: const Text(
-                                    "Sign Up",
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Already have an account?",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 20,
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Already have an account?",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                  SizedBox(
+                                    width: 5,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    signUpBloc.add(LoginButtonPressedEvent());
-                                  },
-                                  child: Text(
-                                    'Login',
-                                    style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 156, 199, 107),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )
-                              ],
-                            )
-                          ]),
+                                  GestureDetector(
+                                    onTap: () {
+                                      signUpBloc.add(LoginButtonPressedEvent());
+                                    },
+                                    child: Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          color: const Color.fromARGB(
+                                              255, 156, 199, 107),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ]),
+                      ),
                     ),
                   ),
                 ],
