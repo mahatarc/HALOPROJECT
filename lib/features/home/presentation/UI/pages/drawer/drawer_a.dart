@@ -43,7 +43,13 @@ class Mydrawer extends StatelessWidget {
                 ),
                 accountName: Text("${userData['name']}"),
                 accountEmail: Text("${userData['email']}"),
-                currentAccountPicture: Icon(Icons.person_2_rounded, size: 50),
+                currentAccountPicture: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: userData['profilePicture'] != null
+                      ? NetworkImage(userData['profilePicture'])
+                          as ImageProvider
+                      : AssetImage('images/profile.jpg'),
+                ),
               ),
               GestureDetector(
                 onTap: () {
