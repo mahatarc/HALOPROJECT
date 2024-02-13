@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterproject/features/driver%20mode/AcceptOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/CompletedOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/PendingOrdeersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/driver_profile.dart';
@@ -67,14 +68,14 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildOrderStatusCard('Accept Orders', 3, () {
-                  // Navigate to the Accept Orders screen
+                  
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AcceptOrdersScreen()),
+                    MaterialPageRoute(builder: (context) => AcceptedOrdersPage()),
                   );
                 }),
                 _buildOrderStatusCard('Pending Orders', 6, () {
-                  // Navigate to the Pending Orders screen
+                  
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => PendingOrdersPage()),
