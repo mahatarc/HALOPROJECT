@@ -48,7 +48,7 @@ class _EditProductState extends State<EditProduct> {
               child: GridTile(
                 child: Container(
                   color: Colors.white,
-                  child: Image.asset(
+                  child: Image.network(
                     widget.edit_picture,
                     fit: BoxFit.contain,
                   ),
@@ -70,33 +70,33 @@ class _EditProductState extends State<EditProduct> {
                     subtitle: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Old Price',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              TextField(
-                                controller: oldPriceController,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Old Price',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Expanded(
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       Text(
+                        //         'Old Price',
+                        //         style: TextStyle(
+                        //           fontWeight: FontWeight.bold,
+                        //           fontSize: 16,
+                        //         ),
+                        //       ),
+                        //       TextField(
+                        //         controller: oldPriceController,
+                        //         style: TextStyle(
+                        //           fontWeight: FontWeight.bold,
+                        //           fontSize: 20,
+                        //           decoration: TextDecoration.lineThrough,
+                        //         ),
+                        //         keyboardType: TextInputType.number,
+                        //         decoration: InputDecoration(
+                        //           border: InputBorder.none,
+                        //           hintText: 'Old Price',
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

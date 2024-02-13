@@ -86,19 +86,21 @@ class _SignUpPageState extends State<SignUppage> {
                               SizedBox(
                                 height: 10,
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
+
+
                               Formcontainerwidget(
                                 controller: _nameController,
                                 hinttext: "Name",
                                 isPasswordField: false,
-                                keyboardType: TextInputType.name,
+                                keyboardType: TextInputType.visiblePassword,
                               ),
+
                               SizedBox(
                                 height: 10,
                               ),
+                             
                               Formcontainerwidget(
+
                                 controller: _phoneNoController,
                                 hinttext: "Phone Number",
                                 isPasswordField: false,
@@ -132,7 +134,6 @@ class _SignUpPageState extends State<SignUppage> {
                                       password: _passwordController.text,
                                       user: UserModel(
                                         email: _emailController.text,
-                                        password: _passwordController.text,
                                         name: _nameController.text,
                                         role: 'buyer',
                                       )));

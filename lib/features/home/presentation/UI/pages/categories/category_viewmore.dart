@@ -2,6 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
 import 'package:flutterproject/consts/lists.dart';
 
+class Category extends StatelessWidget {
+  final String imagePath;
+  final String categoryName;
+  // Add categoryType parameter
+
+  Category({
+    required this.imagePath,
+    required this.categoryName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to CategoryDetails page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CategoryDetails(
+              selectedCategory: categoryName,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        height: 200,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              imagePath,
+              width: 100,
+              height: 60,
+            ),
+            Text(categoryName)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class CategoryScreen extends StatelessWidget {
   const CategoryScreen({Key? key});
 
@@ -32,7 +73,6 @@ class CategoryScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => CategoryDetails(
                       selectedCategory: categoriesList[index],
-                      title: categoriesList[index],
                     ),
                   ),
                 );
