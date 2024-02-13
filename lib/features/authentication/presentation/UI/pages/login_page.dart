@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
             return Scaffold(
               body: Stack(
                 children: [
-                  Image(
+                  const Image(
                     fit: BoxFit.cover,
                     height: double.infinity,
                     width: double.infinity,
@@ -56,26 +56,23 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: BoxDecoration(
                         gradient: LinearGradient(
                             colors: [
-                          Color.fromARGB(255, 51, 76, 56),
+                          const Color.fromARGB(255, 51, 76, 56),
                           Colors.black.withOpacity(0.15)
                         ],
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter)),
                   ),
-                  SingleChildScrollView(
-                    child: Align(
-                      alignment: Alignment.center,
+                  Align(
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Image.asset('images/logo.png',
-                              width: 200, height: 150),
+                              width: 250, height: 200),
                           const SizedBox(
-                            height: 5,
-                          ),
-                          const SizedBox(
-                            height: 10,
+                            height: 15,
                           ),
                           const Text(
                             'Namaste !!',
@@ -88,7 +85,8 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            // padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
                             child: Formcontainerwidget(
                               controller: _emailController,
                               hinttext: "Email Address",
@@ -97,7 +95,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            // padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
                             child: Formcontainerwidget(
                               controller: _passwordController,
                               hinttext: "Password",
@@ -113,20 +112,28 @@ class _LoginPageState extends State<LoginPage> {
                                     email: _emailController.text,
                                     password: _passwordController.text));
                               },
-                              child: Container(
-                                // width: 100,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color:
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  signInBloc.add(SignInButtonPressedEvent(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  ));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary:
                                       const Color.fromARGB(255, 156, 199, 107),
-                                  borderRadius: BorderRadius.circular(10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0),
+                                  ),
+                                  minimumSize: const Size(double.infinity, 50),
                                 ),
-                                child: const Center(
-                                  child: Text("Login",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
                             ),
@@ -136,19 +143,17 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              //BlocProvider.of<ForgotPasswordBloc>(context).add(
-                              //ForgetPasswordButtonPressedNavigateEvent());
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => BlocProvider(
                                             create: (context) =>
                                                 ForgotPasswordBloc(),
-                                            child: ForgotPasswordScreen(),
+                                            child: const ForgotPasswordScreen(),
                                           )));
                             },
                             child: const Text(
-                              ' Forgot Password?',
+                              'Forgot Password?',
                               style: TextStyle(
                                   color: Color.fromARGB(255, 156, 199, 107),
                                   fontWeight: FontWeight.bold),
@@ -193,11 +198,12 @@ class _LoginPageState extends State<LoginPage> {
           } else if (state is SignInErrorState) {
             return const Scaffold();
           } else if (state is SignInNavigateToBuyerHomePageActionState) {
-            return Homepage();
+            return const Homepage();
           } else if (state is SignInNavigateToSellerHomePageActionState) {
             return SellerDashboard();
-          } else
-            return Scaffold();
+          } else {
+            return const Scaffold();
+          }
         },
         listener: (context, state) {
           if (state is SignUpPressedNavigateToSignUpActionState) {
@@ -206,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(
                     builder: (context) => BlocProvider(
                           create: (context) => SignUpBloc(),
-                          child: SignUppage(),
+                          child: const SignUppage(),
                         )));
           } else if (state is SignInNavigateToBuyerHomePageActionState) {
             Navigator.push(
@@ -214,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(
                     builder: (context) => BlocProvider(
                           create: (context) => HomePageBloc(),
-                          child: Homepage(),
+                          child: const Homepage(),
                         )));
           } else if (state is SignInNavigateToSellerHomePageActionState) {
             Navigator.push(
