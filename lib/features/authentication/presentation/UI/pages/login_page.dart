@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ));
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: const Color.fromARGB(
+                                    backgroundColor: const Color.fromARGB(
                                         255, 156, 199, 107),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(0),
