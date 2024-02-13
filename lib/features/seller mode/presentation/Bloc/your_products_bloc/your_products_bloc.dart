@@ -31,13 +31,14 @@ class YourProductsBloc extends Bloc<YourProductsEvents, YourProductsState> {
         //converts every docs to map string dynamic and made a list of map string dynamic
         products.add(document.data() as Map<String, dynamic>);
       });
-
+      
       for (var productData in products) {
         ProductModel productModel =
             ProductModel.fromMap(productData); //productdata==map string dynamic
         print(productModel); //product model=object
         productModelList.add(productModel); //added object to list
       }
+      print(productModelList);
       print('successful');
       emit(YourProductsLoadedState(productModelList));
     } catch (e) {

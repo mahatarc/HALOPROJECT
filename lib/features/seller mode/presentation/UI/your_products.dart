@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/Bloc/your_products_bloc/your_products_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/edit_product.dart';
 
-
 class YourProducts extends StatefulWidget {
   const YourProducts({Key? key});
 
@@ -26,14 +25,15 @@ class _YourProductsState extends State<YourProducts> {
     return BlocProvider<YourProductsBloc>(
       create: (context) => yourProductsBloc,
       child: BlocBuilder<YourProductsBloc, YourProductsState>(
-        bloc:yourProductsBloc,
+        bloc: yourProductsBloc,
         builder: (context, state) {
           if (state is YourProductsLoadingState) {
             return Center(
               child: CircularProgressIndicator(),
             );
           } else if (state is YourProductsLoadedState) {
-            final listOfProducts = state.products; //access productModelList from Bloc
+            final listOfProducts =
+                state.products; //access productModelList from Bloc
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.green[200],
@@ -44,7 +44,6 @@ class _YourProductsState extends State<YourProducts> {
                   ElevatedButton(
                     onPressed: () async {
                       yourProductsBloc.add(YourProductsInitialEvent());
-                  
                     },
                     child: Text('Refresh'),
                   ),
@@ -56,6 +55,8 @@ class _YourProductsState extends State<YourProducts> {
                           productname: listOfProducts[index].productname,
                           productpicture: listOfProducts[index].productpicture,
                           productprice: listOfProducts[index].productprice,
+                          categorytype: listOfProducts[index].categorytype,
+                          productdetails: listOfProducts[index].productdetails,
                         );
                       },
                     ),
@@ -76,11 +77,15 @@ class SingleProduct extends StatelessWidget {
   final productname;
   final productpicture;
   final productprice;
+  final productdetails;
+  final categorytype;
 
   SingleProduct({
     this.productname,
     this.productpicture,
     this.productprice,
+    this.productdetails,
+    this.categorytype,
   });
 
   @override
@@ -116,6 +121,13 @@ class SingleProduct extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.brown,
                     fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Text(
+                  "Category: $categorytype",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
                   ),
                 ),
               ],

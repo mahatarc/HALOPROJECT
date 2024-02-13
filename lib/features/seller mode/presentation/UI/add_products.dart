@@ -29,10 +29,12 @@ class AddProductForm extends StatefulWidget {
 }
 
 class _AddProductFormState extends State<AddProductForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   File? _image;
+  TextEditingController _detailsController = TextEditingController();
+  String? _categorytype;
   late AddProductsBloc addProductsBloc;
 
   @override
@@ -61,84 +63,165 @@ class _AddProductFormState extends State<AddProductForm> {
         if (state is AddProductInitialState) {
           _nameController.clear();
           _priceController.clear();
+          _detailsController.clear();
+
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.green[200],
               title: Text('Add Product'),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    GestureDetector(
-                      onTap: _getImage,
-                      child: _image == null
-                          ? Container(
-                              height: 200,
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Icon(Icons.add_a_photo),
-                              ),
-                            )
-                          : Image.file(
-                              _image!,
-                              height: 200,
-                              fit: BoxFit.cover,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        GestureDetector(
+                          onTap: _getImage,
+                          child: _image == null
+                              ? Container(
+                                  height: 200,
+                                  color: Colors.grey[300],
+                                  child: Center(
+                                    child: Icon(Icons.add_a_photo),
+                                  ),
+                                )
+                              : Image.file(
+                                  _image!,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Product Name',
+                            border: OutlineInputBorder(),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the product name';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 12),
+                        TextFormField(
+                          controller: _priceController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Product Price',
+                            border: OutlineInputBorder(),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the product price';
+                            }
+                            return null;
+                          },
+                        ),
+                        // SizedBox(height: 16),
+                        // TextFormField(
+                        //   controller: _nameController,
+                        //   decoration: InputDecoration(
+                        //     labelText: 'Product Category',
+                        //     border: OutlineInputBorder(),
+                        //     filled: true,
+                        //     fillColor: Colors.grey[200],
+                        //   ),
+                        //   validator: (value) {
+                        //     if (value == null || value.isEmpty) {
+                        //       return 'Please enter the product category';
+                        //     }
+                        //     return null;
+                        //   },
+                        // ),
+                        SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+                          value: _categorytype,
+                          items: [
+                            // Replace this with your list of category options
+                            DropdownMenuItem<String>(
+                              value: 'Seed',
+                              child: Text('Seed'),
                             ),
+                            DropdownMenuItem<String>(
+                              value: 'Plant',
+                              child: Text('Plant'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Tools',
+                              child: Text('Tools'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            _categorytype = value;
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Product Category',
+                            border: OutlineInputBorder(),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                          ),
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please select the product category';
+                          //   }
+                          //   return null;
+                          // },
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _detailsController,
+                          decoration: InputDecoration(
+                            labelText: 'Product Details',
+                            border: OutlineInputBorder(),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter the product description';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_image != null && _categorytype != null) {
+                              addProductsBloc.add(AddProductsButtonPressedEvent(
+                                name: _nameController,
+                                price: _priceController,
+                                image: _image!,
+                                details: _detailsController,
+                                categorytype: _categorytype!,
+                              ));
+                            } else {
+                              // Handle the case where _image or _categorytype is null
+                              // For example, you can show a snackbar or a dialog to inform the user
+                              // or perform some other action based on your app's requirements.
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Please select an image and product category.'),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text('Add Product'),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Product Name',
-                        border: OutlineInputBorder(),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the product name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 12),
-                    TextFormField(
-                      controller: _priceController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Product Price',
-                        border: OutlineInputBorder(),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the product price';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        addProductsBloc.add(AddProductsButtonPressedEvent(
-                            name: _nameController,
-                            price: _priceController,
-                            image: _image!));
-                      },
-                      child: Text('Add Product'),
-                    ),
-                    //_productNameController.clear();
-                    // _productPriceController.clear();
-                    // setState(() {
-                    //   _image = null;
-                    // });
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
