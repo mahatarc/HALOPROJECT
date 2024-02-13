@@ -17,8 +17,7 @@ class SignUppage extends StatefulWidget {
 class _SignUpPageState extends State<SignUppage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _firstnameController = TextEditingController();
-  TextEditingController _lastnameController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNoController = TextEditingController();
 
   late SignUpBloc signUpBloc;
@@ -31,8 +30,7 @@ class _SignUpPageState extends State<SignUppage> {
 
   @override
   void dispose() {
-    _firstnameController.dispose();
-    _lastnameController.dispose();
+    _nameController.dispose();
     _phoneNoController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -89,19 +87,10 @@ class _SignUpPageState extends State<SignUppage> {
                                 height: 10,
                               ),
                               Formcontainerwidget(
-                                controller: _firstnameController,
-                                hinttext: "First Name",
+                                controller: _nameController,
+                                hinttext: "Name",
                                 isPasswordField: false,
                                 keyboardType: TextInputType.visiblePassword,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Formcontainerwidget(
-                                controller: _lastnameController,
-                                hinttext: "Last Name",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.name,
                               ),
                               SizedBox(
                                 height: 10,
@@ -139,11 +128,10 @@ class _SignUpPageState extends State<SignUppage> {
                                       email: _emailController.text,
                                       password: _passwordController.text,
                                       user: UserModel(
-                                          email: _emailController.text,
-                                          firstname: _firstnameController.text,
-                                          lastname: _lastnameController.text,
-                                          role:'buyer',
-                                          )));
+                                        email: _emailController.text,
+                                        name: _nameController.text,
+                                        role: 'buyer',
+                                      )));
                                 },
                                 child: Container(
                                   // width: 100,
