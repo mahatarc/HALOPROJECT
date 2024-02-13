@@ -1,10 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/CompletedOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_profile.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/myearnings.dart';
 
 class DeliveryBoyDashboard extends StatefulWidget {
+  const DeliveryBoyDashboard({super.key});
+
   @override
   _DeliveryBoyDashboardState createState() => _DeliveryBoyDashboardState();
 }
@@ -16,20 +17,20 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 32),
-            Text(
+            const SizedBox(height: 32),
+            const Text(
               'Welcome, Delivery Boy!',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SwitchListTile(
               title: Text(
                 isAvailable ? 'You are Available' : 'You are Not Available',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
               value: isAvailable,
               onChanged: (value) {
@@ -37,15 +38,15 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
                   isAvailable = value;
                 });
               },
-              activeColor: Color.fromARGB(255, 26, 157, 31),
+              activeColor: const Color.fromARGB(255, 26, 157, 31),
               inactiveTrackColor: Colors.red,
             ),
-            SizedBox(height: 32),
-            Text(
+            const SizedBox(height: 32),
+            const Text(
               'Today Orders',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 18),
+            const SizedBox(height: 18),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -54,7 +55,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AcceptOrdersScreen()),
+                        builder: (context) => const AcceptOrdersScreen()),
                   );
                 }),
                 _buildOrderStatusCard('Pending Orders', 6, () {
@@ -62,12 +63,12 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PendingOrdersScreen()),
+                        builder: (context) => const PendingOrdersScreen()),
                   );
                 }),
               ],
             ),
-            SizedBox(height: 18),
+            const SizedBox(height: 18),
             Column(
               children: [
                 _buildOrderStatusCard('Completed Orders', 5, () {
@@ -85,7 +86,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0, // Default selected tab
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -103,7 +104,8 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DeliveryBoyDashboard()),
+              MaterialPageRoute(
+                  builder: (context) => const DeliveryBoyDashboard()),
             );
           } else if (index == 1) {
             Navigator.push(
@@ -125,7 +127,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
       String title, int count, VoidCallback onPressed) {
     return Card(
       elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       color: Colors.lightGreen,
       child: Stack(
         children: [
@@ -136,9 +138,10 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
               ],
             ),
           ),
@@ -147,10 +150,10 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             right: 9,
             child: CircleAvatar(
               radius: 10,
-              backgroundColor: Color.fromARGB(255, 223, 114, 114),
+              backgroundColor: const Color.fromARGB(255, 223, 114, 114),
               child: Text(
                 '$count',
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
             ),
           ),
@@ -169,13 +172,15 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
 }
 
 class AcceptOrdersScreen extends StatelessWidget {
+  const AcceptOrdersScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Accept Orders'),
+        title: const Text('Accept Orders'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Accept Orders Screen'),
       ),
     );
@@ -183,13 +188,15 @@ class AcceptOrdersScreen extends StatelessWidget {
 }
 
 class PendingOrdersScreen extends StatelessWidget {
+  const PendingOrdersScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pending Orders'),
+        title: const Text('Pending Orders'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Pending Orders Screen'),
       ),
     );
@@ -197,13 +204,15 @@ class PendingOrdersScreen extends StatelessWidget {
 }
 
 class CompletedOrdersScreen extends StatelessWidget {
+  const CompletedOrdersScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Completed Orders'),
+        title: const Text('Completed Orders'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Completed Orders Screen'),
       ),
     );
@@ -211,13 +220,15 @@ class CompletedOrdersScreen extends StatelessWidget {
 }
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Profile Screen'),
       ),
     );

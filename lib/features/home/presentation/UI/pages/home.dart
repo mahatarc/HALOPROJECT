@@ -9,6 +9,7 @@ import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -42,7 +43,6 @@ class _HomepageState extends State<Homepage> {
         type:
             BottomNavigationBarType.fixed, // Set type to fixed for even spacing
         selectedItemColor: Color.fromARGB(255, 64, 64, 64),
-        // unselectedItemColor: Colors.black.withOpacity(.5),
         backgroundColor: Colors.green[100],
         currentIndex: currentIndex,
         onTap: (index) {
@@ -97,12 +97,18 @@ class _HomeState extends State<Home> {
           if (state is HomePageInitialState) {
             return Scaffold(
               appBar: AppBar(
-                title: Text('Halo'),
+                title: Text(
+                  'Halo',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(),
+                  ),
+                ),
                 backgroundColor: Colors.green[100],
                 actions: [
                   Icon(Icons.notification_add),
                 ],
               ),
+              backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -117,7 +123,12 @@ class _HomeState extends State<Home> {
                         ),
                         child: TextFormField(
                           decoration: InputDecoration(
-                            label: Text("Search your product..."),
+                            label: Text(
+                              "Search your product...",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(),
+                              ),
+                            ),
                             border: InputBorder.none,
                             prefixIcon: Icon(
                               Icons.search,
@@ -133,40 +144,49 @@ class _HomeState extends State<Home> {
                       SizedBox(height: 20),
 
                       ///Categoriess---------------------------------------------------------
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Categories',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              textScaleFactor: 1.5,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                homePageBloc.add(CategoriesPressedEvent());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 239, 244,
-                                      249), // Change the background color
-                                  onPrimary: const Color.fromARGB(
-                                      255, 11, 3, 3), // Change the text color
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Categories',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                textScaleFactor: 1.5,
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  homePageBloc.add(CategoriesPressedEvent());
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 239, 244, 249),
+                                  onPrimary:
+                                      const Color.fromARGB(255, 11, 3, 3),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                  )),
-                              child: Text(
-                                'View More',
-                                style: TextStyle(
-                                  fontSize: 16, // Adjust text size
-                                  fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                child: Text(
+                                  'View More',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Container(
+                        color: Colors.white,
                         height: 100.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -177,23 +197,38 @@ class _HomeState extends State<Home> {
                               child: Category(
                                 imagePath: categoryImages[index],
                                 categoryName: categoriesList[index],
-                                //categorytype: 'category_type',
                               ),
                             );
                           },
                         ),
                       ),
+                      SizedBox(height: 20),
 
                       // Recommended Section
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Recommended for you',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textScaleFactor: 1.5,
+                      Container(
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Recommended for you',
+                                /* style: TextStyle(fontWeight: FontWeight.bold,
+                                ),*/
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                textScaleFactor: 1.5,
+                              ),
+                            ),
+                            RecommendProduct(),
+                          ],
                         ),
                       ),
-                      RecommendProduct(),
                     ],
                   ),
                 ),
