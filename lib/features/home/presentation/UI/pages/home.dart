@@ -8,7 +8,6 @@ import 'package:flutterproject/consts/lists.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer_a.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
 class Homepage extends StatefulWidget {

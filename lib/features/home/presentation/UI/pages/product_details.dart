@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/payment.dart';
+import 'package:flutterproject/buy_now/location.dart';
 
 class ProductsDetails extends StatefulWidget {
   final product_detail_name;
@@ -158,7 +158,8 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Payment()),
+                  MaterialPageRoute(
+                      builder: (context) => DeliveryAddressScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
