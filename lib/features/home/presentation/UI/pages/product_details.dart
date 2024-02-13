@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterproject/buy_now/location.dart';
+import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 
 class ProductsDetails extends StatefulWidget {
   final product_detail_name;
@@ -177,7 +178,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             ),
             // "Add to Cart" button
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: ((context) => CartPage())));
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
                 shape: RoundedRectangleBorder(

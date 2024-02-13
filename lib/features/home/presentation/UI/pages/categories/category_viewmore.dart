@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
-import 'package:flutterproject/consts/lists.dart';
 
 class Category extends StatelessWidget {
   final String imagePath;
@@ -102,3 +101,10 @@ class CategoryScreen extends StatelessWidget {
     );
   }
 }
+const categoriesList = ['Seed', 'Tools', 'Plant'];
+
+const categoryImages = [
+  'images/crops.png',
+  'images/gardening.png',
+  'images/plants.png',
+];

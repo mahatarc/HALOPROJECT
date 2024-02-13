@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/consts/lists.dart';
+//import 'package:flutterproject/consts/lists.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 
 class CategoryDetails extends StatefulWidget {
@@ -14,11 +14,6 @@ class CategoryDetails extends StatefulWidget {
 
 class _CategoryDetailsState extends State<CategoryDetails> {
   @override
-  // void initState() {
-  //   super.initState();
-  //   selectedCategory = widget.selectedCategory;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,11 +28,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
               .collection('products')
               .where('category_type', isEqualTo: widget.selectedCategory)
               .get(),
-          // future: FirebaseFirestore.instance
-          //     .collection('categories')
-          //     .doc(selectedCategory)
-          //     .collection('products')
-          //     .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               print('LOadingggggggggggggggggg');
@@ -55,27 +45,29 @@ class _CategoryDetailsState extends State<CategoryDetails> {
               return Container(
                 height: MediaQuery.of(context)
                     .size
-                    .height, // Or set any desired height
-                child: Expanded(
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: products.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      var productData =
-                          products[index].data() as Map<String, dynamic>;
-
-                      return SingleProduct(
-                        product_name: productData['name'],
-                        product_picture: productData['image_url'],
-                        prod_price: productData['price'],
-                        prod_details: productData['product_details'],
-                      );
-                    },
+                    .height, // Set any desired height
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio:
+                        1.0, // Aspect ratio of items (adjust as needed)
+                    mainAxisSpacing: 8.0, // Spacing between rows
+                    crossAxisSpacing: 8.0, // Spacing between columns
                   ),
+                  itemCount: products.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    var productData =
+                        products[index].data() as Map<String, dynamic>;
+
+                    return SingleProduct(
+                      product_name: productData['name'],
+                      product_picture: productData['image_url'],
+                      prod_price: productData['price'],
+                      prod_details: productData['product_details'],
+                    );
+                  },
                 ),
               );
             }
@@ -84,32 +76,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
         ),
       ),
     );
-  }
-}
-
-class Products extends StatefulWidget {
-  const Products({super.key});
-
-  @override
-  State<Products> createState() => _ProductsState();
-}
-
-class _ProductsState extends State<Products> {
-  @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: product_list.length,
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          return SingleProduct(
-            product_name: product_list[index]['name'],
-            product_picture: product_list[index]['picture'],
-            prod_price: product_list[index]['price'],
-          );
-        });
   }
 }
 
@@ -144,7 +110,10 @@ class SingleProduct extends StatelessWidget {
             child: ListTile(
               title: Text(
                 product_name,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
               ),
               subtitle: Text(
                 "\रु$prod_price",
