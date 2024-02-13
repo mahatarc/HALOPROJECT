@@ -53,10 +53,9 @@ class CategoryScreen extends StatelessWidget {
         backgroundColor: Colors.green[200],
         title: const Text("Categories"),
       ),
-      body: Container(
+      body: Padding(
         padding: EdgeInsets.all(12),
         child: GridView.builder(
-          shrinkWrap: true,
           itemCount: categoryImages.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
