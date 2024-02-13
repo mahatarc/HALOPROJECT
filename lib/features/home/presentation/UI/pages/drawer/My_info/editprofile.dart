@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'profile.dart';
@@ -17,13 +18,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController locationController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
+  //TextEditingController phoneNumberController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    nameController.text = widget.personalInfo.firstName;
+    nameController.text = widget.personalInfo.name;
     emailController.text = widget.personalInfo.email;
 
     // Initialize other controllers with existing data if needed.
@@ -60,26 +61,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // Save the updated information
                         PersonalInformation updatedInfo = PersonalInformation(
-                          firstName: nameController.text,
-                          lastName: widget.personalInfo.lastName,
+                          name: nameController.text,
                           email: emailController.text,
                           role: widget.personalInfo.role,
                         );
                         Navigator.pop(context, updatedInfo);
-
-                        // Update Firestore document with the new information
                         await FirebaseFirestore.instance
                             .collection('users')
-                            .doc(/* Provide user ID here */)
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
                             .update({
-                          'firstName': updatedInfo.firstName,
+                          'name': updatedInfo.name,
                           'email': updatedInfo.email,
-                          // Update other fields as needed.
                         });
-
-                        // Navigate back to the profile page and pass the updated information as a result
                         Navigator.pop(context, updatedInfo);
                       }
                     },

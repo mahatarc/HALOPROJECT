@@ -69,10 +69,10 @@ class _SellerRegistrationFormState extends State<SellerRegistrationForm> {
           .doc(user.uid)
           .set(seller.toJson());
       // Registration successful, navigate to seller dashboard
-       await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .update({'role': 'seller'});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({'role': 'seller'});
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SellerDashboard()),

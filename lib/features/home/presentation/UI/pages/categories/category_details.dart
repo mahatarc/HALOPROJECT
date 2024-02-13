@@ -129,8 +129,8 @@ class SingleProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Material(
-          child: InkWell(
+        child: Material(
+      child: InkWell(
         onTap: () => Navigator.of(context).push(new MaterialPageRoute(
             //passing the values of products of this page to product details page
             builder: (context) => new ProductsDetails(
@@ -142,32 +142,22 @@ class SingleProduct extends StatelessWidget {
           footer: Container(
             color: Colors.white70,
             child: ListTile(
-              leading: Text(
+              title: Text(
                 product_name,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              title: Text(
+              subtitle: Text(
                 "\रु$prod_price",
                 style: TextStyle(
                   color: Colors.brown,
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              subtitle: Text(
-                "\रु",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w800,
-                    decoration: TextDecoration.lineThrough),
-              ),
             ),
           ),
-          child: Image.network(
-            product_picture,
-            fit: BoxFit.cover,
-          ),
+          child: Image.network(product_picture, fit: BoxFit.fill),
         ),
-      )),
-    );
+      ),
+    ));
   }
 }
