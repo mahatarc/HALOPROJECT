@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/driverform.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/seller_registration.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -81,12 +82,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => SellerRegistrationForm()));
-            // builder: (context) => SellerDashboard()));
           },
         ),
         ListTile(
           title: Text('Driver Mode'),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DeliveryDriverRegistrationForm()));
+          },
         ),
       ],
     );
