@@ -140,7 +140,6 @@ class _SignUpPageState extends State<SignUppage> {
                                       password: _passwordController.text,
                                       user: UserModel(
                                           email: _emailController.text,
-                                          password: _passwordController.text,
                                           firstname: _firstnameController.text,
                                           lastname: _lastnameController.text,
                                           role:'buyer',

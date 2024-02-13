@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/feed/presentation/UI/pages/forum.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -7,151 +11,99 @@ class NewsFeed extends StatefulWidget {
 }
 
 class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.green[200],
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorWeight: 2.0,
-          tabs: [
-            Tab(
-              icon: Icon(Icons.feed),
-              text: "Feed",
-            ),
-            Tab(
-              icon: Icon(Icons.chat_bubble),
-              text: "Forum",
-            )
-          ],
-        ),
+        backgroundColor: Colors.green[100],
+        title: Text("Feed"),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          PostsListView(),
-          ForumHomeScreen(),
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          final postDocs = snapshot.data!.docs;
+          return ListView.separated(
+            itemCount: postDocs.length,
+            separatorBuilder: (context, index) => SizedBox(height: 15),
+            itemBuilder: (context, index) {
+              final post = postDocs[index];
+              return PostView(
+                content: post['content'],
+                imageUrl: post['image_url'],
+              );
+            },
+          );
+        },
       ),
-    );
-  }
-
-  Widget PostAuthorRow() {
-    const double avatarDiameter = 72;
-    return GestureDetector(
-      onTap: () {
-        // Add functionality for tapping on the author row
-      },
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
-              width: avatarDiameter,
-              height: avatarDiameter,
-              decoration: BoxDecoration(
-                color: Colors.green[100],
-                shape: BoxShape.circle,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(avatarDiameter / 2),
-                child: Image.asset(
-                  'images/profile.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Text(
-            'Alphawave',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.teal[400],
-            ),
-          )
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddPost()),
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green[100],
       ),
     );
   }
+}
 
-  Widget PostImage() {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Image.asset(
-        'images/agro.png',
-        fit: BoxFit.cover,
-      ),
-    );
-  }
+class PostView extends StatelessWidget {
+  final String content;
+  final String? imageUrl;
 
-  Widget PostCaption() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
-      child: Text(
-        'Hello World!',
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
+  const PostView({
+    required this.content,
+    this.imageUrl,
+  });
 
-  Widget PostView() {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PostDetailScreen()),
-        );
-      },
-      child: Card(
-        elevation: 4,
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 1,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            PostAuthorRow(),
-            PostCaption(),
-            PostImage(),
+            _buildUserInfo(),
+            SizedBox(height: 8),
+            Text(
+              content,
+              style: TextStyle(color: Colors.black87),
+            ),
+            SizedBox(height: 8),
+            _buildImageContainer(context),
+            SizedBox(height: 8),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                   icon: Icon(Icons.thumb_up),
-                  onPressed: () {
-                    // Add functionality for liking the post
-                  },
+                  onPressed: () {},
                 ),
                 IconButton(
                   icon: Icon(Icons.comment),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CommentsScreen()),
-                    );
-                  },
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.report),
+                  onPressed: () {},
                 ),
               ],
             ),
@@ -161,156 +113,216 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
     );
   }
 
-  Widget PostsListView() {
-    return ListView.separated(
-      itemCount: 3,
-      separatorBuilder: (context, index) => SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        return PostView();
+  Widget _buildUserInfo() {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox.shrink();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        final userData = snapshot.data!.data() as Map?;
+        return Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: userData != null &&
+                      userData['profilePicture'] != null
+                  ? NetworkImage(userData['profilePicture'])
+                  : AssetImage('images/profile.jpg') as ImageProvider<Object>?,
+            ),
+            SizedBox(width: 8),
+            Text(
+              userData != null
+                  ? '${userData["firstName"]} ${userData["lastName"]}'
+                  : 'Unknown User',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        );
       },
     );
   }
+
+  Widget _buildImageContainer(BuildContext context) {
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      return Container(
+        width: double.infinity,
+        height: 200,
+        child: Image.network(
+          imageUrl!,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Text('Error loading image');
+          },
+        ),
+      );
+    } else {
+      print("Invalid imageUrl: $imageUrl");
+      return SizedBox.shrink();
+    }
+  }
 }
 
-class User {
-  final String name;
-  final String profilePicture;
+class AddPost extends StatefulWidget {
+  const AddPost({Key? key}) : super(key: key);
 
-  User({required this.name, required this.profilePicture});
+  @override
+  State<AddPost> createState() => _AddPostState();
 }
 
-class CommentItem extends StatelessWidget {
-  final String comment;
-  final User user;
-
-  CommentItem({required this.comment, required this.user});
+class _AddPostState extends State<AddPost> {
+  final TextEditingController _textEditingController = TextEditingController();
+  File? _image;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.0),
-      padding: EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12.0),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Add Post'),
+        backgroundColor: Colors.green[100],
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20.0,
-            backgroundImage: AssetImage(user.profilePicture),
-          ),
-          SizedBox(width: 8.0),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
             children: [
-              Text(
-                user.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal[400],
-                ),
-              ),
-              SizedBox(height: 8.0),
-              Text(comment),
+              _buildPostField(),
+              _buildImagePreview(),
+              _buildSubmitButton(),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
-}
 
-class CommentInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Add a comment...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+  Widget _buildPostField() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: _textEditingController,
+        decoration: InputDecoration(
+          hintText: 'What\'s on your mind?',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 16.0, vertical: 80.0),
+        ),
+        maxLines: null,
+      ),
+    );
+  }
+
+  Widget _buildImagePreview() {
+    return _image == null
+        ? SizedBox.shrink()
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.green),
+                borderRadius: BorderRadius.circular(10.0),
               ),
+              child: Image.file(_image!),
             ),
-          ),
-          SizedBox(width: 8.0),
-          ElevatedButton(
-            onPressed: () {
-              // Add functionality to send the comment
-            },
-            child: Text('Post'),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.teal[400],
-              onPrimary: Colors.white,
-            ),
-          ),
-        ],
+          );
+  }
+
+  Widget _buildSubmitButton() {
+    return ElevatedButton.icon(
+      onPressed: _submitPost,
+      icon: Icon(
+        Icons.send,
+        color: Colors.white,
+      ),
+      label: Text(
+        'Post',
+        style: TextStyle(color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(
+        primary: Color.fromARGB(255, 153, 231, 156),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0.0),
+        ),
+        elevation: 4.0,
       ),
     );
   }
-}
 
-class CommentsScreen extends StatefulWidget {
-  @override
-  _CommentsScreenState createState() => _CommentsScreenState();
-}
+  Future<void> _submitPost() async {
+    try {
+      final String content = _textEditingController.text;
+      final String imageUrl = _image != null ? await _uploadImage() : '';
 
-class _CommentsScreenState extends State<CommentsScreen> {
-  final List<CommentItem> comments = [
-    CommentItem(
-      comment: 'This is a comment.',
-      user: User(name: 'John Doe', profilePicture: 'images/profile.jpg'),
-    ),
-    CommentItem(
-      comment: 'Great post!',
-      user: User(name: 'Jane Doe', profilePicture: 'images/profile.jpg'),
-    ),
-    CommentItem(
-      comment: 'Interesting!',
-      user: User(name: 'Alice Smith', profilePicture: 'images/profile.jpg'),
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal[400],
-        title: Text('Comments'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: comments.length,
-              itemBuilder: (context, index) {
-                return comments[index];
-              },
-            ),
+      if (content.isEmpty && imageUrl.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('The post cannot be empty.'),
           ),
-          CommentInput(),
-        ],
-      ),
-    );
-  }
-}
+        );
+        return;
+      }
 
-class PostDetailScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Post Detail'),
-      ),
-      body: Center(
-        child: Text('Full post description goes here'),
-      ),
-    );
+      await FirebaseFirestore.instance.collection('posts').add({
+        'content': content,
+        'image_url': imageUrl,
+      });
+
+      _textEditingController.clear();
+      setState(() {
+        _image = null;
+      });
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Post Added Successfully!'),
+        ),
+      );
+    } catch (e) {
+      print('Error submitting post: $e');
+    }
+  }
+
+  Future<String> _uploadImage() async {
+    if (_image == null) return '';
+
+    final Reference storageRef =
+        FirebaseStorage.instance.ref().child('post_images');
+    final TaskSnapshot uploadTask = await storageRef.putFile(_image!);
+    final String imageUrl = await uploadTask.ref.getDownloadURL();
+
+    return imageUrl;
+  }
+
+  Future<void> _getImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
 }

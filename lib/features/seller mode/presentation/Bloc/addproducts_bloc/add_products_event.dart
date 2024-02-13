@@ -7,11 +7,16 @@ class AddProductInitialEvent extends AddProductsEvent {}
 class AddProductsButtonPressedEvent extends AddProductsEvent {
   final TextEditingController name;
   final TextEditingController price;
-   File image;
+  File image;
+  final String categorytype;
+  final TextEditingController details;
 
   AddProductsButtonPressedEvent({
     required this.name,
     required this.price,
     required this.image,
+    String? imagePath,
+    required this.categorytype,
+    required this.details,
   });
 }

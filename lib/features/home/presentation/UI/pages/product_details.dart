@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutterproject/features/payment.dart';
 
 class ProductsDetails extends StatefulWidget {
   final product_detail_name;
   final product_detail_price;
-  final product_detail_old_price;
   final product_detail_picture;
+  final product_detail_details;
 
-  ProductsDetails({
-    this.product_detail_name,
-    this.product_detail_price,
-    this.product_detail_old_price,
-    this.product_detail_picture,
-  });
+  ProductsDetails(
+      {this.product_detail_name,
+      this.product_detail_price,
+      this.product_detail_picture,
+      this.product_detail_details});
 
   @override
   State<ProductsDetails> createState() => _ProductsDetailsState();
@@ -36,7 +36,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             child: GridTile(
               child: Container(
                 color: Colors.white,
-                child: Image.asset(
+                child: Image.network(
                   widget.product_detail_picture,
                   fit: BoxFit.contain,
                 ),
@@ -51,16 +51,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(
-                        child: Text(
-                          "₹${widget.product_detail_old_price}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
-                      ),
                       Expanded(
                         child: Text(
                           "\₹${widget.product_detail_price}",
@@ -165,7 +155,12 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           children: [
             // "Buy Now" button
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Payment()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
                 shape: RoundedRectangleBorder(
