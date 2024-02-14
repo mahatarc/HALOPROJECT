@@ -7,15 +7,65 @@ class DeliveryBoyDashboard extends StatefulWidget {
   const DeliveryBoyDashboard({super.key});
 
   @override
-  _DeliveryBoyDashboardState createState() => _DeliveryBoyDashboardState();
+  State<DeliveryBoyDashboard> createState() => _DeliveryBoyDashboardState();
 }
 
 class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
-  bool isAvailable = true; // Default value
-
+  int currentIndex = 0;
+  List<Widget> pages = [Delivery(), MyEarningsPage(), DeliveryBoyProfile()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: IndexedStack(
+        index: currentIndex,
+        children: pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type:
+            BottomNavigationBarType.fixed, // Set type to fixed for even spacing
+        selectedItemColor: Color.fromARGB(255, 64, 64, 64),
+        backgroundColor: Colors.green[100],
+        currentIndex: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monetization_on),
+            label: 'My Earnings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_shopping_cart),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Delivery extends StatefulWidget {
+  const Delivery({super.key});
+
+  @override
+  State<Delivery> createState() => _DeliveryState();
+}
+
+class _DeliveryState extends State<Delivery> {
+  bool isAvailable = true;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Driver"),
+        backgroundColor: Colors.green[100],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -83,42 +133,6 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // Default selected tab
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on),
-            label: 'My Earnings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const DeliveryBoyDashboard()),
-            );
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyEarningsPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => DeliveryBoyProfile()),
-            );
-          }
-        },
       ),
     );
   }

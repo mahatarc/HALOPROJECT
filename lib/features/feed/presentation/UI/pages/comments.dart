@@ -19,6 +19,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Comments'),
+        backgroundColor: Colors.green[100],
       ),
       body: Column(
         children: [
