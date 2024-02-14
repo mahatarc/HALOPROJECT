@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/feedprofile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_viewmore.dart';
 import 'package:flutterproject/consts/lists.dart';
@@ -25,13 +27,8 @@ class _HomepageState extends State<Homepage> {
     Home(),
     NewsFeed(),
     CartPage(),
+    FeedProfile(),
   ];
-  List<IconData> iconlist = [
-    Icons.home,
-    Icons.feed_rounded,
-    Icons.add_shopping_cart,
-  ];
-  List label = ['Home', 'Newsfeed', 'Cart'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +59,10 @@ class _HomepageState extends State<Homepage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.add_shopping_cart),
             label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.profile_circled),
+            label: 'My Posts',
           ),
         ],
       ),
