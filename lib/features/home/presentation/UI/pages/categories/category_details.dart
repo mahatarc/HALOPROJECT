@@ -119,11 +119,14 @@ class SingleProduct extends StatelessWidget {
   final product_picture;
   final prod_price;
   final prod_details;
+  // final prod_id;
+
   SingleProduct({
     this.product_name,
     this.product_picture,
     this.prod_price,
     this.prod_details,
+    // this.prod_id,
   });
 
   @override
@@ -137,6 +140,8 @@ class SingleProduct extends StatelessWidget {
                   product_detail_name: product_name,
                   product_detail_price: prod_price,
                   product_detail_picture: product_picture,
+                  //  product_detail_id: prod_id,
+                  product_detail_details: prod_details,
                 ))),
         child: GridTile(
           footer: Container(
