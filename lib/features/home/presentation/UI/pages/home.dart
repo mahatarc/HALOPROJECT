@@ -23,7 +23,7 @@ List<Widget> pages = [
     create: (context) => CartBloc(),
     child: CartPage(),
   ),
-  MapService(),
+MapService(),
 ];
 // List<IconData> iconlist = [
 //   Icons.home,

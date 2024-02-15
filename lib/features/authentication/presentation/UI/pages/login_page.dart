@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _emailController,
                               hinttext: "Email Address",
                               isPasswordField: false,
-                              borderRadius: 10.0,
+                              borderRadius: 5.0,
                             ),
                           ),
                           Padding(
