@@ -11,19 +11,21 @@ class Formcontainerwidget extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onFieldSubmitted;
   final TextInputType? inputType;
+  final double borderRadius; // Added parameter
 
-  const Formcontainerwidget(
-      {this.controller,
-      this.isPasswordField,
-      this.fieldKey,
-      this.hinttext,
-      this.labeltext,
-      this.helpertext,
-      this.onSaved,
-      this.validator,
-      this.onFieldSubmitted,
-      this.inputType,
-      required TextInputType keyboardType});
+  const Formcontainerwidget({
+    this.controller,
+    this.isPasswordField,
+    this.fieldKey,
+    this.hinttext,
+    this.labeltext,
+    this.helpertext,
+    this.onSaved,
+    this.validator,
+    this.onFieldSubmitted,
+    this.inputType,
+    required this.borderRadius, // Required parameter
+  });
 
   @override
   _FormcontainerwidgetState createState() => _FormcontainerwidgetState();
@@ -37,8 +39,9 @@ class _FormcontainerwidgetState extends State<Formcontainerwidget> {
     return Container(
       // width: double.infinity,
       decoration: BoxDecoration(
-        //color: Colors.grey,
-        borderRadius: BorderRadius.circular(10),
+        // color: Colors.grey,
+        borderRadius:
+            BorderRadius.circular(widget.borderRadius), // Use borderRadius here
       ),
       child: TextFormField(
         style: const TextStyle(color: Colors.black45),
@@ -50,24 +53,24 @@ class _FormcontainerwidgetState extends State<Formcontainerwidget> {
         validator: widget.validator,
         onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            filled: true,
-            hintText: widget.hinttext,
-            hintStyle: const TextStyle(color: Colors.black),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
-              child: widget.isPasswordField == true
-                  ? Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color:
-                          _obscureText == false ? Colors.black : Colors.black,
-                    )
-                  : const Text(""),
-            )),
+          border: InputBorder.none,
+          filled: true,
+          hintText: widget.hinttext,
+          hintStyle: const TextStyle(color: Colors.black),
+          suffixIcon: GestureDetector(
+            onTap: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+            child: widget.isPasswordField == true
+                ? Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: _obscureText == false ? Colors.black : Colors.black,
+                  )
+                : const Text(""),
+          ),
+        ),
       ),
     );
   }

@@ -26,7 +26,9 @@ class _HomepageState extends State<Homepage> {
   List<Widget> pages = [
     Home(),
     NewsFeed(),
-    CartPage(),
+    CartPage(
+      initialCartItems: [],
+    ),
     FeedProfile(),
   ];
   @override
@@ -252,7 +254,8 @@ class _HomeState extends State<Home> {
           if (state is HomeToCartNavigateState) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CartPage()),
+              MaterialPageRoute(
+                  builder: (context) => CartPage(initialCartItems: [])),
             );
           }
           if (state is HomeToNewsFeedNavigateState) {

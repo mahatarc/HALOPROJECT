@@ -94,7 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                                 controller: _emailController,
                                 hinttext: "Email Address",
                                 isPasswordField: false,
-                                keyboardType: TextInputType.emailAddress,
+                                //   keyboardType: TextInputType.emailAddress,
+                                borderRadius: 10.0,
                               ),
                             ),
                             Padding(
@@ -104,7 +105,8 @@ class _LoginPageState extends State<LoginPage> {
                                 controller: _passwordController,
                                 hinttext: "Password",
                                 isPasswordField: true,
-                                keyboardType: TextInputType.visiblePassword,
+                                //  keyboardType: TextInputType.visiblePassword,
+                                borderRadius: 5.0,
                               ),
                             ),
                             Padding(
@@ -126,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                                     backgroundColor: const Color.fromARGB(
                                         255, 156, 199, 107),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0),
+                                      borderRadius: BorderRadius.circular(5),
                                     ),
                                     minimumSize:
                                         const Size(double.infinity, 50),

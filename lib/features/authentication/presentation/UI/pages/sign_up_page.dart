@@ -94,7 +94,8 @@ class _SignUpPageState extends State<SignUppage> {
                                   controller: _nameController,
                                   hinttext: "Name",
                                   isPasswordField: false,
-                                  keyboardType: TextInputType.visiblePassword,
+                                  //  keyboardType: TextInputType.visiblePassword,
+                                  borderRadius: 10.0,
                                 ),
                               ),
                               SizedBox(
@@ -107,7 +108,8 @@ class _SignUpPageState extends State<SignUppage> {
                                   controller: _phoneNoController,
                                   hinttext: "Phone Number",
                                   isPasswordField: false,
-                                  keyboardType: TextInputType.phone,
+                                  //  keyboardType: TextInputType.phone,
+                                  borderRadius: 10.0,
                                 ),
                               ),
                               SizedBox(
@@ -120,7 +122,8 @@ class _SignUpPageState extends State<SignUppage> {
                                   controller: _emailController,
                                   hinttext: "Email Address",
                                   isPasswordField: false,
-                                  keyboardType: TextInputType.emailAddress,
+                                  // keyboardType: TextInputType.emailAddress,
+                                  borderRadius: 10.0,
                                 ),
                               ),
                               SizedBox(
@@ -133,7 +136,8 @@ class _SignUpPageState extends State<SignUppage> {
                                   controller: _passwordController,
                                   hinttext: "Password",
                                   isPasswordField: true,
-                                  keyboardType: TextInputType.visiblePassword,
+                                  //  keyboardType: TextInputType.visiblePassword,
+                                  borderRadius: 10.0,
                                 ),
                               ),
                               GestureDetector(
@@ -170,7 +174,7 @@ class _SignUpPageState extends State<SignUppage> {
                                       primary: const Color.fromARGB(
                                           255, 156, 199, 107),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(0),
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
                                       minimumSize:
                                           const Size(double.infinity, 50),
