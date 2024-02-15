@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/help_support.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/feedprofile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/settings.dart';
@@ -82,12 +83,9 @@ class Mydrawer extends StatelessWidget {
               ),*/
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SettingsScreen(),
-                    ),
-                  );
+                  Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                          builder: (context) => SettingsScreen()));
                 },
                 child: ListTile(
                   leading: Icon(Icons.settings),
@@ -102,9 +100,16 @@ class Mydrawer extends StatelessWidget {
                 leading: Icon(Icons.delivery_dining),
                 title: Text("Delivery"),
               ),
-              const ListTile(
-                leading: Icon(Icons.support),
-                title: Text("Help and support"),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                          builder: (context) => HelpAndSupportPage()));
+                },
+                child: ListTile(
+                  leading: Icon(Icons.support),
+                  title: Text("Help and support"),
+                ),
               ),
               const SizedBox(
                 height: 30,

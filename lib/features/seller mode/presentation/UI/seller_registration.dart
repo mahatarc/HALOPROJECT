@@ -87,9 +87,15 @@ class _SellerRegistrationFormState extends State<SellerRegistrationForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[200],
-        title: const Text("Seller Registration Form"),
-      ),
+          backgroundColor: Colors.green[200],
+          title: const Text("Seller Registration Form"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              // Navigate back to the previous screen (Drawer in this case)
+              Navigator.pop(context);
+            },
+          )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

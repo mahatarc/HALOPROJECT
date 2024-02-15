@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
@@ -9,9 +10,11 @@ import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
+import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 import 'package:flutterproject/nav.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+List myCart = [];
 int currentIndex = 0;
 List<Widget> pages = [
   Home(),
@@ -19,8 +22,15 @@ List<Widget> pages = [
   BlocProvider(
     create: (context) => CartBloc(),
     child: CartPage(),
-  )
+  ),
+MapService(),
 ];
+// List<IconData> iconlist = [
+//   Icons.home,
+//   Icons.feed_rounded,
+//   Icons.add_shopping_cart,
+// ];
+//List label = ['Home', 'Newsfeed', 'Cart'];
 
 class LandingPage extends StatelessWidget {
   final int? pageIndex;
@@ -45,6 +55,66 @@ class LandingPage extends StatelessWidget {
   }
 }
 
+// class Homepage extends StatefulWidget {
+//   const Homepage({super.key});
+
+//   @override
+//   State<Homepage> createState() => _HomepageState();
+// }
+
+// class _HomepageState extends State<Homepage> {
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: IndexedStack(
+//         index: currentIndex,
+//         children: pages,
+//       ),
+//       bottomNavigationBar: BottomNavigationBar(
+//         type:
+//             BottomNavigationBarType.fixed, // Set type to fixed for even spacing
+//         selectedItemColor: Color.fromARGB(255, 64, 64, 64),
+//         // unselectedItemColor: Colors.black.withOpacity(.5),
+//         backgroundColor: Colors.green[100],
+//         currentIndex: currentIndex,
+//         onTap: (index) {
+//           setState(() {
+//             currentIndex = index;
+//             if (index == 2) {
+//               Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                       builder: (context) => BlocProvider(
+//                             create: (context) => CartBloc(),
+//                             child: CartPage(),
+//                           )));
+//             }
+//           });
+//         },
+//         items: [
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.home),
+//             label: 'Home',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.feed_rounded),
+//             label: 'Newsfeed',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.add_shopping_cart),
+//             label: 'Cart',
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -53,6 +123,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // int currentIndex = 0;
   late HomePageBloc homePageBloc;
   @override
   void initState() {
@@ -93,8 +164,8 @@ class _HomeState extends State<Home> {
                       Container(
                         //  width: MediaQuery.of(context).size.width / 1.12,
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 219, 244, 220),
-                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.green[100],
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: TextFormField(
                           decoration: InputDecoration(
@@ -140,15 +211,11 @@ class _HomeState extends State<Home> {
                                   homePageBloc.add(CategoriesPressedEvent());
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  //shadowColor: Colors.amber,
-                                  surfaceTintColor: Colors.green,
-                                  // animationDuration: Duration(seconds: 5),
-                                  primary: Color.fromARGB(255, 241, 243, 243),
+                                  primary: Color.fromARGB(255, 239, 244, 249),
                                   onPrimary:
                                       const Color.fromARGB(255, 11, 3, 3),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 child: Text(
@@ -169,7 +236,7 @@ class _HomeState extends State<Home> {
                         height: 100.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: 3,
+                          itemCount: 4,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -194,6 +261,8 @@ class _HomeState extends State<Home> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'Recommended for you',
+                                /* style: TextStyle(fontWeight: FontWeight.bold,
+                                ),*/
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,

@@ -225,10 +225,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (state is SignInNavigateToSellerHomePageActionState) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SellerDashboard()),
-          );
+
+          Navigator.of(context, rootNavigator: true).pushReplacement(
+              MaterialPageRoute(builder: (context) => SellerDashboard()));
+
         }
       },
     );

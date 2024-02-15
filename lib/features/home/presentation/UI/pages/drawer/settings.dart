@@ -78,10 +78,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ListTile(
           title: Text('Seller Mode'),
           onTap: () {
+            // Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+            //   builder: (context) => SellerRegistrationForm(),
+            // )
+            //     // Remove all routes from the stack
+            //     );
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SellerRegistrationForm()));
+              context,
+              MaterialPageRoute(
+                builder: (context) => SellerRegistrationForm(),
+                fullscreenDialog:
+                    true, // Set fullscreenDialog to true to remove the AppBar
+              ),
+            );
           },
         ),
         ListTile(
