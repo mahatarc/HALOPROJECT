@@ -65,6 +65,7 @@ class _FeedProfileState extends State<FeedProfile> {
                     return PostView(
                       content: postData?['content'] ?? '',
                       imageUrl: postData?['image_url'],
+                      postId: 'post.id',
                     );
                   },
                 );
