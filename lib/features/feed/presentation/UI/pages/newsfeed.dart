@@ -3,17 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/comments.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-Future<void> _launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -48,10 +41,18 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
             separatorBuilder: (context, index) => SizedBox(height: 15),
             itemBuilder: (context, index) {
               final post = postDocs[index];
+              final content = post['content'] as String;
+              final imageUrl = post['image_url'] as String?;
+              final postId = post.id;
+              final userId = post['user_id'] as String;
+              final likes = (post['likes'] as List<dynamic>?)?.length ?? 0;
+
               return PostView(
-                content: post['content'],
-                imageUrl: post['image_url'],
-                postId: post.id,
+                content: content,
+                imageUrl: imageUrl,
+                postId: postId,
+                userId: userId,
+                likes: likes,
               );
             },
           );
@@ -75,11 +76,15 @@ class PostView extends StatefulWidget {
   final String content;
   final String? imageUrl;
   final String postId;
+  final String userId;
+  final int likes;
 
   const PostView({
     required this.content,
     this.imageUrl,
     required this.postId,
+    required this.userId,
+    required this.likes,
   });
 
   @override
@@ -87,17 +92,19 @@ class PostView extends StatefulWidget {
 }
 
 class _PostViewState extends State<PostView> {
-  Future<void> _refresh() async {
-    // Simulate refreshing data
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      // Add logic to fetch updated data from Firebase or other data source
-    });
-  }
-
   bool isLiked = false;
   bool isDisliked = false;
   bool isReported = false;
+  String? selectedReason;
+
+  void _launchUrl(String? url) async {
+    if (url != null && await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -111,13 +118,41 @@ class _PostViewState extends State<PostView> {
           children: [
             _buildUserInfo(),
             SizedBox(height: 8),
-            Text(
-              widget.content,
+            Linkify(
+              onOpen: (link) => _launchUrl(link.url),
+              text: widget.content,
               style: TextStyle(color: Colors.black87),
             ),
             SizedBox(height: 8),
-            _buildImageContainer(context),
-            SizedBox(height: 8),
+            if (widget.imageUrl != null) ...[
+              GestureDetector(
+                onTap: () {
+                  if (widget.imageUrl != null) {
+                    _launchUrl(widget.imageUrl!);
+                  }
+                },
+                child: Image.network(
+                  widget.imageUrl!,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return SizedBox.shrink(); // Don't show error message
+                  },
+                ),
+              ),
+              SizedBox(height: 8),
+            ],
             Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,27 +166,28 @@ class _PostViewState extends State<PostView> {
                       if (isDisliked) {
                         isDisliked = false;
                       }
+                      _toggleLike();
                     });
                   },
                 ),
+                Text('${widget.likes}'),
                 IconButton(
-                    icon: Icon(Icons.comment),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CommentsScreen(postId: widget.postId),
-                        ),
-                      );
-                    }),
+                  icon: Icon(Icons.comment),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CommentsScreen(postId: widget.postId),
+                      ),
+                    );
+                  },
+                ),
                 IconButton(
                   color: isReported ? Colors.red : null,
                   icon: Icon(Icons.report),
                   onPressed: () {
-                    setState(() {
-                      isReported = !isReported;
-                    });
+                    _showReportDialog();
                   },
                 ),
               ],
@@ -163,71 +199,136 @@ class _PostViewState extends State<PostView> {
   }
 
   Widget _buildUserInfo() {
-    return RefreshIndicator(
-      onRefresh: _refresh,
-      child: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(), // Fetch user data based on userId
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox.shrink();
-          }
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          final userData = snapshot.data!.data() as Map?;
-          return Row(
-            children: [
-              CircleAvatar(
-                backgroundImage:
-                    userData != null && userData['profilePicture'] != null
-                        ? NetworkImage(userData['profilePicture'])
-                        : AssetImage('images/profile.jpg')
-                            as ImageProvider<Object>?,
-              ),
-              SizedBox(width: 8),
-              Text(
-                userData != null ? '${userData["name"]} ' : 'Unknown User',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          );
-        },
-      ),
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox.shrink();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        final userData = snapshot.data!.data() as Map?;
+        return Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: userData != null &&
+                      userData['profilePicture'] != null
+                  ? NetworkImage(userData['profilePicture'])
+                  : AssetImage('images/profile.jpg') as ImageProvider<Object>?,
+            ),
+            SizedBox(width: 8),
+            Text(
+              userData != null ? '${userData["name"]} ' : 'Unknown User',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildImageContainer(BuildContext context) {
-    if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
-      return Container(
-        width: double.infinity,
-        height: 200,
-        child: Image.network(
-          widget.imageUrl!,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Text('Error loading image');
-          },
-        ),
-      );
+  void _toggleLike() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+
+    // Check if the user has already liked the post
+    final postSnapshot = await postRef.get();
+    final likes = List<String>.from(postSnapshot.data()!['likes'] ?? []);
+
+    if (isLiked) {
+      likes.add(userId);
     } else {
-      return SizedBox.shrink();
+      likes.remove(userId);
     }
+
+    // Update the 'likes' field in Firestore
+    await postRef.update({'likes': likes});
+  }
+
+  void _showReportDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Report Post'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text('Inappropriate Content'),
+                  onTap: () {
+                    setState(() {
+                      selectedReason = 'Inappropriate Content';
+                    });
+                    Navigator.pop(context);
+                    _showConfirmationDialog();
+                  },
+                ),
+                ListTile(
+                  title: Text('Spam'),
+                  onTap: () {
+                    setState(() {
+                      selectedReason = 'Spam';
+                    });
+                    Navigator.pop(context);
+                    _showConfirmationDialog();
+                  },
+                ),
+                ListTile(
+                  title: Text('Other'),
+                  onTap: () {
+                    setState(() {
+                      selectedReason = 'Other';
+                    });
+                    Navigator.pop(context);
+                    _showConfirmationDialog();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure you want to report?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _reportPost();
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _reportPost() {
+    // You can implement reporting logic here, using selectedReason
+    print('Post reported for: $selectedReason');
+    setState(() {
+      isReported = true;
+    });
   }
 }
 
@@ -282,13 +383,6 @@ class _AddPostState extends State<AddPost> {
         ),
         maxLines: null,
         keyboardType: TextInputType.multiline,
-        onTap: () {
-          final text = _textEditingController.text;
-          final urls = RegExp(r'https?://[^\s]+').allMatches(text);
-          for (final match in urls) {
-            _launchUrl(match.group(0)!);
-          }
-        },
       ),
     );
   }
@@ -369,6 +463,7 @@ class _AddPostState extends State<AddPost> {
         'image_url': imageUrl,
         'user_id':
             FirebaseAuth.instance.currentUser!.uid, // Add user ID to post data
+        'likes': [], // Initialize likes as an empty array
       });
 
       // Get the current user's ID
@@ -425,4 +520,8 @@ class _AddPostState extends State<AddPost> {
       });
     }
   }
+}
+
+void main() {
+  runApp(MaterialApp(home: NewsFeed()));
 }

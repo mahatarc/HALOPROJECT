@@ -1,25 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/driverdashboard.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/myearnings.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DeliveryBoyProfile(),
-    );
-  }
-}
 
 class DeliveryBoyProfile extends StatefulWidget {
   @override
@@ -42,9 +27,11 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Color.fromARGB(255, 228, 234, 232),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Profile'),
-        backgroundColor: Color.fromARGB(255, 155, 229, 123),
+        backgroundColor: Colors.green[100],
         actions: [
           IconButton(
             icon: Icon(Icons.more_vert),
@@ -65,29 +52,43 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
             _buildTextField('Phone Number', phoneController),
             _buildTextField('Location', locationController),
             SizedBox(height: 300), // Add some spacing
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
-              },
-              child: Container(
-                // width: 100,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 155, 229, 123),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Center(
-                  child: Text("Log Out",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20)),
-                ),
-              ),
-            ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0, // Default selected tab
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monetization_on),
+            label: 'My Earnings',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DeliveryBoyDashboard()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyEarningsPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DeliveryBoyProfile()),
+            );
+          }
+        },
       ),
     );
   }

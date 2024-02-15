@@ -1,36 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/CompletedOrdersScreen.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/PendingOrdeersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_profile.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/myearnings.dart';
 
 class DeliveryBoyDashboard extends StatefulWidget {
-  const DeliveryBoyDashboard({super.key});
-
   @override
-  State<DeliveryBoyDashboard> createState() => _DeliveryBoyDashboardState();
+  _DeliveryBoyDashboardState createState() => _DeliveryBoyDashboardState();
 }
 
 class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
-  int currentIndex = 0;
-  List<Widget> pages = [Delivery(), MyEarningsPage(), DeliveryBoyProfile()];
+  bool isAvailable = true; // Default value
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: pages,
+      backgroundColor: Color.fromARGB(255, 228, 234, 232),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.green[100],
+        title: Text("Driver Dashboard"),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome, Delivery Boy!',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            SwitchListTile(
+              title: Text(
+                isAvailable ? 'You are Available' : 'You are Not Available',
+                style: TextStyle(fontSize: 20),
+              ),
+              value: isAvailable,
+              onChanged: (value) {
+                setState(() {
+                  isAvailable = value;
+                });
+              },
+              activeColor: Color.fromARGB(255, 26, 157, 31),
+              inactiveTrackColor: Colors.grey,
+            ),
+            SizedBox(height: 5),
+            Divider(),
+            SizedBox(height: 10),
+            Text(
+              'Today Orders',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 18),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildOrderStatusCard('Accept Orders', 3, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AcceptedOrdersPage(),
+                      ),
+                    );
+                  }),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: _buildOrderStatusCard('Pending Orders', 6, () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PendingOrdersPage(),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+            SizedBox(height: 18),
+            _buildOrderStatusCard('Completed Orders', 5, () {
+              // Navigate to the Completed Orders screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CompletedOrdersPage(),
+                ),
+              );
+            }),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type:
-            BottomNavigationBarType.fixed, // Set type to fixed for even spacing
-        selectedItemColor: Color.fromARGB(255, 64, 64, 64),
-        backgroundColor: Colors.green[100],
-        currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+        currentIndex: 0, // Default selected tab
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -41,98 +104,28 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             label: 'My Earnings',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_shopping_cart),
+            icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class Delivery extends StatefulWidget {
-  const Delivery({super.key});
-
-  @override
-  State<Delivery> createState() => _DeliveryState();
-}
-
-class _DeliveryState extends State<Delivery> {
-  bool isAvailable = true;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Driver"),
-        backgroundColor: Colors.green[100],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 32),
-            const Text(
-              'Welcome, Delivery Boy!',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            SwitchListTile(
-              title: Text(
-                isAvailable ? 'You are Available' : 'You are Not Available',
-                style: const TextStyle(fontSize: 20),
-              ),
-              value: isAvailable,
-              onChanged: (value) {
-                setState(() {
-                  isAvailable = value;
-                });
-              },
-              activeColor: const Color.fromARGB(255, 26, 157, 31),
-              inactiveTrackColor: Colors.red,
-            ),
-            const SizedBox(height: 32),
-            const Text(
-              'Today Orders',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 18),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildOrderStatusCard('Accept Orders', 3, () {
-                  // Navigate to the Accept Orders screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AcceptOrdersScreen()),
-                  );
-                }),
-                _buildOrderStatusCard('Pending Orders', 6, () {
-                  // Navigate to the Pending Orders screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PendingOrdersScreen()),
-                  );
-                }),
-              ],
-            ),
-            const SizedBox(height: 18),
-            Column(
-              children: [
-                _buildOrderStatusCard('Completed Orders', 5, () {
-                  // Navigate to the Completed Orders screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CompletedOrdersPage()),
-                  );
-                }),
-              ],
-            ),
-          ],
-        ),
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DeliveryBoyDashboard()),
+            );
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyEarningsPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DeliveryBoyProfile()),
+            );
+          }
+        },
       ),
     );
   }
@@ -141,8 +134,8 @@ class _DeliveryState extends State<Delivery> {
       String title, int count, VoidCallback onPressed) {
     return Card(
       elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      color: Colors.lightGreen,
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      color: Colors.green[200],
       child: Stack(
         children: [
           Padding(
@@ -152,10 +145,9 @@ class _DeliveryState extends State<Delivery> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: 40),
               ],
             ),
           ),
@@ -164,10 +156,10 @@ class _DeliveryState extends State<Delivery> {
             right: 9,
             child: CircleAvatar(
               radius: 10,
-              backgroundColor: const Color.fromARGB(255, 223, 114, 114),
+              backgroundColor: Color.fromARGB(255, 223, 114, 114),
               child: Text(
                 '$count',
-                style: const TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black),
               ),
             ),
           ),
@@ -186,15 +178,13 @@ class _DeliveryState extends State<Delivery> {
 }
 
 class AcceptOrdersScreen extends StatelessWidget {
-  const AcceptOrdersScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Accept Orders'),
+        title: Text('Accept Orders'),
       ),
-      body: const Center(
+      body: Center(
         child: Text('Accept Orders Screen'),
       ),
     );
@@ -202,15 +192,13 @@ class AcceptOrdersScreen extends StatelessWidget {
 }
 
 class PendingOrdersScreen extends StatelessWidget {
-  const PendingOrdersScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pending Orders'),
+        title: Text('Pending Orders'),
       ),
-      body: const Center(
+      body: Center(
         child: Text('Pending Orders Screen'),
       ),
     );
@@ -218,15 +206,13 @@ class PendingOrdersScreen extends StatelessWidget {
 }
 
 class CompletedOrdersScreen extends StatelessWidget {
-  const CompletedOrdersScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Completed Orders'),
+        title: Text('Completed Orders'),
       ),
-      body: const Center(
+      body: Center(
         child: Text('Completed Orders Screen'),
       ),
     );
@@ -234,15 +220,13 @@ class CompletedOrdersScreen extends StatelessWidget {
 }
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text('Profile'),
       ),
-      body: const Center(
+      body: Center(
         child: Text('Profile Screen'),
       ),
     );
