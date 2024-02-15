@@ -66,6 +66,8 @@ class _FeedProfileState extends State<FeedProfile> {
                       content: postData?['content'] ?? '',
                       imageUrl: postData?['image_url'],
                       postId: 'post.id',
+                      userId: '',
+                      likes: 0,
                     );
                   },
                 );

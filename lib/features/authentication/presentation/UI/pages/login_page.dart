@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _emailController,
                               hinttext: "Email Address",
                               isPasswordField: false,
-                              borderRadius: 5.0,
+                              borderRadius: 10.0,
                             ),
                           ),
                           Padding(
@@ -225,8 +225,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (state is SignInNavigateToSellerHomePageActionState) {
+
           Navigator.of(context, rootNavigator: true).pushReplacement(
               MaterialPageRoute(builder: (context) => SellerDashboard()));
+
         }
       },
     );

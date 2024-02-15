@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PaymentService {
-  Future<bool> processPayment(
-      String cardNumber, String cvv, String expiryDate) async {
+  Future<bool> processPayment(String cardNumber, String cvv, String expiryDate,
+      String fullName, String address, String city, String productPrice) async {
     await Future.delayed(Duration(seconds: 2));
 
     if (_isExpired(expiryDate)) {
       return false;
     }
 
-    return true;
+    try {
+      // Store order details in Firestore
+      await FirebaseFirestore.instance.collection('orders').add({
+        'productName': 'Product Name', // Replace with actual product name
+        'customerName': fullName, // Use the provided full name
+        'address': address, // Use the provided address
+        'city': city, // Use the provided city
+        'amount': productPrice, // Use the converted product price
+        'sellerName': 'Seller Name', // Replace with actual seller name
+        'paymentStatus': 'Successful', // Indicate payment status
+        'timestamp': Timestamp.now(),
+      });
+      return true;
+    } catch (e) {
+      print("Error storing order details: $e");
+      return false;
+    }
   }
 
   bool _isExpired(String expiryDate) {
@@ -31,6 +48,21 @@ class PaymentService {
 
 class CardPaymentScreen extends StatelessWidget {
   final PaymentService paymentService = PaymentService();
+  final String fullName;
+  final String address;
+  final String city;
+  final String productName;
+  final double productPrice;
+  final String productPicture;
+
+  CardPaymentScreen({
+    required this.fullName,
+    required this.address,
+    required this.city,
+    required this.productName,
+    required this.productPrice,
+    required this.productPicture,
+  });
 
   final TextEditingController cardNumberController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
@@ -80,16 +112,36 @@ class CardPaymentScreen extends StatelessWidget {
                     return;
                   }
 
+                  final parts = expiryDateController.text.split('-');
+                  final expiryMonth = int.tryParse(parts[0]) ?? 0;
+                  final expiryYear = int.tryParse('20' + parts[1]) ?? 0;
+
+                  if (expiryMonth < 1 ||
+                      expiryMonth > 12 ||
+                      expiryYear < 2000 ||
+                      expiryYear > 2099) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Please enter a valid expiry date.'),
+                    ));
+                    return;
+                  }
+
                   bool isSuccess = await paymentService.processPayment(
                     cardNumberController.text,
                     cvvController.text,
                     expiryDateController.text,
+                    fullName, // Add full name
+                    address, // Add address
+                    city, // Add city
+                    productPrice.toString(), // Convert product price to string
                   );
 
                   if (isSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Payment successful!'),
-                    ));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OrderPlacedPage()),
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text('Payment failed. Expiry date has passed.'),
@@ -97,6 +149,77 @@ class CardPaymentScreen extends StatelessWidget {
                   }
                 },
                 child: Text('Pay Now'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OrderPlacedPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.green[100],
+      appBar: AppBar(
+        backgroundColor: Colors.green[100],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+      ),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,
+                size: 100,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Order Placed Successfully!',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Your order has been successfully placed. Thank you for shopping with us!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.popUntil(
+                    context,
+                    ModalRoute.withName(Navigator.defaultRouteName),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  onPrimary: Colors.green[100],
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text(
+                  'Continue Shopping',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),

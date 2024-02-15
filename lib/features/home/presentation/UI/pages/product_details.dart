@@ -27,6 +27,8 @@ class _ProductsDetailsState extends State<ProductsDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final double productPrice =
+        double.parse(widget.product_detail_price.toString());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
@@ -57,7 +59,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                     children: [
                       Expanded(
                         child: Text(
-                          "\₹${widget.product_detail_price}",
+                          "\₹$productPrice",
                           style: TextStyle(
                             color: Colors.brown,
                             fontWeight: FontWeight.bold,
@@ -163,7 +165,14 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DeliveryAddressScreen()),
+                      builder: (context) => DeliveryAddressScreen(
+                            product_detail_name: widget.product_detail_name,
+                            product_detail_price: widget.product_detail_price,
+                            product_detail_picture:
+                                widget.product_detail_picture,
+                            //     product_detail_details:
+                            //    widget.product_detail_details,
+                          )),
                 );
               },
               style: ElevatedButton.styleFrom(

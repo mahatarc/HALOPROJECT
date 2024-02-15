@@ -2,28 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_profile.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driverdashboard.dart';
 
+// Function to build the earnings card
 Widget _buildOrderStatusCard(String title, String amount) {
   return Card(
     elevation: 4,
     margin: EdgeInsets.symmetric(vertical: 8.0),
-    color: Colors.lightGreen,
+    color: Colors.green[200],
     child: Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                amount,
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
+          Text(
+            title,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8),
+          Text(
+            amount,
+            style: TextStyle(fontSize: 16),
           ),
         ],
       ),
@@ -31,28 +28,30 @@ Widget _buildOrderStatusCard(String title, String amount) {
   );
 }
 
-// Add MyEarningsPage widget
 class MyEarningsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      backgroundColor: Color.fromARGB(255, 228, 234, 232),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor:
+            Colors.green[100], // Change the background color of the app bar
+        title: Text('My Earnings'),
+      ),
+      body: ListView(
+        // Use ListView instead of SingleChildScrollView for better scrolling
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 18),
-            Text(
-              'My Earnings',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            _buildOrderStatusCard('Total Earnings Today', '\$100.00'),
-            _buildOrderStatusCard('Total Earnings This Week', '\$500.00'),
-            _buildOrderStatusCard('Total Earnings This Month', '\$2000.00'),
-            _buildOrderStatusCard('Overall Total Earnings', '\$10000.00'),
-          ],
-        ),
+        children: [
+          SizedBox(height: 5),
+          _buildOrderStatusCard('Total Earnings Today', '\$100.00'),
+          Divider(),
+          _buildOrderStatusCard('Total Earnings This Week', '\$500.00'),
+          Divider(),
+          _buildOrderStatusCard('Total Earnings This Month', '\$2000.00'),
+          Divider(),
+          _buildOrderStatusCard('Overall Total Earnings', '\$10000.00'),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -72,7 +71,7 @@ class MyEarningsPage extends StatelessWidget {
         onTap: (index) {
           // Handle tap on BottomNavigationBar items
           if (index == 0) {
-            // Navigate to the Profile screen
+            // Navigate to the Dashboard screen
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => DeliveryBoyDashboard()),

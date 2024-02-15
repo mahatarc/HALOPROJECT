@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/help_support.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/feedprofile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/settings.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
@@ -66,6 +67,20 @@ class Mydrawer extends StatelessWidget {
                   title: Text("My Information"),
                 ),
               ),
+              /* GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FeedProfile(),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text("My Posts"),
+                ),
+              ),*/
               GestureDetector(
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(

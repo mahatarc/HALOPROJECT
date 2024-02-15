@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class CompletedOrdersPage extends StatelessWidget {
   final List<Order> completedOrders = [
     Order("Order #001", "Axe, Sickle", "2024-01-15"),
@@ -15,21 +14,26 @@ class CompletedOrdersPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Completed Orders'),
+        backgroundColor: Color.fromARGB(255, 155, 229, 123),
       ),
-      body: ListView.builder(
-        itemCount: completedOrders.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(completedOrders[index].orderNumber),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Products: ${completedOrders[index].productNames}'),
-                Text('Completed on: ${completedOrders[index].completionDate}'),
-              ],
-            ),
-          );
-        },
+      body: Container(
+        color: Color.fromARGB(255, 211, 245, 172),
+        child: ListView.builder(
+          itemCount: completedOrders.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(completedOrders[index].orderNumber),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Products: ${completedOrders[index].productNames}'),
+                  Text(
+                      'Completed on: ${completedOrders[index].completionDate}'),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
