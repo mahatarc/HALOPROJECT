@@ -78,8 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ListTile(
           title: Text('Seller Mode'),
           onTap: () {
-            Navigator.push(
-                context,
+            Navigator.of(context, rootNavigator: true).pushReplacement(
                 MaterialPageRoute(
                     builder: (context) => SellerRegistrationForm()));
           },

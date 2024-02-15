@@ -10,8 +10,9 @@ import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
+import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 import 'package:flutterproject/nav.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 
 List myCart = [];
 int currentIndex = 0;
@@ -21,7 +22,9 @@ List<Widget> pages = [
   BlocProvider(
     create: (context) => CartBloc(),
     child: CartPage(),
-  )
+    
+  ),
+  MapService(),
 ];
 // List<IconData> iconlist = [
 //   Icons.home,
@@ -37,11 +40,22 @@ class LandingPage extends StatelessWidget {
     this.pageIndex = 0,
   });
 
-
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade300,
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Scaffold(
+          body: pages[0],
+          bottomNavigationBar:
+              BottomBar2(screenList: pages, selectedIndex: pageIndex),
+        ),
       ),
     );
   }
 }
+
 // class Homepage extends StatefulWidget {
 //   const Homepage({super.key});
 

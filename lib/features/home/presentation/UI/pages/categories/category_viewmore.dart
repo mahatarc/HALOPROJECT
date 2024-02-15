@@ -16,14 +16,19 @@ class Category extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigate to CategoryDetails page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CategoryDetails(
-              selectedCategory: categoryName,
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => CategoryDetails(
+        //       selectedCategory: categoryName,
+        //     ),
+        //   ),
+        // );
+        Navigator.of(context, rootNavigator: true)
+            .pushReplacement(MaterialPageRoute(
+                builder: (context) => CategoryDetails(
+                      selectedCategory: categoryName,
+                    )));
       },
       child: Container(
         height: 200,

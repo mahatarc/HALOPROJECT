@@ -50,6 +50,15 @@ class BottomBar2 extends StatelessWidget {
           ),
           activeColorPrimary: Color.fromARGB(255, 64, 64, 64),
         ),
+         PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.explore,
+            color: Color.fromARGB(255, 64, 64, 64),
+          ),
+
+          activeColorPrimary: Color.fromARGB(255, 64, 64, 64),
+          //title: 'Home',
+        ),
       ],
       confineInSafeArea: true,
       backgroundColor:

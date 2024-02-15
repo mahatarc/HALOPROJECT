@@ -12,7 +12,7 @@ import 'package:flutterproject/features/seller%20mode/presentation/UI/seller.dar
 import 'package:flutterproject/forgot.dart/forgot_pass_screen.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -39,211 +39,196 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignInBloc, SignInStates>(
-        bloc: signInBloc,
-        listenWhen: (previous, current) => current is SignInActionState,
-        buildWhen: (previous, current) => current is! SignInActionState,
-        builder: (context, state) {
-          if (state is SignInInitialState) {
-            return Scaffold(
-              body: Stack(
-                children: [
-                  const Image(
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                    image: AssetImage('images/aaa.jpg'),
+      bloc: signInBloc,
+      listenWhen: (previous, current) => current is SignInActionState,
+      buildWhen: (previous, current) => current is! SignInActionState,
+      builder: (context, state) {
+        if (state is SignInInitialState) {
+          return Scaffold(
+            body: Stack(
+              children: [
+                const Image(
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  width: double.infinity,
+                  image: AssetImage('images/aaa.jpg'),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color.fromARGB(255, 51, 76, 56),
+                        Colors.black.withOpacity(0.15)
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                          const Color.fromARGB(255, 51, 76, 56),
-                          Colors.black.withOpacity(0.15)
-                        ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter)),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: SingleChildScrollView(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset('images/logo.png',
-                                width: 200, height: 220),
-                            const SizedBox(
-                              height: 15,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('images/logo.png',
+                              width: 200, height: 220),
+                          const SizedBox(height: 15),
+                          const Text(
+                            'Namaste !!',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 248, 249, 247),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const Text(
-                              'Namaste !!',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 248, 249, 247),
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                            child: Formcontainerwidget(
+                              controller: _emailController,
+                              hinttext: "Email Address",
+                              isPasswordField: false,
+                              borderRadius: 10.0,
                             ),
-                            const SizedBox(
-                              height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                            child: Formcontainerwidget(
+                              controller: _passwordController,
+                              hinttext: "Password",
+                              isPasswordField: true,
+                              borderRadius: 5.0,
                             ),
-                            Padding(
-                              // padding: const EdgeInsets.all(16),
-                              padding:
-                                  const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                              child: Formcontainerwidget(
-                                controller: _emailController,
-                                hinttext: "Email Address",
-                                isPasswordField: false,
-                                //   keyboardType: TextInputType.emailAddress,
-                                borderRadius: 10.0,
-                              ),
-                            ),
-                            Padding(
-                              // padding: const EdgeInsets.all(16),
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                              child: Formcontainerwidget(
-                                controller: _passwordController,
-                                hinttext: "Password",
-                                isPasswordField: true,
-                                //  keyboardType: TextInputType.visiblePassword,
-                                borderRadius: 5.0,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  signInBloc.add(SignInButtonPressedEvent(
-                                      email: _emailController.text,
-                                      password: _passwordController.text));
-                                },
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    signInBloc.add(SignInButtonPressedEvent(
-                                      email: _emailController.text,
-                                      password: _passwordController.text,
-                                    ));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 156, 199, 107),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    minimumSize:
-                                        const Size(double.infinity, 50),
-                                  ),
-                                  child: const Text(
-                                    "Login",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            GestureDetector(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BlocProvider(
-                                              create: (context) =>
-                                                  ForgotPasswordBloc(),
-                                              child:
-                                                  const ForgotPasswordScreen(),
-                                            )));
+                                signInBloc.add(SignInButtonPressedEvent(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                ));
                               },
-                              child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 156, 199, 107),
-                                    fontWeight: FontWeight.bold),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  signInBloc.add(SignInButtonPressedEvent(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  ));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 156, 199, 107),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  minimumSize: const Size(double.infinity, 50),
+                                ),
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
                               ),
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(
-                                      color: Color.fromARGB(255, 248, 249, 247),
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    signInBloc.add(
-                                        SignUpButtonPressedNavigateEvent());
-                                  },
-                                  child: const Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 156, 199, 107),
-                                        fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) => ForgotPasswordBloc(),
+                                    child: const ForgotPasswordScreen(),
                                   ),
-                                )
-                              ],
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 156, 199, 107),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Don't have an account?",
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 248, 249, 247),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  signInBloc
+                                      .add(SignUpButtonPressedNavigateEvent());
+                                },
+                                child: const Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 156, 199, 107),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                ],
-              ),
-            );
-          } else if (state is SignInNavigateToBuyerHomePageActionState) {
-
-            return LandingPage();
-          } else if (state is SignInNavigateToSellerHomePageActionState) {
-            return SellerDashboard();
-          } else {
-            return Scaffold(
-             );
-                    },
                   ),
-                ],
+                ),
+              ],
+            ),
+          );
+        } else if (state is SignInNavigateToBuyerHomePageActionState) {
+          return LandingPage();
+        } else if (state is SignInNavigateToSellerHomePageActionState) {
+          return SellerDashboard();
+        } else {
+          return Scaffold();
+        }
+      },
+      listener: (context, state) {
+        if (state is SignUpPressedNavigateToSignUpActionState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => SignUpBloc(),
+                child: const SignUppage(),
               ),
-            );
-          }
-        },
-        listener: (context, state) {
-          if (state is SignUpPressedNavigateToSignUpActionState) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) => SignUpBloc(),
-                          child: const SignUppage(),
-                        )));
-          } else if (state is SignInNavigateToBuyerHomePageActionState) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) => HomePageBloc(),
-
-                          child: LandingPage(),
-                        )));
-          } else if (state is SignInNavigateToSellerHomePageActionState) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SellerDashboard()),
-            );
-          }
-        });
+            ),
+          );
+        } else if (state is SignInNavigateToBuyerHomePageActionState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => HomePageBloc(),
+                child: LandingPage(),
+              ),
+            ),
+          );
+        } else if (state is SignInNavigateToSellerHomePageActionState) {
+          Navigator.of(context, rootNavigator: true).pushReplacement(
+              MaterialPageRoute(builder: (context) => SellerDashboard()));
+        }
+      },
+    );
   }
 }
