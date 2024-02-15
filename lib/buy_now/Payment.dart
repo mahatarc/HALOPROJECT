@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PaymentService {
-  Future<bool> processPayment(
-      String cardNumber, String cvv, String expiryDate) async {
+  Future<bool> processPayment(String cardNumber, String cvv, String expiryDate,
+      String fullName, String address, String city, String productPrice) async {
     await Future.delayed(Duration(seconds: 2));
 
     if (_isExpired(expiryDate)) {
       return false;
     }
 
-    return true;
+    try {
+      // Store order details in Firestore
+      await FirebaseFirestore.instance.collection('orders').add({
+        'productName': 'Product Name', // Replace with actual product name
+        'customerName': fullName, // Use the provided full name
+        'address': address, // Use the provided address
+        'city': city, // Use the provided city
+        'amount': productPrice, // Use the converted product price
+        'sellerName': 'Seller Name', // Replace with actual seller name
+        'paymentStatus': 'Successful', // Indicate payment status
+        'timestamp': Timestamp.now(),
+      });
+      return true;
+    } catch (e) {
+      print("Error storing order details: $e");
+      return false;
+    }
   }
 
   bool _isExpired(String expiryDate) {
@@ -31,6 +48,21 @@ class PaymentService {
 
 class CardPaymentScreen extends StatelessWidget {
   final PaymentService paymentService = PaymentService();
+  final String fullName;
+  final String address;
+  final String city;
+  final String productName;
+  final double productPrice;
+  final String productPicture;
+
+  CardPaymentScreen({
+    required this.fullName,
+    required this.address,
+    required this.city,
+    required this.productName,
+    required this.productPrice,
+    required this.productPicture,
+  });
 
   final TextEditingController cardNumberController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
@@ -80,7 +112,6 @@ class CardPaymentScreen extends StatelessWidget {
                     return;
                   }
 
-                  // Validate month and year
                   final parts = expiryDateController.text.split('-');
                   final expiryMonth = int.tryParse(parts[0]) ?? 0;
                   final expiryYear = int.tryParse('20' + parts[1]) ?? 0;
@@ -99,6 +130,10 @@ class CardPaymentScreen extends StatelessWidget {
                     cardNumberController.text,
                     cvvController.text,
                     expiryDateController.text,
+                    fullName, // Add full name
+                    address, // Add address
+                    city, // Add city
+                    productPrice.toString(), // Convert product price to string
                   );
 
                   if (isSuccess) {
@@ -165,7 +200,10 @@ class OrderPlacedPage extends StatelessWidget {
               SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  // Navigate to home page or any other relevant page
+                  Navigator.popUntil(
+                    context,
+                    ModalRoute.withName(Navigator.defaultRouteName),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,

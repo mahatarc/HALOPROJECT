@@ -22,41 +22,43 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
         backgroundColor: Colors.green[100],
         title: Text("Feed"),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          }
-          final postDocs = snapshot.data!.docs;
-          return ListView.separated(
-            itemCount: postDocs.length,
-            separatorBuilder: (context, index) => SizedBox(height: 15),
-            itemBuilder: (context, index) {
-              final post = postDocs[index];
-              final content = post['content'] as String;
-              final imageUrl = post['image_url'] as String?;
-              final postId = post.id;
-              final userId = post['user_id'] as String;
-              final likes = (post['likes'] as List<dynamic>?)?.length ?? 0;
-
-              return PostView(
-                content: content,
-                imageUrl: imageUrl,
-                postId: postId,
-                userId: userId,
-                likes: likes,
+      body: Expanded(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
               );
-            },
-          );
-        },
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+            final postDocs = snapshot.data!.docs;
+            return ListView.separated(
+              itemCount: postDocs.length,
+              separatorBuilder: (context, index) => SizedBox(height: 15),
+              itemBuilder: (context, index) {
+                final post = postDocs[index];
+                final content = post['content'] as String;
+                final imageUrl = post['image_url'] as String?;
+                final postId = post.id;
+                final userId = post['user_id'] as String;
+                final likes = (post['likes'] as List<dynamic>?)?.length ?? 0;
+
+                return PostView(
+                  content: content,
+                  imageUrl: imageUrl,
+                  postId: postId,
+                  userId: userId,
+                  likes: likes,
+                );
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
