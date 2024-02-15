@@ -66,7 +66,7 @@ class Mydrawer extends StatelessWidget {
                   title: Text("My Information"),
                 ),
               ),
-              /*GestureDetector(
+              /* GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
