@@ -44,6 +44,7 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
+        backgroundColor: Color.fromARGB(255, 155, 229, 123),
         actions: [
           IconButton(
             icon: Icon(Icons.more_vert),
@@ -71,9 +72,9 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
               },
               child: Container(
                 // width: 100,
-                height: 50,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 147, 198, 88),
+                  color: Color.fromARGB(255, 155, 229, 123),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Center(
