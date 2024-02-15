@@ -79,8 +79,8 @@ class _SellerSettingsState extends State<SellerSettings> {
         ListTile(
           title: Text('Customer Mode'),
           onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Homepage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => LandingPage()));
             // builder: (context) => SellerDashboard()));
           },
         ),

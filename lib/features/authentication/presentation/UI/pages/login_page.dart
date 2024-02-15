@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/forgot_bloc/forgot_bloc.dart';
@@ -190,14 +191,27 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             );
-          } else if (state is SignInErrorState) {
-            return const Scaffold();
           } else if (state is SignInNavigateToBuyerHomePageActionState) {
-            return Homepage();
+            return LandingPage();
           } else if (state is SignInNavigateToSellerHomePageActionState) {
             return SellerDashboard();
-          } else
-            return Scaffold();
+          } else {
+            return Scaffold(
+              body: CupertinoAlertDialog(
+                title: Text('Error!'),
+                content: Text('Please provide valid information.'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('Try Again'),
+                    onPressed: () {
+                      // Close the dialog
+                      signInBloc.add(SignInInitialEvent());
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
         },
         listener: (context, state) {
           if (state is SignUpPressedNavigateToSignUpActionState) {
@@ -214,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                 MaterialPageRoute(
                     builder: (context) => BlocProvider(
                           create: (context) => HomePageBloc(),
-                          child: Homepage(),
+                          child: LandingPage(),
                         )));
           } else if (state is SignInNavigateToSellerHomePageActionState) {
             Navigator.push(

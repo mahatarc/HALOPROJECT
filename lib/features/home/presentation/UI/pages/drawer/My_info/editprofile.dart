@@ -27,7 +27,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     nameController.text = widget.personalInfo.name;
     emailController.text = widget.personalInfo.email;
 
-    // Initialize other controllers with existing data if needed.
+   
   }
 
   @override
@@ -47,7 +47,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               _buildTextField('Name', nameController),
               _buildTextField('Email', emailController),
-              // Add other fields as needed for editing other information.
+              
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

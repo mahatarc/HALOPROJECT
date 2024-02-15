@@ -86,21 +86,16 @@ class _SignUpPageState extends State<SignUppage> {
                               SizedBox(
                                 height: 10,
                               ),
-
-
                               Formcontainerwidget(
                                 controller: _nameController,
                                 hinttext: "Name",
                                 isPasswordField: false,
                                 keyboardType: TextInputType.visiblePassword,
                               ),
-
                               SizedBox(
                                 height: 10,
                               ),
-                             
                               Formcontainerwidget(
-
                                 controller: _phoneNoController,
                                 hinttext: "Phone Number",
                                 isPasswordField: false,
@@ -204,7 +199,7 @@ class _SignUpPageState extends State<SignUppage> {
                 MaterialPageRoute(
                     builder: (context) => BlocProvider(
                           create: (context) => HomePageBloc(),
-                          child: Homepage(),
+                          child: LandingPage(),
                         )));
           }
         });

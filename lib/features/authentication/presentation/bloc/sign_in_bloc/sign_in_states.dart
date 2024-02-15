@@ -15,3 +15,5 @@ class SignInNavigateToSellerHomePageActionState extends SignInActionState {}
 class SignUpPressedNavigateToSignUpActionState extends SignInActionState {}
 
 class SignInErrorState extends SignInStates {}
+
+class SignInLoadedState extends SignInStates{}

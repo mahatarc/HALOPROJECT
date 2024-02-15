@@ -2,71 +2,113 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_viewmore.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer_a.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
+import 'package:flutterproject/nav.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+List myCart = [];
+int currentIndex = 0;
+List<Widget> pages = [
+  Home(),
+  NewsFeed(),
+  BlocProvider(
+    create: (context) => CartBloc(),
+    child: CartPage(),
+  )
+];
+// List<IconData> iconlist = [
+//   Icons.home,
+//   Icons.feed_rounded,
+//   Icons.add_shopping_cart,
+// ];
+//List label = ['Home', 'Newsfeed', 'Cart'];
 
-  @override
-  State<Homepage> createState() => _HomepageState();
-}
+class LandingPage extends StatelessWidget {
+  final int? pageIndex;
+  const LandingPage({
+    super.key,
+    this.pageIndex = 0,
+  });
 
-class _HomepageState extends State<Homepage> {
-  List myCart = [];
-  int currentIndex = 0;
-  List<Widget> pages = [
-    Home(),
-    NewsFeed(),
-    CartPage(),
-  ];
-  List<IconData> iconlist = [
-    Icons.home,
-    Icons.feed_rounded,
-    Icons.add_shopping_cart,
-  ];
-  List label = ['Home', 'Newsfeed', 'Cart'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type:
-            BottomNavigationBarType.fixed, // Set type to fixed for even spacing
-        selectedItemColor: Color.fromARGB(255, 64, 64, 64),
-        // unselectedItemColor: Colors.black.withOpacity(.5),
-        backgroundColor: Colors.green[100],
-        currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.feed_rounded),
-            label: 'Newsfeed',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_shopping_cart),
-            label: 'Cart',
-          ),
-        ],
+      backgroundColor: Colors.grey.shade300,
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Scaffold(
+          body: pages[0],
+          bottomNavigationBar:
+              BottomBar2(screenList: pages, selectedIndex: pageIndex),
+        ),
       ),
     );
   }
 }
+// class Homepage extends StatefulWidget {
+//   const Homepage({super.key});
+
+//   @override
+//   State<Homepage> createState() => _HomepageState();
+// }
+
+// class _HomepageState extends State<Homepage> {
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: IndexedStack(
+//         index: currentIndex,
+//         children: pages,
+//       ),
+//       bottomNavigationBar: BottomNavigationBar(
+//         type:
+//             BottomNavigationBarType.fixed, // Set type to fixed for even spacing
+//         selectedItemColor: Color.fromARGB(255, 64, 64, 64),
+//         // unselectedItemColor: Colors.black.withOpacity(.5),
+//         backgroundColor: Colors.green[100],
+//         currentIndex: currentIndex,
+//         onTap: (index) {
+//           setState(() {
+//             currentIndex = index;
+//             if (index == 2) {
+//               Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                       builder: (context) => BlocProvider(
+//                             create: (context) => CartBloc(),
+//                             child: CartPage(),
+//                           )));
+//             }
+//           });
+//         },
+//         items: [
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.home),
+//             label: 'Home',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.feed_rounded),
+//             label: 'Newsfeed',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(Icons.add_shopping_cart),
+//             label: 'Cart',
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -212,12 +254,15 @@ class _HomeState extends State<Home> {
               ),
             );
           }
-          if (state is HomeToCartNavigateState) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CartPage()),
-            );
-          }
+          // if (state is HomeToCartNavigateState) {
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => BlocProvider(
+          //                 create: (context) => CartBloc(),
+          //                 child: CartPage(),
+          //               )));
+          //}
           if (state is HomeToNewsFeedNavigateState) {
             Navigator.push(
               context,
@@ -262,8 +307,9 @@ class RecommendProduct extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   var productData =
                       products[index].data() as Map<String, dynamic>;
-
+                  var productId = products[index].id;
                   return SingleProduct(
+                    productId: productId,
                     product_name: productData['name'],
                     product_picture: productData['image_url'],
                     prod_price: productData['price'],

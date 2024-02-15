@@ -66,14 +66,19 @@ class CategoryScreen extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 // Handle category tap
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CategoryDetails(
-                      selectedCategory: categoriesList[index],
-                    ),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => CategoryDetails(
+                //       selectedCategory: categoriesList[index],
+                //     ),
+                //   ),
+                // );
+                Navigator.of(context, rootNavigator: true)
+                    .pushReplacement(MaterialPageRoute(
+                  builder: (context) =>
+                      CategoryDetails(selectedCategory: categoriesList[index]),
+                ));
               },
               child: Column(
                 children: [
@@ -101,6 +106,7 @@ class CategoryScreen extends StatelessWidget {
     );
   }
 }
+
 const categoriesList = ['Seed', 'Tools', 'Plant'];
 
 const categoryImages = [

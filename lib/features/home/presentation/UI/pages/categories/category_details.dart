@@ -60,8 +60,9 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                   itemBuilder: (BuildContext context, int index) {
                     var productData =
                         products[index].data() as Map<String, dynamic>;
-
+                    var productId = products[index].id;
                     return SingleProduct(
+                      productId: productId,
                       product_name: productData['name'],
                       product_picture: productData['image_url'],
                       prod_price: productData['price'],
@@ -80,12 +81,13 @@ class _CategoryDetailsState extends State<CategoryDetails> {
 }
 
 class SingleProduct extends StatelessWidget {
-  // const single_prod({super.key});
+  final productId;
   final product_name;
   final product_picture;
   final prod_price;
   final prod_details;
   SingleProduct({
+    this.productId,
     this.product_name,
     this.product_picture,
     this.prod_price,
@@ -100,6 +102,7 @@ class SingleProduct extends StatelessWidget {
         onTap: () => Navigator.of(context).push(new MaterialPageRoute(
             //passing the values of products of this page to product details page
             builder: (context) => new ProductsDetails(
+              product_detail_id:productId ,
                   product_detail_name: product_name,
                   product_detail_price: prod_price,
                   product_detail_picture: product_picture,

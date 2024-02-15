@@ -40,7 +40,7 @@ final user = FirebaseAuth.instance.currentUser;
       if (userData.exists) {
         // Retrieve user role
         String role = userData.get('role');
-
+           
         // Compare user role and navigate to respective dashboard
         if (role == 'seller') {
           emit(SignInNavigateToSellerHomePageActionState());
