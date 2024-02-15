@@ -44,8 +44,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
 
       for (var item in documentSnapshot) {
-        cartItems
-            .add(CartItemModel.fromJson(item.data() as Map<String, dynamic>));
+        // cartItems
+        // .add(CartItemModel.fromJson(item.data() as Map<String, dynamic>));
+        for (var item in documentSnapshot) {
+          final data = item.data();
+          if (data != null) {
+            cartItems.add(CartItemModel.fromJson(data as Map<String, dynamic>));
+            print('Successful');
+          } else {
+            print('Item data is null');
+          }
+        }
+
         print('Successful');
       }
       print(cartItems.first.productName);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class BottomBar2 extends StatelessWidget {
@@ -50,7 +51,7 @@ class BottomBar2 extends StatelessWidget {
           ),
           activeColorPrimary: Color.fromARGB(255, 64, 64, 64),
         ),
-         PersistentBottomNavBarItem(
+        PersistentBottomNavBarItem(
           icon: const Icon(
             Icons.explore,
             color: Color.fromARGB(255, 64, 64, 64),
@@ -90,4 +91,5 @@ class BottomBar2 extends StatelessWidget {
           NavBarStyle.style6, // Choose the nav bar style with this property.
     );
   }
+  
 }

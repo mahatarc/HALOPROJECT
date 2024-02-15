@@ -22,7 +22,6 @@ List<Widget> pages = [
   BlocProvider(
     create: (context) => CartBloc(),
     child: CartPage(),
-    
   ),
   MapService(),
 ];
@@ -237,7 +236,7 @@ class _HomeState extends State<Home> {
                         height: 100.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: 3,
+                          itemCount: 4,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
