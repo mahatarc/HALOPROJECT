@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/categories/category_details.dart';
-import 'package:flutterproject/consts/lists.dart';
 
 class Category extends StatelessWidget {
   final String imagePath;
@@ -67,14 +66,19 @@ class CategoryScreen extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 // Handle category tap
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CategoryDetails(
-                      selectedCategory: categoriesList[index],
-                    ),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => CategoryDetails(
+                //       selectedCategory: categoriesList[index],
+                //     ),
+                //   ),
+                // );
+                Navigator.of(context, rootNavigator: true)
+                    .pushReplacement(MaterialPageRoute(
+                  builder: (context) =>
+                      CategoryDetails(selectedCategory: categoriesList[index]),
+                ));
               },
               child: Column(
                 children: [
@@ -102,3 +106,11 @@ class CategoryScreen extends StatelessWidget {
     );
   }
 }
+
+const categoriesList = ['Seed', 'Tools', 'Plant'];
+
+const categoryImages = [
+  'images/crops.png',
+  'images/gardening.png',
+  'images/plants.png',
+];

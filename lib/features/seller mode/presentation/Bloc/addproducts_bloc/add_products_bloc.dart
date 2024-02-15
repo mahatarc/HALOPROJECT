@@ -23,7 +23,6 @@ class AddProductsBloc extends Bloc<AddProductsEvent, AddProductsStates> {
   FutureOr<void> addProductsButtonPressedEvent(
       AddProductsButtonPressedEvent event,
       Emitter<AddProductsStates> emit) async {
-    DocumentReference? productRef;
     try {
       {
         // Validate and parse product price
@@ -47,7 +46,7 @@ class AddProductsBloc extends Bloc<AddProductsEvent, AddProductsStates> {
           // User not authenticated, handle accordingly
           return;
         }
-        productRef =
+        DocumentReference newProductRef =
             await FirebaseFirestore.instance.collection('products').add({
           'name': event.name.text,
           'price': event.price.text,
@@ -56,20 +55,9 @@ class AddProductsBloc extends Bloc<AddProductsEvent, AddProductsStates> {
           'category_type': event.categorytype,
           'user_id': user.uid,
         });
-        // Add product to categories collection
-
-        await FirebaseFirestore.instance
-            .collection('categories')
-            .doc(event.categorytype)
-            .collection('products')
-            .doc(productRef.id)
-            .set({
-          'name': event.name.text,
-          'price': event.price.text,
-          'image_url': imageUrl,
-          'product_details': event.details.text,
-          'user_id': user.uid,
-        });
+        String productId = newProductRef.id;
+        print('Successful');
+        print(productId);
       }
     } catch (e) {
       print('Error uploading product: $e');

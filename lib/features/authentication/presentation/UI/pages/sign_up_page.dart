@@ -87,6 +87,7 @@ class _SignUpPageState extends State<SignUppage> {
                               SizedBox(
                                 height: 10,
                               ),
+
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -97,10 +98,12 @@ class _SignUpPageState extends State<SignUppage> {
                                   //  keyboardType: TextInputType.visiblePassword,
                                   borderRadius: 10.0,
                                 ),
+
+                            
                               ),
                               SizedBox(
                                 height: 10,
-                              ),
+                             
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -111,7 +114,7 @@ class _SignUpPageState extends State<SignUppage> {
                                   //  keyboardType: TextInputType.phone,
                                   borderRadius: 10.0,
                                 ),
-                              ),
+                           
                               SizedBox(
                                 height: 10,
                               ),
@@ -245,7 +248,7 @@ class _SignUpPageState extends State<SignUppage> {
                 MaterialPageRoute(
                     builder: (context) => BlocProvider(
                           create: (context) => HomePageBloc(),
-                          child: Homepage(),
+                          child: LandingPage(),
                         )));
           }
         });

@@ -171,7 +171,7 @@ class _DeliveryBoyProfileState extends State<DeliveryBoyProfile> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Homepage(),
+                builder: (context) => LandingPage(),
               ),
             );
           },
