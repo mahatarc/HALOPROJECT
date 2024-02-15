@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/comments.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -50,7 +51,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
               return PostView(
                 content: post['content'],
                 imageUrl: post['image_url'],
-                //uid: post['uid'], // Pass userId here
+                postId: post.id,
               );
             },
           );
@@ -73,12 +74,12 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
 class PostView extends StatefulWidget {
   final String content;
   final String? imageUrl;
-  // final String uid; // Added userId parameter
+  final String postId;
 
   const PostView({
     required this.content,
     this.imageUrl,
-    //  required this.uid, // Required userId parameter
+    required this.postId,
   });
 
   @override
@@ -134,9 +135,16 @@ class _PostViewState extends State<PostView> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.comment),
-                  onPressed: () {},
-                ),
+                    icon: Icon(Icons.comment),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CommentsScreen(postId: widget.postId),
+                        ),
+                      );
+                    }),
                 IconButton(
                   color: isReported ? Colors.red : null,
                   icon: Icon(Icons.report),

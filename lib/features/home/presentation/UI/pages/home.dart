@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/nav.dart';
+
 
 List myCart = [];
 int currentIndex = 0;
@@ -35,17 +37,7 @@ class LandingPage extends StatelessWidget {
     this.pageIndex = 0,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Scaffold(
-          body: pages[0],
-          bottomNavigationBar:
-              BottomBar2(screenList: pages, selectedIndex: pageIndex),
-        ),
+
       ),
     );
   }
@@ -138,12 +130,18 @@ class _HomeState extends State<Home> {
           if (state is HomePageInitialState) {
             return Scaffold(
               appBar: AppBar(
-                title: Text('Halo'),
+                title: Text(
+                  'Halo',
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(),
+                  ),
+                ),
                 backgroundColor: Colors.green[100],
                 actions: [
                   Icon(Icons.notification_add),
                 ],
               ),
+              backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -158,7 +156,12 @@ class _HomeState extends State<Home> {
                         ),
                         child: TextFormField(
                           decoration: InputDecoration(
-                            label: Text("Search your product..."),
+                            label: Text(
+                              "Search your product...",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(),
+                              ),
+                            ),
                             border: InputBorder.none,
                             prefixIcon: Icon(
                               Icons.search,
@@ -174,40 +177,49 @@ class _HomeState extends State<Home> {
                       SizedBox(height: 20),
 
                       ///Categoriess---------------------------------------------------------
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Categories',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                              textScaleFactor: 1.5,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                homePageBloc.add(CategoriesPressedEvent());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 239, 244,
-                                      249), // Change the background color
-                                  onPrimary: const Color.fromARGB(
-                                      255, 11, 3, 3), // Change the text color
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Categories',
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                textScaleFactor: 1.5,
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  homePageBloc.add(CategoriesPressedEvent());
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 239, 244, 249),
+                                  onPrimary:
+                                      const Color.fromARGB(255, 11, 3, 3),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                  )),
-                              child: Text(
-                                'View More',
-                                style: TextStyle(
-                                  fontSize: 16, // Adjust text size
-                                  fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                child: Text(
+                                  'View More',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Container(
+                        color: Colors.white,
                         height: 100.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -218,23 +230,38 @@ class _HomeState extends State<Home> {
                               child: Category(
                                 imagePath: categoryImages[index],
                                 categoryName: categoriesList[index],
-                                //categorytype: 'category_type',
                               ),
                             );
                           },
                         ),
                       ),
+                      SizedBox(height: 20),
 
                       // Recommended Section
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Recommended for you',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textScaleFactor: 1.5,
+                      Container(
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Recommended for you',
+                                /* style: TextStyle(fontWeight: FontWeight.bold,
+                                ),*/
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                textScaleFactor: 1.5,
+                              ),
+                            ),
+                            RecommendProduct(),
+                          ],
                         ),
                       ),
-                      RecommendProduct(),
                     ],
                   ),
                 ),
@@ -254,15 +281,7 @@ class _HomeState extends State<Home> {
               ),
             );
           }
-          // if (state is HomeToCartNavigateState) {
-          //   Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => BlocProvider(
-          //                 create: (context) => CartBloc(),
-          //                 child: CartPage(),
-          //               )));
-          //}
+
           if (state is HomeToNewsFeedNavigateState) {
             Navigator.push(
               context,
