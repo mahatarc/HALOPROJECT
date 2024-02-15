@@ -80,6 +80,21 @@ class CardPaymentScreen extends StatelessWidget {
                     return;
                   }
 
+                  // Validate month and year
+                  final parts = expiryDateController.text.split('-');
+                  final expiryMonth = int.tryParse(parts[0]) ?? 0;
+                  final expiryYear = int.tryParse('20' + parts[1]) ?? 0;
+
+                  if (expiryMonth < 1 ||
+                      expiryMonth > 12 ||
+                      expiryYear < 2000 ||
+                      expiryYear > 2099) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Please enter a valid expiry date.'),
+                    ));
+                    return;
+                  }
+
                   bool isSuccess = await paymentService.processPayment(
                     cardNumberController.text,
                     cvvController.text,
@@ -87,9 +102,11 @@ class CardPaymentScreen extends StatelessWidget {
                   );
 
                   if (isSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Payment successful!'),
-                    ));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OrderPlacedPage()),
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text('Payment failed. Expiry date has passed.'),
@@ -97,6 +114,74 @@ class CardPaymentScreen extends StatelessWidget {
                   }
                 },
                 child: Text('Pay Now'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OrderPlacedPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.green[100],
+      appBar: AppBar(
+        backgroundColor: Colors.green[100],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+      ),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                Icons.check_circle_outline,
+                color: Colors.white,
+                size: 100,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Order Placed Successfully!',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Your order has been successfully placed. Thank you for shopping with us!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to home page or any other relevant page
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  onPrimary: Colors.green[100],
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text(
+                  'Continue Shopping',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
