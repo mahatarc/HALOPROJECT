@@ -1,14 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterproject/buy_now/location.dart';
 
 class ProductsDetails extends StatefulWidget {
+  final product_detail_id;
   final product_detail_name;
   final product_detail_price;
   final product_detail_picture;
   final product_detail_details;
 
   ProductsDetails(
-      {this.product_detail_name,
+      {this.product_detail_id,
+      this.product_detail_name,
       this.product_detail_price,
       this.product_detail_picture,
       this.product_detail_details});
@@ -177,7 +181,22 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             ),
             // "Add to Cart" button
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final user = FirebaseAuth.instance.currentUser;
+                await FirebaseFirestore.instance
+                    .collection('carts')
+                    .doc(user!.uid)
+                    .collection(user.uid)
+                    .doc(widget.product_detail_id)
+                    .set({'count': selectedQuantity});
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Item added successfully.'),
+                      );
+                    });
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
                 shape: RoundedRectangleBorder(

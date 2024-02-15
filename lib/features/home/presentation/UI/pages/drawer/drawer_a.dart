@@ -96,12 +96,11 @@ class Mydrawer extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
+                  Navigator.of(context, rootNavigator: true)
+                      .pushReplacement(MaterialPageRoute(
                           builder: (context) => BlocProvider(
                                 create: (context) => SignInBloc(),
-                                child: LoginPage(),
+                                child: const LoginPage(),
                               )));
                 },
                 child: Container(
