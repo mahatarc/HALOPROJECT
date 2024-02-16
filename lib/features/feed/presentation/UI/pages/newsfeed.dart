@@ -20,45 +20,45 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.green[100],
-        title: Text("Feed"),
-      ),
-      body: Expanded(
-        child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            }
-            final postDocs = snapshot.data!.docs;
-            return ListView.separated(
-              itemCount: postDocs.length,
-              separatorBuilder: (context, index) => SizedBox(height: 15),
-              itemBuilder: (context, index) {
-                final post = postDocs[index];
-                final content = post['content'] as String;
-                final imageUrl = post['image_url'] as String?;
-                final postId = post.id;
-                final userId = post['user_id'] as String;
-                final likes = (post['likes'] as List<dynamic>?)?.length ?? 0;
-
-                return PostView(
-                  content: content,
-                  imageUrl: imageUrl,
-                  postId: postId,
-                  userId: userId,
-                  likes: likes,
-                );
-              },
-            );
-          },
+        title: Text(
+          "Feed",
         ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          final postDocs = snapshot.data!.docs;
+          return ListView.separated(
+            itemCount: postDocs.length,
+            separatorBuilder: (context, index) => SizedBox(height: 15),
+            itemBuilder: (context, index) {
+              final post = postDocs[index];
+              final content = post['content'] as String;
+              final imageUrl = post['image_url'] as String?;
+              final postId = post.id;
+              final userId = post['user_id'] as String;
+              final likes = (post['likes'] as List<dynamic>?)?.length ?? 0;
+
+              return PostView(
+                content: content,
+                imageUrl: imageUrl,
+                postId: postId,
+                userId: userId,
+                likes: likes,
+              );
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -112,7 +112,7 @@ class _PostViewState extends State<PostView> {
     return Card(
       elevation: 1,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -172,7 +172,9 @@ class _PostViewState extends State<PostView> {
                     });
                   },
                 ),
-                Text('${widget.likes}'),
+                Text('${widget.likes}',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 IconButton(
                   icon: Icon(Icons.comment),
                   onPressed: () {
@@ -376,7 +378,7 @@ class _AddPostState extends State<AddPost> {
         decoration: InputDecoration(
           hintText: 'What\'s on your mind?',
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(0.0),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           filled: true,
           fillColor: Colors.white,
@@ -421,7 +423,7 @@ class _AddPostState extends State<AddPost> {
           style: ElevatedButton.styleFrom(
             primary: Color.fromARGB(255, 153, 231, 156),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
           ),
         ),
@@ -436,7 +438,7 @@ class _AddPostState extends State<AddPost> {
           style: ElevatedButton.styleFrom(
             primary: Color.fromARGB(255, 153, 231, 156),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
           ),
         ),
@@ -522,8 +524,4 @@ class _AddPostState extends State<AddPost> {
       });
     }
   }
-}
-
-void main() {
-  runApp(MaterialApp(home: NewsFeed()));
 }
