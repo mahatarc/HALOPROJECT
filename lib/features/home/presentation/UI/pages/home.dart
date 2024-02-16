@@ -23,19 +23,13 @@ List<Widget> pages = [
     create: (context) => CartBloc(),
     child: CartPage(),
   ),
-MapService(),
+  MapService(),
 ];
-// List<IconData> iconlist = [
-//   Icons.home,
-//   Icons.feed_rounded,
-//   Icons.add_shopping_cart,
-// ];
-//List label = ['Home', 'Newsfeed', 'Cart'];
 
 class LandingPage extends StatelessWidget {
   final int? pageIndex;
   const LandingPage({
-    super.key,
+    Key? key,
     this.pageIndex = 0,
   });
 
@@ -48,82 +42,21 @@ class LandingPage extends StatelessWidget {
         child: Scaffold(
           body: pages[0],
           bottomNavigationBar:
-              BottomBar2(screenList: pages, selectedIndex: pageIndex),
+              BottomBar2(screenList: pages, selectedIndex: pageIndex!),
         ),
       ),
     );
   }
 }
 
-// class Homepage extends StatefulWidget {
-//   const Homepage({super.key});
-
-//   @override
-//   State<Homepage> createState() => _HomepageState();
-// }
-
-// class _HomepageState extends State<Homepage> {
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: IndexedStack(
-//         index: currentIndex,
-//         children: pages,
-//       ),
-//       bottomNavigationBar: BottomNavigationBar(
-//         type:
-//             BottomNavigationBarType.fixed, // Set type to fixed for even spacing
-//         selectedItemColor: Color.fromARGB(255, 64, 64, 64),
-//         // unselectedItemColor: Colors.black.withOpacity(.5),
-//         backgroundColor: Colors.green[100],
-//         currentIndex: currentIndex,
-//         onTap: (index) {
-//           setState(() {
-//             currentIndex = index;
-//             if (index == 2) {
-//               Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                       builder: (context) => BlocProvider(
-//                             create: (context) => CartBloc(),
-//                             child: CartPage(),
-//                           )));
-//             }
-//           });
-//         },
-//         items: [
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.home),
-//             label: 'Home',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.feed_rounded),
-//             label: 'Newsfeed',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.add_shopping_cart),
-//             label: 'Cart',
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  // int currentIndex = 0;
   late HomePageBloc homePageBloc;
   @override
   void initState() {
@@ -142,135 +75,175 @@ class _HomeState extends State<Home> {
         builder: (context, state) {
           if (state is HomePageInitialState) {
             return Scaffold(
+              backgroundColor: Colors.grey.shade100,
               appBar: AppBar(
                 title: Text(
                   'Halo',
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(),
-                  ),
+                  style: GoogleFonts.lato(),
                 ),
                 backgroundColor: Colors.green[100],
                 actions: [
-                  Icon(Icons.notification_add),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.notifications),
+                  ),
                 ],
               ),
-              backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        //  width: MediaQuery.of(context).size.width / 1.12,
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
                         decoration: BoxDecoration(
-                          color: Colors.green[100],
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                         ),
                         child: TextFormField(
                           decoration: InputDecoration(
-                            label: Text(
-                              "Search your product...",
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(),
-                              ),
-                            ),
-                            border: InputBorder.none,
+                            labelText: "Search your product...",
                             prefixIcon: Icon(
                               Icons.search,
                               size: 30,
-                              color: Colors.green[200],
+                              color: Colors.grey.shade600,
                             ),
+                            border: InputBorder.none,
                           ),
                         ),
                       ),
-                      // SizedBox to create some space between the search bar and carousel
                       SizedBox(height: 20),
-                      ImageCarouselSlider(),
-                      SizedBox(height: 20),
-
-                      ///Categoriess---------------------------------------------------------
-                      Container(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Categories',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                textScaleFactor: 1.5,
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  homePageBloc.add(CategoriesPressedEvent());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 239, 244, 249),
-                                  onPrimary:
-                                      const Color.fromARGB(255, 11, 3, 3),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: Text(
-                                  'View More',
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        height: 100.0,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 4,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Category(
-                                imagePath: categoryImages[index],
-                                categoryName: categoriesList[index],
-                              ),
-                            );
-                          },
-                        ),
+                      AnimatedOpacity(
+                        duration: Duration(milliseconds: 500),
+                        opacity: 1,
+                        child: ImageCarouselSlider(),
                       ),
                       SizedBox(height: 20),
-
-                      // Recommended Section
-                      Container(
-                        color: Colors.white,
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Categories',
+                                    style: GoogleFonts.lato(
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      homePageBloc
+                                          .add(CategoriesPressedEvent());
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      primary:
+                                          Color.fromARGB(255, 239, 244, 249),
+                                      onPrimary:
+                                          const Color.fromARGB(255, 11, 3, 3),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'View More',
+                                      style: GoogleFonts.lato(
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              height: 100,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 4,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Category(
+                                      imagePath: categoryImages[index],
+                                      categoryName: categoriesList[index],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      // Recommended Section
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               child: Text(
                                 'Recommended for you',
-                                /* style: TextStyle(fontWeight: FontWeight.bold,
-                                ),*/
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 18,
                                   ),
                                 ),
-                                textScaleFactor: 1.5,
                               ),
                             ),
+                            SizedBox(height: 10),
                             RecommendProduct(),
                           ],
                         ),
@@ -306,54 +279,47 @@ class _HomeState extends State<Home> {
 }
 
 class RecommendProduct extends StatelessWidget {
-  const RecommendProduct({super.key});
+  const RecommendProduct({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      child: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection('products').get(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            print('Loading');
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            print('Errorr');
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            List<QueryDocumentSnapshot> products =
-                snapshot.data!.docs.cast<QueryDocumentSnapshot>();
-            print(products.first);
-            print('categories receieved');
-            return Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: products.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  var productData =
-                      products[index].data() as Map<String, dynamic>;
-                  var productId = products[index].id;
-                  return SingleProduct(
-                    productId: productId,
-                    product_name: productData['name'],
-                    product_picture: productData['image_url'],
-                    prod_price: productData['price'],
-                    prod_details: productData['product_details'],
-                  );
-                },
-              ),
-            );
-          }
-          return Scaffold();
-        },
-      ),
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance.collection('products').get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          List<QueryDocumentSnapshot> products =
+              snapshot.data!.docs.cast<QueryDocumentSnapshot>();
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: products.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 0.9, // Adjusted height of product item
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              var productData = products[index].data() as Map<String, dynamic>;
+              var productId = products[index].id;
+              return SingleProduct(
+                productId: productId,
+                product_name: productData['name'],
+                product_picture: productData['image_url'],
+                prod_price: productData['price'],
+                prod_details: productData['product_details'],
+              );
+            },
+          );
+        }
+        return SizedBox();
+      },
     );
   }
 }
@@ -382,6 +348,7 @@ class ImageCarouselSlider extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.symmetric(horizontal: 5.0),
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -391,9 +358,12 @@ class ImageCarouselSlider extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.cover,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                ),
               ),
             );
           },
