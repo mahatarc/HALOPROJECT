@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/help_support.dart';
-import 'package:flutterproject/features/feed/presentation/UI/pages/feedprofile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/settings.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';

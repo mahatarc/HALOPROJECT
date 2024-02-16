@@ -18,10 +18,10 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Accepted Orders'),
-        backgroundColor: Color.fromARGB(255, 155, 229, 123),
+        backgroundColor: Colors.green[100],
       ),
       body: Container(
-        color: Color.fromARGB(255, 211, 245, 172),
+        // color: Color.fromARGB(255, 211, 245, 172),
         child: ListView.builder(
           itemCount: acceptedOrders.length,
           itemBuilder: (context, index) {
@@ -70,9 +70,9 @@ class OrderDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Order Details'),
-        backgroundColor: Color.fromARGB(255, 155, 229, 123),
+        backgroundColor: Colors.green[100],
       ),
-      backgroundColor: Color.fromARGB(255, 211, 245, 172),
+      // backgroundColor: Color.fromARGB(255, 211, 245, 172),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

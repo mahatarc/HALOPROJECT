@@ -20,10 +20,10 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Pending Orders'),
-        backgroundColor: Color.fromARGB(255, 155, 229, 123),
+        backgroundColor: Colors.green[100],
       ),
       body: Container(
-        color: Color.fromARGB(255, 211, 245, 172),
+        //  color: Color.fromARGB(255, 211, 245, 172),
         child: ListView.builder(
           itemCount: pendingOrders.length,
           itemBuilder: (context, index) {

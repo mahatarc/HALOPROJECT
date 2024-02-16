@@ -109,9 +109,18 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           // Product description
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Product Description:\nThis is a high-quality product with a detailed description.',
-              style: TextStyle(fontSize: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Product Description:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  widget.product_detail_details,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ),
           // Customer Reviews
@@ -138,20 +147,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ],
             ),
           ),
-          // Related Products Section
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Related Products',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8.0),
-              ],
-            ),
-          ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -170,8 +165,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                             product_detail_price: widget.product_detail_price,
                             product_detail_picture:
                                 widget.product_detail_picture,
-                            //     product_detail_details:
-                            //    widget.product_detail_details,
                           )),
                 );
               },
