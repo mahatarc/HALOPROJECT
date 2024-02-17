@@ -1,14 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:flutterproject/features/cart/models/cart_model.dart';
 
 class CartPage extends StatefulWidget {
+  const CartPage({super.key});
+
   @override
   _CartPageState createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
   late CartBloc cartBloc;
+  late List<CartItemModel> listOfProducts = []; // Initialize here
+  late List<CartItemModel> updatedProducts = [];
 
   @override
   void initState() {
@@ -25,15 +32,15 @@ class _CartPageState extends State<CartPage> {
         bloc: cartBloc,
         builder: (context, state) {
           if (state is MyCartLoadingState) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (state is MyCartLoadedState) {
-            final listOfProducts = state.products;
+            listOfProducts = state.products; // Update the existing list
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.green[200],
-                title: Text('My Cart'),
+                title: const Text('My Cart'),
               ),
               body: RefreshIndicator(
                 onRefresh: () async {
@@ -46,12 +53,35 @@ class _CartPageState extends State<CartPage> {
                         itemCount: listOfProducts.length,
                         itemBuilder: (BuildContext context, int index) {
                           return CartProduct(
-                            productname: listOfProducts[index].productName,
-                            productpicture: listOfProducts[index].imageUrl,
-                            productprice: listOfProducts[index].price,
+                            product: listOfProducts[index],
+                            increaseQuantity: () {
+                              setState(() {
+                                listOfProducts[index].quantity++;
+                                updatedProducts = listOfProducts;
+                              });
+                            },
+                            decreaseQuantity: () {
+                              setState(() {
+                                if (listOfProducts[index].quantity > 1) {
+                                  listOfProducts[index].quantity--;
+                                  updatedProducts = listOfProducts;
+                                }
+                              });
+                            },
+                            deleteItem: () {
+                              cartBloc
+                                  .add(DeleteItemEvent(listOfProducts[index]));
+                            },
                           );
                         },
                       ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Save the updated quantities to Firestore
+                        saveQuantitiesToFirestore(updatedProducts);
+                      },
+                      child: const Text('Save'),
                     ),
                   ],
                 ),
@@ -62,18 +92,16 @@ class _CartPageState extends State<CartPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Delivery Charge: रु50'),
+                      const Text('Delivery Charge: रु50'),
                       ElevatedButton(
                         onPressed: () {
-                          // Implement your checkout logic here
-                          // This is just a placeholder
                           print('Checkout pressed');
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 156, 199,
-                              107), // Set the button color to green
+                          backgroundColor:
+                              const Color.fromARGB(255, 156, 199, 107),
                         ),
-                        child: Text('Checkout'),
+                        child: const Text('Checkout'),
                       ),
                     ],
                   ),
@@ -81,33 +109,53 @@ class _CartPageState extends State<CartPage> {
               ),
             );
           } else {
-            return Scaffold();
+            return const Scaffold();
           }
         },
       ),
     );
   }
+
+  void saveQuantitiesToFirestore(List<CartItemModel> updatedProducts) async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      final cartRef = FirebaseFirestore.instance
+          .collection('carts')
+          .doc(userId)
+          .collection(userId);
+
+      for (var product in updatedProducts) {
+        await cartRef
+            .doc(product
+                .product_detail_id) // Use product_detail_id as the document ID
+            .update({'quantity': product.quantity});
+      }
+      setState(() {
+        // Assign the updated products list to the original list
+        listOfProducts = updatedProducts;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Quantities saved successfully')),
+      );
+    } catch (e) {
+      print('Error saving quantities: $e');
+    }
+  }
 }
 
-// Calculate and return the total price of all items in the cart
-// double calculateTotal() {
-//   double total = 0.0;
-//   for (var item in cartItems) {
-//     total += item.quantity * item.price;
-//   }
-//   total += 50;
-//   return total;
-// }
-
+// CartProduct widget
 class CartProduct extends StatelessWidget {
-  final productname;
-  final productpicture;
-  final productprice;
+  final CartItemModel product;
+  final VoidCallback increaseQuantity;
+  final VoidCallback decreaseQuantity;
+  final VoidCallback deleteItem;
 
-  CartProduct({
-    this.productname,
-    this.productpicture,
-    this.productprice,
+  const CartProduct({
+    required this.product,
+    required this.increaseQuantity,
+    required this.decreaseQuantity,
+    required this.deleteItem,
   });
 
   @override
@@ -116,55 +164,47 @@ class CartProduct extends StatelessWidget {
       children: [
         ListTile(
           leading: Image.network(
-            productpicture,
+            product.imageUrl,
             fit: BoxFit.contain,
             width: 80.0,
             height: 80.0,
           ),
           title: Text(
-            productname,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            product.productName,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "\रु$productprice",
-                style: TextStyle(
+                "रु${product.price}",
+                style: const TextStyle(
                   color: Colors.brown,
                   fontWeight: FontWeight.w800,
                 ),
               ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: decreaseQuantity,
+                    icon: const Icon(Icons.remove),
+                  ),
+                  Text(product.quantity.toString()),
+                  IconButton(
+                    onPressed: increaseQuantity,
+                    icon: const Icon(Icons.add),
+                  ),
+                  IconButton(
+                    onPressed: deleteItem,
+                    icon: const Icon(Icons.delete),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
+        const Divider(),
       ],
     );
   }
 }
-
-
- // bottomNavigationBar: BottomAppBar(
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.all(5.0),
-                      //     child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //       children: [
-                      //         // Text('Total: \रु${calculateTotal()}'),
-                      //         Text('Delivery Charge: रु50'),
-                      //         ElevatedButton(
-                      //           onPressed: () {
-                      //             // Implement your checkout logic here
-                      //             // This is just a placeholder
-                      //             print('Checkout pressed');
-                      //           },
-                      //           style: ElevatedButton.styleFrom(
-                      //             backgroundColor: const Color.fromARGB(255, 156,
-                      //                 199, 107), // Set the button color to green
-                      //           ),
-                      //           child: Text('Checkout'),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
