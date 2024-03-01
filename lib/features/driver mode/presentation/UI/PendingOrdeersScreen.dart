@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PendingOrdersPage extends StatefulWidget {
@@ -6,14 +7,7 @@ class PendingOrdersPage extends StatefulWidget {
 }
 
 class _PendingOrdersPageState extends State<PendingOrdersPage> {
-  final List<Order> pendingOrders = [
-    Order("Order #128", "Product K, Product L", "2022-02-20"),
-    Order("Order #129", "Product M, Product N", "2022-02-21"),
-    Order("Order #130", "Product O, Product P", "2022-02-22"),
-    Order("Order #131", "Product Q, Product R", "2022-02-23"),
-    Order("Order #132", "Product S, Product T", "2022-02-24"),
-    Order("Order #133", "Product U, Product V", "2022-02-25"),
-  ];
+  late List<DocumentSnapshot> pendingOrders;
 
   @override
   Widget build(BuildContext context) {
@@ -22,31 +16,109 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
         title: Text('Pending Orders'),
         backgroundColor: Colors.green[100],
       ),
-      body: Container(
-        //  color: Color.fromARGB(255, 211, 245, 172),
-        child: ListView.builder(
-          itemCount: pendingOrders.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(pendingOrders[index].orderNumber),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Products: ${pendingOrders[index].productNames}'),
-                  Text('Placed on: ${pendingOrders[index].placementDate}'),
-                ],
-              ),
-              onTap: () {
-                _showOrderOptions(context, pendingOrders[index]);
-              },
-            );
-          },
-        ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('orders').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          final orders = snapshot.data!.docs;
+          pendingOrders = orders; // Assigning orders to pendingOrders
+
+          if (orders.isEmpty) {
+            return Center(child: Text('No orders available.'));
+          }
+
+          return ListView.builder(
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              var orderData = orders[index].data() as Map<String, dynamic>;
+              var productIdList = orderData['productIdList'] as List?;
+
+              return FutureBuilder<List<DocumentSnapshot>>(
+                future: _getProductDocuments(productIdList),
+                builder: (context, productSnapshot) {
+                  if (productSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (productSnapshot.hasError) {
+                    return Center(
+                        child: Text('Error: ${productSnapshot.error}'));
+                  }
+
+                  var productDataList = productSnapshot.data;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Text('Order ID: ${orders[index].id}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (productDataList != null)
+                              ...productDataList.map((productData) {
+                                var product =
+                                    productData.data() as Map<String, dynamic>;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Product: ${product['name']}'),
+                                    Text('Price: \$${product['price']}'),
+                                    SizedBox(height: 8),
+                                  ],
+                                );
+                              }).toList(),
+                            Text('Customer: ${orderData['customerName']}'),
+                            Text('Location: ${orderData['address']}'),
+                            Text('Price: \$${orderData['amount'] ?? 'N/A'}'),
+                            Text(
+                                'Payment Status: ${orderData['paymentStatus']}'),
+                            SizedBox(height: 16),
+                          ],
+                        ),
+                        onTap: () {
+                          _showOrderOptions(
+                              context, orders[index].id as String);
+                        },
+                      ),
+                      Divider(), // Add a Divider between each order
+                    ],
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }
 
-  void _showOrderOptions(BuildContext context, Order order) {
+  Future<List<DocumentSnapshot>> _getProductDocuments(
+      List? productIdList) async {
+    if (productIdList == null || productIdList.isEmpty) {
+      return []; // Return an empty list if productIdList is null or empty
+    }
+
+    var productDocuments = <DocumentSnapshot>[];
+    for (var productId in productIdList) {
+      var productDocument = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId)
+          .get();
+      productDocuments.add(productDocument);
+    }
+    return productDocuments;
+  }
+
+  void _showOrderOptions(BuildContext context, String orderId) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -57,14 +129,14 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
               title: Text('Accept Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
-                _acceptOrder(order);
+                _acceptOrder(orderId);
               },
             ),
             ListTile(
               title: Text('Reject Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
-                _rejectOrder(order);
+                _rejectOrder(orderId);
               },
             ),
           ],
@@ -73,51 +145,22 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
     );
   }
 
-  void _acceptOrder(Order order) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AcceptOrderScreen(order),
+  void _acceptOrder(String orderId) {
+    // Implement accept order functionality
+    // Show pop-up message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Order $orderId accepted'),
       ),
     );
   }
 
-  void _rejectOrder(Order order) {
-    setState(() {
-      pendingOrders.remove(order);
-    });
-  }
-}
-
-class Order {
-  final String orderNumber;
-  final String productNames;
-  final String placementDate;
-
-  Order(this.orderNumber, this.productNames, this.placementDate);
-}
-
-class AcceptOrderScreen extends StatelessWidget {
-  final Order order;
-
-  AcceptOrderScreen(this.order);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Accept Order'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Order Number: ${order.orderNumber}'),
-            Text('Products: ${order.productNames}'),
-            Text('Placed on: ${order.placementDate}'),
-            // Add more details or actions as needed
-          ],
-        ),
+  void _rejectOrder(String orderId) {
+    // Implement reject order functionality
+    // Show pop-up message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Order $orderId rejected'),
       ),
     );
   }

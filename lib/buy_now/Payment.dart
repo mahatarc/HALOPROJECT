@@ -14,13 +14,13 @@ class PaymentService {
     try {
       // Store order details in Firestore
       await FirebaseFirestore.instance.collection('orders').add({
-        'productName': 'Product Name', // Replace with actual product name
-        'customerName': fullName, // Use the provided full name
-        'address': address, // Use the provided address
-        'city': city, // Use the provided city
-        'amount': productPrice, // Use the converted product price
-        'sellerName': 'Seller Name', // Replace with actual seller name
-        'paymentStatus': 'Successful', // Indicate payment status
+        'productName': 'Product Name',
+        'customerName': fullName,
+        'address': address,
+        'city': city,
+        'amount': productPrice,
+        'sellerName': 'Seller Name',
+        'paymentStatus': 'Successful',
         'timestamp': Timestamp.now(),
       });
       return true;
@@ -130,9 +130,9 @@ class CardPaymentScreen extends StatelessWidget {
                     cardNumberController.text,
                     cvvController.text,
                     expiryDateController.text,
-                    fullName, // Add full name
-                    address, // Add address
-                    city, // Add city
+                    fullName,
+                    address,
+                    city,
                     productPrice.toString(), // Convert product price to string
                   );
 

@@ -32,6 +32,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           .doc(userId)
           .collection(userId)
           .get();
+      if (cartSnapshot == null) {
+        print('Error: No cart snapshot available');
+        return;
+      }
       cartSnapshot.docs.forEach((doc) {
         productIDList.add(doc.id);
       });
@@ -44,7 +48,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             .collection('products')
             .doc(item)
             .get();
-        documentSnapshot.add(singleItem);
+        if (singleItem != null) {
+          documentSnapshot.add(singleItem);
+        }
       }
 
       print('Retrieved details for ${documentSnapshot.length} products');

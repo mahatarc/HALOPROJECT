@@ -14,13 +14,13 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   late CartBloc cartBloc;
-  late List<CartItemModel> listOfProducts = []; // Initialize here
-  late List<CartItemModel> updatedProducts = [];
+  late List<CartItemModel> updatedProducts;
 
   @override
   void initState() {
     cartBloc = BlocProvider.of<CartBloc>(context);
     cartBloc.add(MyCartInitialEvent());
+    updatedProducts = [];
     super.initState();
   }
 
@@ -36,7 +36,7 @@ class _CartPageState extends State<CartPage> {
               child: CircularProgressIndicator(),
             );
           } else if (state is MyCartLoadedState) {
-            listOfProducts = state.products; // Update the existing list
+            final listOfProducts = state.products;
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.green[200],
@@ -55,12 +55,14 @@ class _CartPageState extends State<CartPage> {
                           return CartProduct(
                             product: listOfProducts[index],
                             increaseQuantity: () {
+                              // Update the quantity locally
                               setState(() {
                                 listOfProducts[index].quantity++;
                                 updatedProducts = listOfProducts;
                               });
                             },
                             decreaseQuantity: () {
+                              // Update the quantity locally
                               setState(() {
                                 if (listOfProducts[index].quantity > 1) {
                                   listOfProducts[index].quantity--;
@@ -126,14 +128,9 @@ class _CartPageState extends State<CartPage> {
 
       for (var product in updatedProducts) {
         await cartRef
-            .doc(product
-                .product_detail_id) // Use product_detail_id as the document ID
+            .doc(product.productId)
             .update({'quantity': product.quantity});
       }
-      setState(() {
-        // Assign the updated products list to the original list
-        listOfProducts = updatedProducts;
-      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Quantities saved successfully')),
