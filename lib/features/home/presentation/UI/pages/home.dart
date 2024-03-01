@@ -9,9 +9,11 @@ import 'package:flutterproject/features/home/presentation/UI/pages/categories/ca
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer_a.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 import 'package:flutterproject/nav.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 List myCart = [];
@@ -23,14 +25,8 @@ List<Widget> pages = [
     create: (context) => CartBloc(),
     child: CartPage(),
   ),
-MapService(),
+  MapService(),
 ];
-// List<IconData> iconlist = [
-//   Icons.home,
-//   Icons.feed_rounded,
-//   Icons.add_shopping_cart,
-// ];
-//List label = ['Home', 'Newsfeed', 'Cart'];
 
 class LandingPage extends StatelessWidget {
   final int? pageIndex;
@@ -55,66 +51,6 @@ class LandingPage extends StatelessWidget {
   }
 }
 
-// class Homepage extends StatefulWidget {
-//   const Homepage({super.key});
-
-//   @override
-//   State<Homepage> createState() => _HomepageState();
-// }
-
-// class _HomepageState extends State<Homepage> {
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: IndexedStack(
-//         index: currentIndex,
-//         children: pages,
-//       ),
-//       bottomNavigationBar: BottomNavigationBar(
-//         type:
-//             BottomNavigationBarType.fixed, // Set type to fixed for even spacing
-//         selectedItemColor: Color.fromARGB(255, 64, 64, 64),
-//         // unselectedItemColor: Colors.black.withOpacity(.5),
-//         backgroundColor: Colors.green[100],
-//         currentIndex: currentIndex,
-//         onTap: (index) {
-//           setState(() {
-//             currentIndex = index;
-//             if (index == 2) {
-//               Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                       builder: (context) => BlocProvider(
-//                             create: (context) => CartBloc(),
-//                             child: CartPage(),
-//                           )));
-//             }
-//           });
-//         },
-//         items: [
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.home),
-//             label: 'Home',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.feed_rounded),
-//             label: 'Newsfeed',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.add_shopping_cart),
-//             label: 'Cart',
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -123,16 +59,40 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // int currentIndex = 0;
+
   late HomePageBloc homePageBloc;
+  late TextEditingController _searchController;
+  late List<Map<String, dynamic>> _filteredProducts;
+  Map<String, dynamic>? _searchedProduct;
   @override
   void initState() {
     homePageBloc = BlocProvider.of<HomePageBloc>(context);
     homePageBloc.add(HomePageInitialEvent());
-
+    _searchController = TextEditingController();
     super.initState();
   }
 
+  Future<void> fetchProduct(String query) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('products').get();
+      final List<Map<String, dynamic>> products =
+          snapshot.docs.map((doc) => doc.data()).toList();
+
+      setState(() {
+        if (query.isNotEmpty) {
+          _searchedProduct = products.firstWhere((product) =>
+              product['name'].toLowerCase().contains(query.toLowerCase()));
+        } else {
+          _searchedProduct = null;
+          // Remove focus from the search field
+          FocusScope.of(context).requestFocus(FocusNode());
+        }
+      });
+    } catch (e) {
+      print('Error fetching product: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomePageBloc, HomePageState>(
@@ -162,12 +122,15 @@ class _HomeState extends State<Home> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        //  width: MediaQuery.of(context).size.width / 1.12,
                         decoration: BoxDecoration(
                           color: Colors.green[100],
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: TextFormField(
+                          controller: _searchController,
+                          onChanged: (value) {
+                            fetchProduct(value.trim());
+                          },
                           decoration: InputDecoration(
                             label: Text(
                               "Search your product...",
@@ -184,6 +147,29 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 20),
+                      if (_searchedProduct != null)
+                        ListTile(
+                          title: Text(_searchedProduct!['name']),
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductsDetails(
+                                  product_detail_id: _searchedProduct!['id'],
+                                  product_detail_name:
+                                      _searchedProduct!['name'],
+                                  product_detail_price:
+                                      _searchedProduct!['price'],
+                                  product_detail_picture:
+                                      _searchedProduct!['image_url'],
+                                  product_detail_details:
+                                      _searchedProduct!['details'],
+                                ),
+                              ),
+                            )
+                          },
+                        ),
                       // SizedBox to create some space between the search bar and carousel
                       SizedBox(height: 20),
                       ImageCarouselSlider(),
@@ -306,7 +292,7 @@ class _HomeState extends State<Home> {
 }
 
 class RecommendProduct extends StatelessWidget {
-  const RecommendProduct({super.key});
+  const RecommendProduct({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -320,38 +306,36 @@ class RecommendProduct extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            print('Errorr');
+            print('Error');
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (snapshot.connectionState == ConnectionState.done) {
             List<QueryDocumentSnapshot> products =
                 snapshot.data!.docs.cast<QueryDocumentSnapshot>();
             print(products.first);
-            print('categories receieved');
-            return Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: products.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  var productData =
-                      products[index].data() as Map<String, dynamic>;
-                  var productId = products[index].id;
-                  return SingleProduct(
-                    productId: productId,
-                    product_name: productData['name'],
-                    product_picture: productData['image_url'],
-                    prod_price: productData['price'],
-                    prod_details: productData['product_details'],
-                  );
-                },
+            print('Categories received');
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: products.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
               ),
+              itemBuilder: (BuildContext context, int index) {
+                var productData =
+                    products[index].data() as Map<String, dynamic>;
+                var productId = products[index].id;
+                return SingleProduct(
+                  productId: productId,
+                  product_name: productData['name'],
+                  product_picture: productData['image_url'],
+                  prod_price: productData['price'],
+                  prod_details: productData['product_details'],
+                );
+              },
             );
           }
-          return Scaffold();
+          return SizedBox(); // Return an empty widget if none of the conditions are met
         },
       ),
     );
@@ -373,7 +357,7 @@ class ImageCarouselSlider extends StatelessWidget {
         viewportFraction: 0.8,
       ),
       items: [
-        'images/logo.png',
+        'images/advertisement.png',
         'images/discount.png',
       ].map((String imagePath) {
         return Builder(

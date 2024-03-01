@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/model/usermodel.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
-import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
 class SignUppage extends StatefulWidget {
   const SignUppage({Key? key}) : super(key: key);
@@ -76,9 +74,29 @@ class _SignUpPageState extends State<SignUppage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset('images/logo.png',
-                              width: 200, height: 220),
-                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('HA',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text before the icon
+                              Image.asset(
+                                'images/logo.png', // Replace 'custom_icon.png' with the name of your icon file
+                                width:
+                                    60, // Adjust the width of the icon as needed
+                                height:
+                                    60, // Adjust the height of the icon as needed
+                              ),
+                              Text('O',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text after the icon
+                            ],
+                          ),
+                          SizedBox(height: 10),
                           Container(
                             child: Text(
                               'Please Sign Up To Your Account',
@@ -132,6 +150,7 @@ class _SignUpPageState extends State<SignUppage> {
                             onTap: () {
                               signUpBloc.add(
                                 SignUpButtonPressedEvent(
+                                  context: context,
                                   email: _emailController.text,
                                   password: _passwordController.text,
                                   user: UserModel(
@@ -148,6 +167,7 @@ class _SignUpPageState extends State<SignUppage> {
                                 onPressed: () {
                                   signUpBloc.add(
                                     SignUpButtonPressedEvent(
+                                      context: context,
                                       email: _emailController.text,
                                       password: _passwordController.text,
                                       user: UserModel(
@@ -162,7 +182,7 @@ class _SignUpPageState extends State<SignUppage> {
                                   primary:
                                       const Color.fromARGB(255, 156, 199, 107),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   minimumSize: const Size(double.infinity, 50),
                                 ),
@@ -228,18 +248,47 @@ class _SignUpPageState extends State<SignUppage> {
               ),
             ),
           );
-        } else if (state is SignUpNavigateToHomePageActionState) {
-          Navigator.push(
+        } else if (state is EmailVerifiedState) {
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => BlocProvider(
-                create: (context) => HomePageBloc(),
-                child: LandingPage(),
+                create: (context) => SignInBloc(),
+                child: LoginPage(),
               ),
             ),
           );
+        } else if (state is VerificationEmailSentState) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VerifyEmailScreen(email: state.email)));
         }
       },
+    );
+  }
+}
+
+class VerifyEmailScreen extends StatelessWidget {
+  final String email;
+
+  const VerifyEmailScreen({Key? key, required this.email}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Verify Email'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('A verification email has been sent to $email.'),
+            ElevatedButton(onPressed: () {}, child: Text('Verified'))
+          ],
+        ),
+      ),
     );
   }
 }

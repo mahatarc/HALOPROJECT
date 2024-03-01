@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/Bloc/your_products_bloc/your_products_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/add_products.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/orders.dart';
@@ -92,7 +93,14 @@ class _SellerDashboardState extends State<SellerDashboard> {
           onDestinationSelected: (index) {
             setState(() {
               currentIndex = index;
+
               if (index == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewsFeed()),
+                );
+              }
+              if (index == 2) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -101,7 +109,8 @@ class _SellerDashboardState extends State<SellerDashboard> {
                               child: YourProducts(),
                             )));
               }
-              if (index == 2) {
+
+              if (index == 3) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => OrderScreen()),
@@ -116,7 +125,9 @@ class _SellerDashboardState extends State<SellerDashboard> {
             NavigationDestination(
                 icon: const Icon(Icons.home), label: 'Dashboard'),
             NavigationDestination(
-                icon: Icon(Icons.newspaper), label: 'Your Products'),
+                icon: Icon(Icons.newspaper), label: 'Newsfeed'),
+            NavigationDestination(
+                icon: Icon(Icons.list), label: 'Your Products'),
             NavigationDestination(
                 icon: Icon(Icons.add_shopping_cart), label: 'Orders'),
           ]),

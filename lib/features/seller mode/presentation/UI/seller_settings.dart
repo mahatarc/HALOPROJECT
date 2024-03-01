@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
+import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
 class SellerSettings extends StatefulWidget {
   const SellerSettings({Key? key});
@@ -79,9 +81,15 @@ class _SellerSettingsState extends State<SellerSettings> {
         ListTile(
           title: Text('Customer Mode'),
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => LandingPage()));
-            // builder: (context) => SellerDashboard()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => HomePageBloc(),
+                  child: LandingPage(),
+                ),
+              ),
+            );
           },
         ),
         ListTile(

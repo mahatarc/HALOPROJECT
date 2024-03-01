@@ -17,8 +17,8 @@ class BottomBar2 extends StatelessWidget {
 
     navbarController =
         PersistentTabController(initialIndex: selectedIndex ?? 0);
-    double iconHeight = 25;
-    Color inactiveIconColor = Colors.grey.shade800;
+    // double iconHeight = 25;
+    // Color inactiveIconColor = Colors.grey.shade800;
     //Color activeIconColor = PrimaryColors().greenA700;
 
     return PersistentTabView(

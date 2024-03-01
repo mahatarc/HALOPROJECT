@@ -37,11 +37,14 @@ class _FormcontainerwidgetState extends State<Formcontainerwidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // width: double.infinity,
       decoration: BoxDecoration(
-        // color: Colors.grey,
-        borderRadius:
-            BorderRadius.circular(widget.borderRadius), // Use borderRadius here
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        // border: Border.all(color: Color.fromARGB(255, 20, 19, 19)),
+        border: Border.all(
+            color: Color.fromARGB(255, 188, 187, 187)
+                .withOpacity(0.5)), // Border color with adjusted opacity
+        color: Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
+        // Border color
       ),
       child: TextFormField(
         style: const TextStyle(color: Colors.black45),
@@ -54,9 +57,16 @@ class _FormcontainerwidgetState extends State<Formcontainerwidget> {
         onFieldSubmitted: widget.onFieldSubmitted,
         decoration: InputDecoration(
           border: InputBorder.none,
-          filled: true,
           hintText: widget.hinttext,
-          hintStyle: const TextStyle(color: Colors.black),
+          hintStyle: const TextStyle(
+            color: Color.fromARGB(255, 101, 100, 100),
+            fontSize: 15,
+          ),
+          labelText: widget.labeltext, // Add labelText for better UX
+          labelStyle: TextStyle(color: Colors.black), // Customize label color
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 12), // Adjust vertical position of hint text
           suffixIcon: GestureDetector(
             onTap: () {
               setState(() {

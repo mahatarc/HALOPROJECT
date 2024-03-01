@@ -8,8 +8,21 @@ class SignUpInitialState extends SignUpState {}
 
 class SignUpLoadingState extends SignUpState {}
 
-class SignUpNavigateToHomePageActionState extends SignUpActionState {}
+class EmailVerifiedState extends SignUpActionState {}
 
 class LoginPressedNavigateToLoginActionState extends SignUpActionState {}
+
+class EmailVerificationLoadingState extends SignUpActionState {}
+
+class VerificationEmailSentState extends SignUpActionState {
+  final String email;
+
+  VerificationEmailSentState(this.email);
+}
+class StatusTextChangedState extends SignUpState {
+  final String text;
+
+  StatusTextChangedState(this.text);
+}
 
 class SignUpErrorState extends SignUpState {}

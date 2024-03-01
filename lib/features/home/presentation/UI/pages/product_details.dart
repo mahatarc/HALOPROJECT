@@ -15,7 +15,7 @@ class ProductsDetails extends StatefulWidget {
       this.product_detail_name,
       this.product_detail_price,
       this.product_detail_picture,
-      this.product_detail_details});
+      this.product_detail_details, Map<String, dynamic>? product});
 
   @override
   State<ProductsDetails> createState() => _ProductsDetailsState();

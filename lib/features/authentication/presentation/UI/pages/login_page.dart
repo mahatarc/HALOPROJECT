@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterproject/features/authentication/presentation/bloc/forgot_bloc/forgot_bloc.dart';
+import 'package:flutterproject/features/authentication/presentation/UI/pages/forgot_pass_screen.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/driverdashboard.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/sign_up_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/seller.dart';
-import 'package:flutterproject/forgot.dart/forgot_pass_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -74,8 +73,28 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset('images/logo.png',
-                              width: 200, height: 220),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('HA',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text before the icon
+                              Image.asset(
+                                'images/logo.png', // Replace 'custom_icon.png' with the name of your icon file
+                                width:
+                                    60, // Adjust the width of the icon as needed
+                                height:
+                                    60, // Adjust the height of the icon as needed
+                              ),
+                              Text('O',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text after the icon
+                            ],
+                          ),
                           const SizedBox(height: 15),
                           const Text(
                             'Namaste !!',
@@ -101,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _passwordController,
                               hinttext: "Password",
                               isPasswordField: true,
-                              borderRadius: 5.0,
+                              borderRadius: 10.0,
                             ),
                           ),
                           Padding(
@@ -124,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                                   backgroundColor:
                                       const Color.fromARGB(255, 156, 199, 107),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   minimumSize: const Size(double.infinity, 50),
                                 ),
@@ -145,10 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (context) => ForgotPasswordBloc(),
-                                    child: const ForgotPasswordScreen(),
-                                  ),
+                                  builder: (context) => ForgotPasswordScreen(),
                                 ),
                               );
                             },
@@ -180,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                                 child: const Text(
                                   'Sign Up',
                                   style: TextStyle(
-                                    color: Color.fromARGB(255, 156, 199, 107),
+                                    color: Color.fromRGBO(156, 199, 107, 1),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -225,10 +241,11 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (state is SignInNavigateToSellerHomePageActionState) {
-
           Navigator.of(context, rootNavigator: true).pushReplacement(
               MaterialPageRoute(builder: (context) => SellerDashboard()));
-
+        } else if (state is SignInNavigateToDriverHomePageActionState) {
+          Navigator.of(context, rootNavigator: true).pushReplacement(
+              MaterialPageRoute(builder: (context) => DeliveryBoyDashboard()));
         }
       },
     );
