@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PendingOrdersPage extends StatefulWidget {
   @override
@@ -28,7 +28,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
           }
 
           final orders = snapshot.data!.docs;
-          pendingOrders = orders; // Assigning orders to pendingOrders
+          pendingOrders = orders;
 
           if (orders.isEmpty) {
             return Center(child: Text('No orders available.'));
@@ -40,82 +40,70 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
               var orderData = orders[index].data() as Map<String, dynamic>;
               var productIdList = orderData['productIdList'] as List?;
 
-              return FutureBuilder<List<DocumentSnapshot>>(
-                future: _getProductDocuments(productIdList),
-                builder: (context, productSnapshot) {
-                  if (productSnapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
+              return Card(
+                elevation: 4,
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                color: Colors.green[200],
+                child: InkWell(
+                  onTap: () {
+                    _showOrderOptions(context, orders[index].id as String);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Order ID: ${orders[index].id}',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        if (productIdList != null)
+                          ...productIdList.map((productId) {
+                            return FutureBuilder<DocumentSnapshot>(
+                              future: FirebaseFirestore.instance
+                                  .collection('products')
+                                  .doc(productId)
+                                  .get(),
+                              builder: (context, productSnapshot) {
+                                if (productSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
 
-                  if (productSnapshot.hasError) {
-                    return Center(
-                        child: Text('Error: ${productSnapshot.error}'));
-                  }
+                                if (productSnapshot.hasError) {
+                                  return Text(
+                                      'Error: ${productSnapshot.error}');
+                                }
 
-                  var productDataList = productSnapshot.data;
-
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text('Order ID: ${orders[index].id}'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (productDataList != null)
-                              ...productDataList.map((productData) {
-                                var product =
-                                    productData.data() as Map<String, dynamic>;
+                                var productData = productSnapshot.data!.data()
+                                    as Map<String, dynamic>;
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Product: ${product['name']}'),
-                                    Text('Price: \$${product['price']}'),
+                                    Text('Product: ${productData['name']}'),
+                                    Text('Price: \$${productData['price']}'),
                                     SizedBox(height: 8),
                                   ],
                                 );
-                              }).toList(),
-                            Text('Customer: ${orderData['customerName']}'),
-                            Text('Location: ${orderData['address']}'),
-                            Text('Price: \$${orderData['amount'] ?? 'N/A'}'),
-                            Text(
-                                'Payment Status: ${orderData['paymentStatus']}'),
-                            SizedBox(height: 16),
-                          ],
-                        ),
-                        onTap: () {
-                          _showOrderOptions(
-                              context, orders[index].id as String);
-                        },
-                      ),
-                      Divider(), // Add a Divider between each order
-                    ],
-                  );
-                },
+                              },
+                            );
+                          }).toList(),
+                        Text('Customer: ${orderData['customerName']}'),
+                        Text('Location: ${orderData['address']}'),
+                        Text('Price: \$${orderData['amount'] ?? 'N/A'}'),
+                        Text('Payment Status: ${orderData['paymentStatus']}'),
+                      ],
+                    ),
+                  ),
+                ),
               );
             },
           );
         },
       ),
     );
-  }
-
-  Future<List<DocumentSnapshot>> _getProductDocuments(
-      List? productIdList) async {
-    if (productIdList == null || productIdList.isEmpty) {
-      return []; // Return an empty list if productIdList is null or empty
-    }
-
-    var productDocuments = <DocumentSnapshot>[];
-    for (var productId in productIdList) {
-      var productDocument = await FirebaseFirestore.instance
-          .collection('products')
-          .doc(productId)
-          .get();
-      productDocuments.add(productDocument);
-    }
-    return productDocuments;
   }
 
   void _showOrderOptions(BuildContext context, String orderId) {
