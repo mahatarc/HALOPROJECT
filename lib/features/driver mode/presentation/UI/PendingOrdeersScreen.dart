@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
 
 class PendingOrdersPage extends StatefulWidget {
   @override
@@ -8,6 +9,7 @@ class PendingOrdersPage extends StatefulWidget {
 
 class _PendingOrdersPageState extends State<PendingOrdersPage> {
   late List<DocumentSnapshot> pendingOrders;
+  late List<Order> acceptedOrders = [];
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +93,13 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                             );
                           }).toList(),
                         Text('Customer: ${orderData['customerName']}'),
-                        Text('Location: ${orderData['address']}'),
-                        Text('Price: \$${orderData['amount'] ?? 'N/A'}'),
+                        Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
+                        Text('Price: \$${orderData['productName']}'),
+                        Text(
+                            'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
+                        Text('Seller Name: ${orderData['sellerName']}'),
+                        Text('Seller Location: ${orderData['location']}'),
                       ],
                     ),
                   ),
@@ -117,7 +123,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
               title: Text('Accept Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
-                _acceptOrder(orderId);
+                _acceptOrder(context, orderId);
               },
             ),
             ListTile(
@@ -133,23 +139,97 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
     );
   }
 
-  void _acceptOrder(String orderId) {
-    // Implement accept order functionality
-    // Show pop-up message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Order $orderId accepted'),
+  void _acceptOrder(BuildContext context, String orderId) {
+    FirebaseFirestore.instance
+        .collection('orders')
+        .doc(orderId)
+        .get()
+        .then((orderSnapshot) {
+      if (orderSnapshot.exists) {
+        var orderData = orderSnapshot.data() as Map<String, dynamic>;
+
+        // Store the accepted order in the 'accepted_orders' collection
+        FirebaseFirestore.instance.collection('accepted_orders').add({
+          'orderNumber': orderId,
+          'productName': orderData['productName'],
+          'orderDate': orderData['orderDate'],
+          'deliveryLocation': orderData['customeraddress'],
+        }).then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Order $orderId accepted'),
+            ),
+          );
+
+          // After accepting the order, fetch the accepted orders
+          _fetchAcceptedOrders(context);
+        }).catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to accept order: $error'),
+            ),
+          );
+        });
+      }
+    }).catchError((error) {
+      // Handle error fetching the order
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching order: $error'),
+        ),
+      );
+    });
+  }
+
+  void _fetchAcceptedOrders(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AcceptedOrdersPage(),
       ),
     );
   }
 
   void _rejectOrder(String orderId) {
-    // Implement reject order functionality
-    // Show pop-up message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Order $orderId rejected'),
       ),
+    );
+  }
+}
+
+class Order {
+  final String orderNumber;
+  final String productName;
+  final String customerName;
+  final String customeraddress;
+  final double amount;
+  final String paymentStatus; // Add payment status field
+  final String sellerName; // Add seller name field
+  final String location; // Add seller location field
+
+  Order({
+    required this.orderNumber,
+    required this.productName,
+    required this.customerName,
+    required this.customeraddress,
+    required this.amount,
+    required this.paymentStatus,
+    required this.sellerName,
+    required this.location,
+  });
+
+  factory Order.fromMap(Map<String, dynamic> map) {
+    return Order(
+      orderNumber: map['orderNumber'] ?? '',
+      productName: map['productName'] ?? '',
+      customerName: map['customerName'] ?? '',
+      customeraddress: map['address'] ?? '',
+      amount: map['amount'] != null ? map['amount'].toDouble() : 0.0,
+      paymentStatus: map['paymentStatus'] ?? '',
+      sellerName: map['sellerName'] ?? '',
+      location: map['location'] ?? '',
     );
   }
 }

@@ -3,8 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PaymentService {
-  Future<bool> processPayment(String cardNumber, String cvv, String expiryDate,
-      String fullName, String address, String city, String productPrice) async {
+  Future<bool> processPayment(
+      String cardNumber,
+      String cvv,
+      String expiryDate,
+      String fullName,
+      String address,
+      String city,
+      String productPrice,
+      String productName) async {
     await Future.delayed(Duration(seconds: 2));
 
     if (_isExpired(expiryDate)) {
@@ -14,12 +21,12 @@ class PaymentService {
     try {
       // Store order details in Firestore
       await FirebaseFirestore.instance.collection('orders').add({
-        'productName': 'Product Name',
+        'productName': productName,
         'customerName': fullName,
-        'address': address,
+        'customeraddress': address,
         'city': city,
         'amount': productPrice,
-        'sellerName': 'Seller Name',
+        'sellerName': 'SellerName',
         'paymentStatus': 'Successful',
         'timestamp': Timestamp.now(),
       });
@@ -133,6 +140,7 @@ class CardPaymentScreen extends StatelessWidget {
                     fullName,
                     address,
                     city,
+                    productName,
                     productPrice.toString(), // Convert product price to string
                   );
 
