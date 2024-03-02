@@ -164,19 +164,30 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
         // Store the accepted order in the 'accepted_orders' collection
         FirebaseFirestore.instance.collection('accepted_orders').add({
           'orderNumber': orderId,
-          'productName': orderData['productName'],
-          //'orderDate': orderData['orderDate'],
+          'productName': orderData['ProductName'],
+          'productPrice': orderData['amount'],
           'deliveryLocation': orderData['customeraddress'],
+          'BusinessName': orderData['businessName'],
+          'sellerAddress': orderData['sellerAddress'],
           'driverId': driverId,
         }).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Order $orderId accepted'),
-            ),
-          );
+          // Remove the accepted order from the 'orders' collection
+          orderSnapshot.reference.delete().then((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Order $orderId accepted'),
+              ),
+            );
 
-          // After accepting the order, fetch the accepted orders
-          _fetchAcceptedOrders(context);
+            // After accepting the order, fetch the accepted orders
+            _fetchAcceptedOrders(context);
+          }).catchError((error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to delete order: $error'),
+              ),
+            );
+          });
         }).catchError((error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -212,40 +223,3 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
     );
   }
 }
-
-/*class Order {
-  final String orderNumber;
-  final String productName;
-  final String customerName;
-  final String customeraddress;
-  final double amount;
-  final String paymentStatus;
-  final String businessName;
-  final String sellerLocation;
-  // final String sellerId;
-  Order({
-    required this.orderNumber,
-    required this.productName,
-    required this.customerName,
-    required this.customeraddress,
-    required this.amount,
-    required this.paymentStatus,
-    required this.businessName,
-    required this.sellerLocation,
-    //required this.sellerId,
-  });
-
-  factory Order.fromMap(Map<String, dynamic> map) {
-    return Order(
-      orderNumber: map['orderNumber'] ?? '',
-      productName: map['productName'] ?? '',
-      customerName: map['customerName'] ?? '',
-      customeraddress: map['address'] ?? '',
-      amount: map['amount'] != null ? map['amount'].toDouble() : 0.0,
-      paymentStatus: map['paymentStatus'] ?? '',
-      businessName: map['businessName'] ?? '',
-      sellerLocation: map['sellerAddress'] ?? '',
-      //  sellerId: map['sellerId'] ??'',
-    );
-  }
-}*/

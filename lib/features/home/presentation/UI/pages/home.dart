@@ -13,7 +13,6 @@ import 'package:flutterproject/features/home/presentation/UI/pages/product_detai
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 import 'package:flutterproject/nav.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 
 List myCart = [];
@@ -59,7 +58,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   late HomePageBloc homePageBloc;
   late TextEditingController _searchController;
   late List<Map<String, dynamic>> _filteredProducts;
@@ -93,6 +91,7 @@ class _HomeState extends State<Home> {
       print('Error fetching product: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomePageBloc, HomePageState>(
