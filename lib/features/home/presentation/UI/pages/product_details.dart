@@ -39,7 +39,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
       _isLoading = true;
     });
     try {
-      // Fetch the product document
       final productDoc = await FirebaseFirestore.instance
           .collection('products')
           .doc(widget.product_detail_id)
@@ -48,7 +47,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
       if (productDoc.exists) {
         final sellerId = productDoc.data()?['user_id'];
 
-        // Fetch the seller document based on the seller ID associated with the product
         final sellerDoc = await FirebaseFirestore.instance
             .collection('sellers')
             .doc(sellerId)
@@ -119,7 +117,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
       ),
       body: ListView(
         children: [
-          // Product image and details section
           Container(
             height: 300,
             child: GridTile(
