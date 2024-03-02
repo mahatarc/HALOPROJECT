@@ -36,8 +36,8 @@ class AcceptedOrdersPage extends StatelessWidget {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Product: ${orderData['productName']}'),
-                    Text('Product Price : ${orderData['amount']}'),
+                    Text('Product Price: ${orderData['productName']}'),
+                    Text('Product Name : ${orderData['amount']}'),
                     Text('Business Name: ${orderData['businessName']}'),
                     Text('Seller Address: ${orderData['sellerAddress']}'),
                     Text('deliveryLocation: ${orderData['customeraddress']}'),

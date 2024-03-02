@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
@@ -151,6 +152,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   }
 
   void _acceptOrder(BuildContext context, String orderId) {
+    String driverId = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance
         .collection('orders')
         .doc(orderId)
@@ -165,6 +167,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
           'productName': orderData['productName'],
           //'orderDate': orderData['orderDate'],
           'deliveryLocation': orderData['customeraddress'],
+          'driverId': driverId,
         }).then((_) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
