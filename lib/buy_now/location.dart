@@ -6,11 +6,21 @@ class DeliveryAddressScreen extends StatefulWidget {
   final product_detail_name;
   final product_detail_price;
   final product_detail_picture;
+  final String? businessName;
+  final String? contactNumber;
+  final String? address;
+  final String? city;
+  final String? province;
 
   DeliveryAddressScreen({
     this.product_detail_name,
     this.product_detail_price,
     this.product_detail_picture,
+    this.businessName,
+    this.contactNumber,
+    this.address,
+    this.city,
+    this.province,
   });
   @override
   _DeliveryAddressScreenState createState() => _DeliveryAddressScreenState();
@@ -73,7 +83,8 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
             TextField(
               controller: postalCodeController,
               onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Postal Code (Optional)'),
+              decoration: InputDecoration(labelText: 'Postal Code'),
+              keyboardType: TextInputType.number,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(5),
                 FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
@@ -94,6 +105,11 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                             productPrice:
                                 double.parse(widget.product_detail_price),
                             productPicture: widget.product_detail_picture,
+                            businessName: widget.businessName,
+                            contactNumber: widget.contactNumber,
+                            sellerAddress: widget.address,
+                            sellerCity: widget.city,
+                            sellerProvince: widget.province,
                           ),
                         ),
                       );

@@ -1,5 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
 
 class PendingOrdersPage extends StatefulWidget {
   @override
@@ -7,14 +9,15 @@ class PendingOrdersPage extends StatefulWidget {
 }
 
 class _PendingOrdersPageState extends State<PendingOrdersPage> {
-  final List<Order> pendingOrders = [];
+  late List<DocumentSnapshot> pendingOrders;
+  late List<Order> acceptedOrders = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Pending Orders'),
-        backgroundColor: Color.fromARGB(255, 155, 229, 123),
+        backgroundColor: Colors.green[100],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('orders').snapshots(),
@@ -28,6 +31,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
           }
 
           final orders = snapshot.data!.docs;
+          pendingOrders = orders;
 
           if (orders.isEmpty) {
             return Center(child: Text('No orders available.'));
@@ -39,68 +43,78 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
               var orderData = orders[index].data() as Map<String, dynamic>;
               var productIdList = orderData['productIdList'] as List?;
 
-              return GestureDetector(
-                onTap: () {
-                  // Call function to show options for the tapped order
-                  _showOrderOptions(
-                      context,
-                      Order(
-                        orderData['orderNumber'],
-                        orderData['productNames'],
-                        orderData['placementDate'],
-                      ));
-                },
-                child: FutureBuilder<List<DocumentSnapshot>>(
-                  future: _getProductDocuments(productIdList),
-                  builder: (context, productSnapshot) {
-                    if (productSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    if (productSnapshot.hasError) {
-                      return Center(
-                          child: Text('Error: ${productSnapshot.error}'));
-                    }
-
-                    var productDataList = productSnapshot.data;
-
-                    return Column(
+              return Card(
+                elevation: 2,
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                // color: Colors.green[200],
+                child: InkWell(
+                  onTap: () {
+                    _showOrderOptions(context, orders[index].id as String);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ListTile(
-                          title: Text('Order ID: ${orders[index].id}'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (productDataList != null)
-                                ...productDataList.map((productData) {
-                                  var product = productData.data()
-                                      as Map<String, dynamic>;
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('Product: ${product['name']}'),
-                                      Text('Price: \$${product['price']}'),
-                                      SizedBox(height: 8),
-                                    ],
-                                  );
-                                }).toList(),
-                              Text('Customer: ${orderData['customerName']}'),
-                              Text('Location: ${orderData['address']}'),
-                              Text(
-                                  'Price: \$${orderData['amount'] ?? 'N/A'}'), // Use 'totalAmount' with a fallback value of 'N/A' if it's null
-                              Text(
-                                  'Payment Status: ${orderData['paymentStatus']}'),
-                              SizedBox(height: 16),
-                            ],
-                          ),
+                        Text(
+                          'Order ID: ${orders[index].id}',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Divider(), // Add a Divider between each order
+                        SizedBox(height: 8),
+                        if (productIdList != null)
+                          ...productIdList.map((productId) {
+                            return FutureBuilder<DocumentSnapshot>(
+                              future: FirebaseFirestore.instance
+                                  .collection('products')
+                                  .doc(productId)
+                                  .get(),
+                              builder: (context, productSnapshot) {
+                                if (productSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator();
+                                }
+
+                                if (productSnapshot.hasError) {
+                                  return Text(
+                                      'Error: ${productSnapshot.error}');
+                                }
+
+                                var productData = productSnapshot.data!.data()
+                                    as Map<String, dynamic>;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Product: ${productData['name']}'),
+                                    Text('Price: \$${productData['price']}'),
+                                    SizedBox(height: 8),
+                                  ],
+                                );
+                              },
+                            );
+                          }).toList(),
+                        Text(
+                            'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
+                        Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
+                        Text('Price: \$${orderData['productName'] ?? 'N/A'}'),
+                        Text(
+                            'Customer Location: ${orderData['customeraddress']}'),
+                        Text('Payment Status: ${orderData['paymentStatus']}'),
+                        Text(
+                          'Seller Information:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text('Business Name: ${orderData['businessName']}'),
+                        Text('Seller Location: ${orderData['sellerAddress']}'),
+                        Text('Seller Contact: ${orderData['contactNumber']}'),
+                        Text('Seller City: ${orderData['sellerCity']}'),
+                        Text('Seller Province: ${orderData['sellerProvince']}'),
                       ],
-                    );
-                  },
+                    ),
+                  ),
                 ),
               );
             },
@@ -110,7 +124,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
     );
   }
 
-  void _showOrderOptions(BuildContext context, Order order) {
+  void _showOrderOptions(BuildContext context, String orderId) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -121,14 +135,14 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
               title: Text('Accept Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
-                _acceptOrder(order);
+                _acceptOrder(context, orderId);
               },
             ),
             ListTile(
               title: Text('Reject Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
-                _rejectOrder(order);
+                _rejectOrder(orderId);
               },
             ),
           ],
@@ -137,69 +151,101 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
     );
   }
 
-  void _acceptOrder(Order order) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AcceptOrderScreen(order),
-      ),
-    );
-  }
+  void _acceptOrder(BuildContext context, String orderId) {
+    String driverId = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore.instance
+        .collection('orders')
+        .doc(orderId)
+        .get()
+        .then((orderSnapshot) {
+      if (orderSnapshot.exists) {
+        var orderData = orderSnapshot.data() as Map<String, dynamic>;
 
-  void _rejectOrder(Order order) {
-    setState(() {
-      pendingOrders.remove(order);
+        // Store the accepted order in the 'accepted_orders' collection
+        FirebaseFirestore.instance.collection('accepted_orders').add({
+          'orderNumber': orderId,
+          'productName': orderData['productName'],
+          //'orderDate': orderData['orderDate'],
+          'deliveryLocation': orderData['customeraddress'],
+          'driverId': driverId,
+        }).then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Order $orderId accepted'),
+            ),
+          );
+
+          // After accepting the order, fetch the accepted orders
+          _fetchAcceptedOrders(context);
+        }).catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to accept order: $error'),
+            ),
+          );
+        });
+      }
+    }).catchError((error) {
+      // Handle error fetching the order
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error fetching order: $error'),
+        ),
+      );
     });
   }
-}
 
-class Order {
-  final String orderNumber;
-  final String productNames;
-  final String placementDate;
-
-  Order(this.orderNumber, this.productNames, this.placementDate);
-}
-
-class AcceptOrderScreen extends StatelessWidget {
-  final Order order;
-
-  AcceptOrderScreen(this.order);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Accept Order'),
+  void _fetchAcceptedOrders(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AcceptedOrdersPage(),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Order Number: ${order.orderNumber}'),
-            Text('Products: ${order.productNames}'),
-            Text('Placed on: ${order.placementDate}'),
-            // Add more details or actions as needed
-          ],
-        ),
+    );
+  }
+
+  void _rejectOrder(String orderId) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Order $orderId rejected'),
       ),
     );
   }
 }
 
-Future<List<DocumentSnapshot>> _getProductDocuments(List? productIdList) async {
-  if (productIdList == null || productIdList.isEmpty) {
-    return []; // Return an empty list if productIdList is null or empty
-  }
+/*class Order {
+  final String orderNumber;
+  final String productName;
+  final String customerName;
+  final String customeraddress;
+  final double amount;
+  final String paymentStatus;
+  final String businessName;
+  final String sellerLocation;
+  // final String sellerId;
+  Order({
+    required this.orderNumber,
+    required this.productName,
+    required this.customerName,
+    required this.customeraddress,
+    required this.amount,
+    required this.paymentStatus,
+    required this.businessName,
+    required this.sellerLocation,
+    //required this.sellerId,
+  });
 
-  var productDocuments = <DocumentSnapshot>[];
-  for (var productId in productIdList) {
-    var productDocument = await FirebaseFirestore.instance
-        .collection('products')
-        .doc(productId)
-        .get();
-    productDocuments.add(productDocument);
+  factory Order.fromMap(Map<String, dynamic> map) {
+    return Order(
+      orderNumber: map['orderNumber'] ?? '',
+      productName: map['productName'] ?? '',
+      customerName: map['customerName'] ?? '',
+      customeraddress: map['address'] ?? '',
+      amount: map['amount'] != null ? map['amount'].toDouble() : 0.0,
+      paymentStatus: map['paymentStatus'] ?? '',
+      businessName: map['businessName'] ?? '',
+      sellerLocation: map['sellerAddress'] ?? '',
+      //  sellerId: map['sellerId'] ??'',
+    );
   }
-
-  return productDocuments;
-}
+}*/

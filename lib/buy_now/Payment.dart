@@ -3,8 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PaymentService {
-  Future<bool> processPayment(String cardNumber, String cvv, String expiryDate,
-      String fullName, String address, String city, String productPrice) async {
+  Future<bool> processPayment(
+    String cardNumber,
+    String cvv,
+    String expiryDate,
+    String fullName,
+    String address,
+    String city,
+    String productPrice,
+    String productName,
+    String? businessName,
+    String? contactNumber,
+    String? sellerAddress,
+    String? sellerCity,
+    String? sellerProvince,
+  ) async {
     await Future.delayed(Duration(seconds: 2));
 
     if (_isExpired(expiryDate)) {
@@ -14,14 +27,18 @@ class PaymentService {
     try {
       // Store order details in Firestore
       await FirebaseFirestore.instance.collection('orders').add({
-        'productName': 'Product Name', // Replace with actual product name
-        'customerName': fullName, // Use the provided full name
-        'address': address, // Use the provided address
-        'city': city, // Use the provided city
-        'amount': productPrice, // Use the converted product price
-        'sellerName': 'Seller Name', // Replace with actual seller name
-        'paymentStatus': 'Successful', // Indicate payment status
+        'productName': productName,
+        'customerName': fullName,
+        'customeraddress': address,
+        'city': city,
+        'amount': productPrice,
+        'paymentStatus': 'Successful',
         'timestamp': Timestamp.now(),
+        'businessName': businessName,
+        'contactNumber': contactNumber,
+        'sellerAddress': sellerAddress,
+        'sellerCity': sellerCity,
+        'sellerProvince': sellerProvince,
       });
       return true;
     } catch (e) {
@@ -54,6 +71,11 @@ class CardPaymentScreen extends StatelessWidget {
   final String productName;
   final double productPrice;
   final String productPicture;
+  final String? businessName;
+  final String? contactNumber;
+  final String? sellerAddress;
+  final String? sellerCity;
+  final String? sellerProvince;
 
   CardPaymentScreen({
     required this.fullName,
@@ -62,6 +84,11 @@ class CardPaymentScreen extends StatelessWidget {
     required this.productName,
     required this.productPrice,
     required this.productPicture,
+    this.businessName,
+    this.contactNumber,
+    this.sellerAddress,
+    this.sellerCity,
+    this.sellerProvince,
   });
 
   final TextEditingController cardNumberController = TextEditingController();
@@ -130,10 +157,17 @@ class CardPaymentScreen extends StatelessWidget {
                     cardNumberController.text,
                     cvvController.text,
                     expiryDateController.text,
-                    fullName, // Add full name
-                    address, // Add address
-                    city, // Add city
-                    productPrice.toString(), // Convert product price to string
+                    fullName,
+                    address,
+                    city,
+                    productName,
+                    productPrice.toString(),
+                    // Convert product price to string
+                    businessName,
+                    contactNumber,
+                    sellerAddress,
+                    sellerCity,
+                    sellerProvince,
                   );
 
                   if (isSuccess) {
