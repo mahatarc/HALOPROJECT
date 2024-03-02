@@ -92,9 +92,10 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                               },
                             );
                           }).toList(),
-                        Text('Customer: ${orderData['customerName']}'),
+                        Text(
+                            'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
                         Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                        Text('Price: \$${orderData['productName']}'),
+                        Text('Price: \$${orderData['productName'] ?? 'N/A'}'),
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
@@ -104,8 +105,10 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         Text('Business Name: ${orderData['businessName']}'),
-                        Text('Seller Location: ${orderData['sellerLocation']}'),
+                        Text('Seller Location: ${orderData['sellerAddress']}'),
                         Text('Seller Contact: ${orderData['contactNumber']}'),
+                        Text('Seller City: ${orderData['sellerCity']}'),
+                        Text('Seller Province: ${orderData['sellerProvince']}'),
                       ],
                     ),
                   ),
@@ -158,7 +161,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
         FirebaseFirestore.instance.collection('accepted_orders').add({
           'orderNumber': orderId,
           'productName': orderData['productName'],
-          'orderDate': orderData['orderDate'],
+          //'orderDate': orderData['orderDate'],
           'deliveryLocation': orderData['customeraddress'],
         }).then((_) {
           ScaffoldMessenger.of(context).showSnackBar(

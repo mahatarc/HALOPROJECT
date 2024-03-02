@@ -36,9 +36,9 @@ class PaymentService {
         'timestamp': Timestamp.now(),
         'businessName': businessName,
         'contactNumber': contactNumber,
-        'address': sellerAddress,
-        'Sellercity': sellerCity,
-        'province': sellerProvince,
+        'sellerAddress': sellerAddress,
+        'sellerCity': sellerCity,
+        'sellerProvince': sellerProvince,
       });
       return true;
     } catch (e) {
