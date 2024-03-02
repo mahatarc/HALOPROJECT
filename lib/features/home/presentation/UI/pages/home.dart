@@ -9,9 +9,11 @@ import 'package:flutterproject/features/home/presentation/UI/pages/categories/ca
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/drawer_a.dart';
 import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 import 'package:flutterproject/nav.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 List myCart = [];
@@ -29,7 +31,7 @@ List<Widget> pages = [
 class LandingPage extends StatelessWidget {
   final int? pageIndex;
   const LandingPage({
-    Key? key,
+    super.key,
     this.pageIndex = 0,
   });
 
@@ -42,7 +44,7 @@ class LandingPage extends StatelessWidget {
         child: Scaffold(
           body: pages[0],
           bottomNavigationBar:
-              BottomBar2(screenList: pages, selectedIndex: pageIndex!),
+              BottomBar2(screenList: pages, selectedIndex: pageIndex),
         ),
       ),
     );
@@ -50,22 +52,47 @@ class LandingPage extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  const Home({Key? key});
+  const Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+
   late HomePageBloc homePageBloc;
+  late TextEditingController _searchController;
+  late List<Map<String, dynamic>> _filteredProducts;
+  Map<String, dynamic>? _searchedProduct;
   @override
   void initState() {
     homePageBloc = BlocProvider.of<HomePageBloc>(context);
     homePageBloc.add(HomePageInitialEvent());
-
+    _searchController = TextEditingController();
     super.initState();
   }
 
+  Future<void> fetchProduct(String query) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('products').get();
+      final List<Map<String, dynamic>> products =
+          snapshot.docs.map((doc) => doc.data()).toList();
+
+      setState(() {
+        if (query.isNotEmpty) {
+          _searchedProduct = products.firstWhere((product) =>
+              product['name'].toLowerCase().contains(query.toLowerCase()));
+        } else {
+          _searchedProduct = null;
+          // Remove focus from the search field
+          FocusScope.of(context).requestFocus(FocusNode());
+        }
+      });
+    } catch (e) {
+      print('Error fetching product: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomePageBloc, HomePageState>(
@@ -75,175 +102,161 @@ class _HomeState extends State<Home> {
         builder: (context, state) {
           if (state is HomePageInitialState) {
             return Scaffold(
-              backgroundColor: Colors.grey.shade100,
               appBar: AppBar(
                 title: Text(
                   'Halo',
-                  style: GoogleFonts.lato(),
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(),
+                  ),
                 ),
                 backgroundColor: Colors.green[100],
                 actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.notifications),
-                  ),
+                  Icon(Icons.notification_add),
                 ],
               ),
+              backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
+                      Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.green[100],
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
                         ),
                         child: TextFormField(
+                          controller: _searchController,
+                          onChanged: (value) {
+                            fetchProduct(value.trim());
+                          },
                           decoration: InputDecoration(
-                            labelText: "Search your product...",
+                            label: Text(
+                              "Search your product...",
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(),
+                              ),
+                            ),
+                            border: InputBorder.none,
                             prefixIcon: Icon(
                               Icons.search,
                               size: 30,
-                              color: Colors.grey.shade600,
+                              color: Colors.green[200],
                             ),
-                            border: InputBorder.none,
                           ),
                         ),
                       ),
                       SizedBox(height: 20),
-                      AnimatedOpacity(
-                        duration: Duration(milliseconds: 500),
-                        opacity: 1,
-                        child: ImageCarouselSlider(),
-                      ),
-                      SizedBox(height: 20),
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Categories',
-                                    style: GoogleFonts.lato(
-                                      textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      homePageBloc
-                                          .add(CategoriesPressedEvent());
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      primary:
-                                          Color.fromARGB(255, 239, 244, 249),
-                                      onPrimary:
-                                          const Color.fromARGB(255, 11, 3, 3),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'View More',
-                                      style: GoogleFonts.lato(
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                      if (_searchedProduct != null)
+                        ListTile(
+                          title: Text(_searchedProduct!['name']),
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductsDetails(
+                                  product_detail_id: _searchedProduct!['id'],
+                                  product_detail_name:
+                                      _searchedProduct!['name'],
+                                  product_detail_price:
+                                      _searchedProduct!['price'],
+                                  product_detail_picture:
+                                      _searchedProduct!['image_url'],
+                                  product_detail_details:
+                                      _searchedProduct!['details'],
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              height: 100,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 4,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Category(
-                                      imagePath: categoryImages[index],
-                                      categoryName: categoriesList[index],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                            )
+                          },
                         ),
-                      ),
+                      // SizedBox to create some space between the search bar and carousel
                       SizedBox(height: 20),
-                      // Recommended Section
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              child: Text(
-                                'Recommended for you',
+                      ImageCarouselSlider(),
+                      SizedBox(height: 20),
+
+                      ///Categoriess---------------------------------------------------------
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Categories',
                                 style: GoogleFonts.lato(
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                  ),
+                                ),
+                                textScaleFactor: 1.5,
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  homePageBloc.add(CategoriesPressedEvent());
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 239, 244, 249),
+                                  onPrimary:
+                                      const Color.fromARGB(255, 11, 3, 3),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  'View More',
+                                  style: GoogleFonts.lato(
+                                    textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                 ),
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        height: 100.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 4,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Category(
+                                imagePath: categoryImages[index],
+                                categoryName: categoriesList[index],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+
+                      // Recommended Section
+                      Container(
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Recommended for you',
+                                /* style: TextStyle(fontWeight: FontWeight.bold,
+                                ),*/
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                textScaleFactor: 1.5,
+                              ),
                             ),
-                            SizedBox(height: 10),
                             RecommendProduct(),
                           ],
                         ),
@@ -283,43 +296,48 @@ class RecommendProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection('products').get(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          List<QueryDocumentSnapshot> products =
-              snapshot.data!.docs.cast<QueryDocumentSnapshot>();
-          return GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: products.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.9, // Adjusted height of product item
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              var productData = products[index].data() as Map<String, dynamic>;
-              var productId = products[index].id;
-              return SingleProduct(
-                productId: productId,
-                product_name: productData['name'],
-                product_picture: productData['image_url'],
-                prod_price: productData['price'],
-                prod_details: productData['product_details'],
-              );
-            },
-          );
-        }
-        return SizedBox();
-      },
+    return Container(
+      padding: EdgeInsets.all(12),
+      child: FutureBuilder<QuerySnapshot>(
+        future: FirebaseFirestore.instance.collection('products').get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print('Loading');
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            print('Error');
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            List<QueryDocumentSnapshot> products =
+                snapshot.data!.docs.cast<QueryDocumentSnapshot>();
+            print(products.first);
+            print('Categories received');
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: products.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                var productData =
+                    products[index].data() as Map<String, dynamic>;
+                var productId = products[index].id;
+                return SingleProduct(
+                  productId: productId,
+                  product_name: productData['name'],
+                  product_picture: productData['image_url'],
+                  prod_price: productData['price'],
+                  prod_details: productData['product_details'],
+                );
+              },
+            );
+          }
+          return SizedBox(); // Return an empty widget if none of the conditions are met
+        },
+      ),
     );
   }
 }
@@ -339,7 +357,7 @@ class ImageCarouselSlider extends StatelessWidget {
         viewportFraction: 0.8,
       ),
       items: [
-        'images/logo.png',
+        'images/advertisement.png',
         'images/discount.png',
       ].map((String imagePath) {
         return Builder(
@@ -348,7 +366,6 @@ class ImageCarouselSlider extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.symmetric(horizontal: 5.0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
@@ -358,12 +375,9 @@ class ImageCarouselSlider extends StatelessWidget {
                   ),
                 ],
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                ),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
               ),
             );
           },

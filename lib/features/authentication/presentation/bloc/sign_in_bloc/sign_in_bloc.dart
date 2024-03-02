@@ -14,7 +14,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInStates> {
     on<SignInInitialEvent>(signInInitialEvent);
     on<SignInButtonPressedEvent>(signInButtonPressedEvent);
     on<SignUpButtonPressedNavigateEvent>(signUpButtonPressedNavigateEvent);
-    
   }
 
   FutureOr<void> signInInitialEvent(
@@ -23,51 +22,51 @@ class SignInBloc extends Bloc<SignInEvent, SignInStates> {
   }
 
   FutureOr<void> signInButtonPressedEvent(
-      SignInButtonPressedEvent event, Emitter<SignInStates> emit) async{
-         try {
+      SignInButtonPressedEvent event, Emitter<SignInStates> emit) async {
+    try {
       emit(SignInLoadingState());
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-    email: event.email,
-    password: event.password); 
+          email: event.email, password: event.password);
       //emit(SignInNavigateToHomePageActionState());
-final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      DocumentSnapshot userData = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
 
-      if (userData.exists) {
-        // Retrieve user role
-        String role = userData.get('role');
-           
-        // Compare user role and navigate to respective dashboard
-        if (role == 'seller') {
-          emit(SignInNavigateToSellerHomePageActionState());
+        if (userData.exists) {
+          // Retrieve user role
+          String role = userData.get('role');
+
+          // Compare user role and navigate to respective dashboard
+          if (role == 'seller') {
+            emit(SignInNavigateToSellerHomePageActionState());
+          }
+         else if (role == 'driver') {
+            emit(SignInNavigateToDriverHomePageActionState());
+          } else {
+            emit(SignInNavigateToBuyerHomePageActionState());
+          }
         } else {
-          emit(SignInNavigateToBuyerHomePageActionState());
+          // Handle case where user data does not exist
+          print('User data does not exist.');
         }
       } else {
-        // Handle case where user data does not exist
-        print('User data does not exist.');
+        // Handle case where user is not logged in
+        print('User is not logged in.');
       }
-    } else {
-      // Handle case where user is not logged in
-      print('User is not logged in.');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
     }
-    } 
-    on FirebaseAuthException catch (e) {
-  if (e.code == 'user-not-found') {
-    print('No user found for that email.');
-  } else if (e.code == 'wrong-password') {
-    print('Wrong password provided for that user.');
   }
-    }
-        
-      }
 
   FutureOr<void> signUpButtonPressedNavigateEvent(
       SignUpButtonPressedNavigateEvent event, Emitter<SignInStates> emit) {
-        emit(SignUpPressedNavigateToSignUpActionState());
-      }
+    emit(SignUpPressedNavigateToSignUpActionState());
+  }
 }

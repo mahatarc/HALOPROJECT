@@ -52,9 +52,11 @@ dependencies:
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
   flutter_linkify: ^6.0.0
+  package_info: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
+ 
     
 
   # The "flutter_lints" package below contains a set of recommended lints to

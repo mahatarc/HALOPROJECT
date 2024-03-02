@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/model/usermodel.dart';
@@ -27,9 +28,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         email: event.email,
         password: event.password,
       );
-      addUserDetails(credential.user!.uid, event.user);
 
-      emit(SignUpNavigateToHomePageActionState());
+      await credential.user!.sendEmailVerification();
+      emit(VerificationEmailSentState(event.email,event.user));
+      print('User data has been successfully added after email verification');
     } on FirebaseAuthException catch (error) {
       print(error);
     }
@@ -38,7 +40,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   FutureOr<void> loginButtonPressedEvent(
       LoginButtonPressedEvent event, Emitter<SignUpState> emit) {
     emit(LoginPressedNavigateToLoginActionState());
-    
   }
 }
 
@@ -48,4 +49,3 @@ Future addUserDetails(String uid, UserModel user) async {
       .doc(uid)
       .set(user.toJson());
 }
-

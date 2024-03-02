@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/model/usermodel.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
 class SignUppage extends StatefulWidget {
@@ -76,9 +77,29 @@ class _SignUpPageState extends State<SignUppage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset('images/logo.png',
-                              width: 200, height: 220),
-                          SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('HA',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text before the icon
+                              Image.asset(
+                                'images/logo.png', // Replace 'custom_icon.png' with the name of your icon file
+                                width:
+                                    60, // Adjust the width of the icon as needed
+                                height:
+                                    60, // Adjust the height of the icon as needed
+                              ),
+                              Text('O',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text after the icon
+                            ],
+                          ),
+                          SizedBox(height: 10),
                           Container(
                             child: Text(
                               'Please Sign Up To Your Account',
@@ -132,6 +153,7 @@ class _SignUpPageState extends State<SignUppage> {
                             onTap: () {
                               signUpBloc.add(
                                 SignUpButtonPressedEvent(
+                                  context: context,
                                   email: _emailController.text,
                                   password: _passwordController.text,
                                   user: UserModel(
@@ -148,6 +170,7 @@ class _SignUpPageState extends State<SignUppage> {
                                 onPressed: () {
                                   signUpBloc.add(
                                     SignUpButtonPressedEvent(
+                                      context: context,
                                       email: _emailController.text,
                                       password: _passwordController.text,
                                       user: UserModel(
@@ -162,7 +185,7 @@ class _SignUpPageState extends State<SignUppage> {
                                   primary:
                                       const Color.fromARGB(255, 156, 199, 107),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   minimumSize: const Size(double.infinity, 50),
                                 ),
@@ -228,17 +251,160 @@ class _SignUpPageState extends State<SignUppage> {
               ),
             ),
           );
-        } else if (state is SignUpNavigateToHomePageActionState) {
+        } else if (state is VerificationEmailSentState) {
           Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => HomePageBloc(),
-                child: LandingPage(),
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      VerifyEmailScreen(email: state.email, user: state.user)));
+        }
+      },
+    );
+  }
+}
+
+class VerifyEmailScreen extends StatefulWidget {
+  final String email;
+  final UserModel user;
+
+  const VerifyEmailScreen({Key? key, required this.email, required this.user})
+      : super(key: key);
+
+  @override
+  _VerifyEmailScreenState createState() => _VerifyEmailScreenState();
+}
+
+class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+  bool _isEmailVerified = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Verify Email'),
+        backgroundColor: Colors.green[100],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              'images/email.png',
+              width: 300,
+              height: 300,
+            ),
+            SizedBox(
+              height: 40,
+              width: 10,
+            ),
+            Text(
+              'A verification email has been sent to ${widget.email}.',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 30,
+              width: 10,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.currentUser?.reload();
+
+                final user = FirebaseAuth.instance.currentUser;
+                setState(() {
+                  _isEmailVerified = user?.emailVerified ?? false;
+                });
+
+                if (!_isEmailVerified) {
+                  _showErrorDialog(context);
+                } else if (_isEmailVerified) {
+                  _showSignInDialog(context);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 156, 199, 107),
+              ),
+              child: Text(
+                'Confirm Verification',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
               ),
             ),
-          );
-        }
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSignInDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          title: Text('Email Verified'),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'images/tick1.png',
+                width: 100,
+                height: 100,
+              ),
+              Text('Congratulations!!'),
+              Text('Your email has been verified.'),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                String? uid = FirebaseAuth.instance.currentUser?.uid;
+                await addUserDetails(uid!, widget.user);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => HomePageBloc(),
+                      child: LandingPage(),
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 156, 199, 107),
+              ),
+              child: Text(
+                'Go to Dashboard',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please verify your email first.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
       },
     );
   }
