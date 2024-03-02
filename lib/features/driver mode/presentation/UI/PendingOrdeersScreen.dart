@@ -161,16 +161,12 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
       if (orderSnapshot.exists) {
         var orderData = orderSnapshot.data() as Map<String, dynamic>;
 
-        // Store the accepted order in the 'accepted_orders' collection
-        FirebaseFirestore.instance.collection('accepted_orders').add({
-          'orderNumber': orderId,
-          'productName': orderData['ProductName'],
-          'productPrice': orderData['amount'],
-          'deliveryLocation': orderData['customeraddress'],
-          'BusinessName': orderData['businessName'],
-          'sellerAddress': orderData['sellerAddress'],
-          'driverId': driverId,
-        }).then((_) {
+        // Store the entire order document in 'accepted_orders'
+        FirebaseFirestore.instance
+            .collection('accepted_orders')
+            .doc(orderId)
+            .set(orderData)
+            .then((_) {
           // Remove the accepted order from the 'orders' collection
           orderSnapshot.reference.delete().then((_) {
             ScaffoldMessenger.of(context).showSnackBar(
