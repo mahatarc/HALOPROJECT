@@ -67,20 +67,6 @@ class Mydrawer extends StatelessWidget {
                   title: Text("My Information"),
                 ),
               ),
-              /* GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FeedProfile(),
-                    ),
-                  );
-                },
-                child: ListTile(
-                  leading: Icon(Icons.info),
-                  title: Text("My Posts"),
-                ),
-              ),*/
               GestureDetector(
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(
@@ -92,14 +78,11 @@ class Mydrawer extends StatelessWidget {
                   title: Text("Settings"),
                 ),
               ),
-              const ListTile(
-                leading: Icon(Icons.history),
-                title: Text("Transaction History"),
-              ),
-              const ListTile(
-                leading: Icon(Icons.delivery_dining),
-                title: Text("Delivery"),
-              ),
+
+              // const ListTile(
+              //   leading: Icon(Icons.delivery_dining),
+              //   title: Text("Delivery"),
+              // ),
               GestureDetector(
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(
@@ -114,8 +97,8 @@ class Mydrawer extends StatelessWidget {
               const SizedBox(
                 height: 30,
               ),
-              GestureDetector(
-                onTap: () {
+              ElevatedButton(
+                onPressed: () {
                   Navigator.of(context, rootNavigator: true)
                       .pushReplacement(MaterialPageRoute(
                           builder: (context) => BlocProvider(
@@ -123,18 +106,15 @@ class Mydrawer extends StatelessWidget {
                                 child: const LoginPage(),
                               )));
                 },
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 156, 199, 107),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Center(
-                    child: Text("Log Out",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20)),
+                style: ElevatedButton.styleFrom(
+                  primary: const Color.fromARGB(255, 156, 199, 107),
+                  minimumSize: const Size(20, 50),
+                ),
+                child: Text(
+                  'Log Out',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
                   ),
                 ),
               ),

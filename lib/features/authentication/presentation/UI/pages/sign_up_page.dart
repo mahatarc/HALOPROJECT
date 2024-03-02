@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/model/usermodel.dart';
@@ -5,6 +6,8 @@ import 'package:flutterproject/features/authentication/presentation/bloc/sign_in
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
+import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
 class SignUppage extends StatefulWidget {
   const SignUppage({Key? key}) : super(key: key);
@@ -248,47 +251,161 @@ class _SignUpPageState extends State<SignUppage> {
               ),
             ),
           );
-        } else if (state is EmailVerifiedState) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => SignInBloc(),
-                child: LoginPage(),
-              ),
-            ),
-          );
         } else if (state is VerificationEmailSentState) {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => VerifyEmailScreen(email: state.email)));
+                  builder: (context) =>
+                      VerifyEmailScreen(email: state.email, user: state.user)));
         }
       },
     );
   }
 }
 
-class VerifyEmailScreen extends StatelessWidget {
+class VerifyEmailScreen extends StatefulWidget {
   final String email;
+  final UserModel user;
 
-  const VerifyEmailScreen({Key? key, required this.email}) : super(key: key);
+  const VerifyEmailScreen({Key? key, required this.email, required this.user})
+      : super(key: key);
+
+  @override
+  _VerifyEmailScreenState createState() => _VerifyEmailScreenState();
+}
+
+class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+  bool _isEmailVerified = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Verify Email'),
+        backgroundColor: Colors.green[100],
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('A verification email has been sent to $email.'),
-            ElevatedButton(onPressed: () {}, child: Text('Verified'))
+            Image.asset(
+              'images/email.png',
+              width: 300,
+              height: 300,
+            ),
+            SizedBox(
+              height: 40,
+              width: 10,
+            ),
+            Text(
+              'A verification email has been sent to ${widget.email}.',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 30,
+              width: 10,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.currentUser?.reload();
+
+                final user = FirebaseAuth.instance.currentUser;
+                setState(() {
+                  _isEmailVerified = user?.emailVerified ?? false;
+                });
+
+                if (!_isEmailVerified) {
+                  _showErrorDialog(context);
+                } else if (_isEmailVerified) {
+                  _showSignInDialog(context);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 156, 199, 107),
+              ),
+              child: Text(
+                'Confirm Verification',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showSignInDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          title: Text('Email Verified'),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'images/tick1.png',
+                width: 100,
+                height: 100,
+              ),
+              Text('Congratulations!!'),
+              Text('Your email has been verified.'),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                String? uid = FirebaseAuth.instance.currentUser?.uid;
+                await addUserDetails(uid!, widget.user);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => HomePageBloc(),
+                      child: LandingPage(),
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 156, 199, 107),
+              ),
+              child: Text(
+                'Go to Dashboard',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please verify your email first.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
