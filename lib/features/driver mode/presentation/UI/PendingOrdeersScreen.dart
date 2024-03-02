@@ -98,8 +98,14 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
-                        Text('Seller Name: ${orderData['sellerName']}'),
-                        Text('Seller Location: ${orderData['location']}'),
+                        Text(
+                          'Seller Information:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text('Business Name: ${orderData['businessName']}'),
+                        Text('Seller Location: ${orderData['sellerLocation']}'),
+                        Text('Seller Contact: ${orderData['contactNumber']}'),
                       ],
                     ),
                   ),
@@ -199,16 +205,16 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   }
 }
 
-class Order {
+/*class Order {
   final String orderNumber;
   final String productName;
   final String customerName;
   final String customeraddress;
   final double amount;
-  final String paymentStatus; // Add payment status field
-  final String sellerName; // Add seller name field
-  final String location; // Add seller location field
-
+  final String paymentStatus;
+  final String businessName;
+  final String sellerLocation;
+  // final String sellerId;
   Order({
     required this.orderNumber,
     required this.productName,
@@ -216,8 +222,9 @@ class Order {
     required this.customeraddress,
     required this.amount,
     required this.paymentStatus,
-    required this.sellerName,
-    required this.location,
+    required this.businessName,
+    required this.sellerLocation,
+    //required this.sellerId,
   });
 
   factory Order.fromMap(Map<String, dynamic> map) {
@@ -228,8 +235,9 @@ class Order {
       customeraddress: map['address'] ?? '',
       amount: map['amount'] != null ? map['amount'].toDouble() : 0.0,
       paymentStatus: map['paymentStatus'] ?? '',
-      sellerName: map['sellerName'] ?? '',
-      location: map['location'] ?? '',
+      businessName: map['businessName'] ?? '',
+      sellerLocation: map['sellerAddress'] ?? '',
+      //  sellerId: map['sellerId'] ??'',
     );
   }
-}
+}*/

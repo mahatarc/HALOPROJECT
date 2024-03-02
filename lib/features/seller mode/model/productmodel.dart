@@ -19,8 +19,6 @@ class ProductModel {
         productpicture: map['image_url'],
         productprice: map['price'],
         productdetails: map['product_details'],
-        categorytype: map['category_type']
-        // prod_old_price: map['old_price'],
-        );
+        categorytype: map['category_type']);
   }
 }
