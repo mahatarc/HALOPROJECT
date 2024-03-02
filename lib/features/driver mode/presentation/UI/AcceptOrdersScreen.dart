@@ -38,9 +38,9 @@ class AcceptedOrdersPage extends StatelessWidget {
                   children: [
                     Text('Product: ${orderData['productName']}'),
                     Text('Product Price : ${orderData['amount']}'),
-                    Text('Seller: ${orderData['sellerName']}'),
-                    Text('Seller Address: ${orderData['location']}'),
-                    Text('deliveryLocation: ${orderData['deliveryAddress']}'),
+                    Text('Business Name: ${orderData['businessName']}'),
+                    Text('Seller Address: ${orderData['sellerAddress']}'),
+                    Text('deliveryLocation: ${orderData['customeraddress']}'),
                   ],
                 ),
               );

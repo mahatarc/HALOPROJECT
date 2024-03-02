@@ -43,9 +43,11 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
               var productIdList = orderData['productIdList'] as List?;
 
               return Card(
-                elevation: 4,
-                margin: EdgeInsets.symmetric(vertical: 8.0),
-                color: Colors.green[200],
+                elevation: 2,
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                // color: Colors.green[200],
                 child: InkWell(
                   onTap: () {
                     _showOrderOptions(context, orders[index].id as String);
