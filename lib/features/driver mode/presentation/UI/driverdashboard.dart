@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/CompletedOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/PendingOrdeersScreen.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_drawer.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_profile.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/myearnings.dart';
 
@@ -16,9 +17,9 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DriverDrawer(),
       backgroundColor: Color.fromARGB(255, 228, 234, 232),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.green[100],
         title: Text("Driver Dashboard"),
       ),
@@ -171,62 +172,6 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class AcceptOrdersScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Accept Orders'),
-      ),
-      body: Center(
-        child: Text('Accept Orders Screen'),
-      ),
-    );
-  }
-}
-
-class PendingOrdersScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pending Orders'),
-      ),
-      body: Center(
-        child: Text('Pending Orders Screen'),
-      ),
-    );
-  }
-}
-
-class CompletedOrdersScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Completed Orders'),
-      ),
-      body: Center(
-        child: Text('Completed Orders Screen'),
-      ),
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
-      body: Center(
-        child: Text('Profile Screen'),
       ),
     );
   }
