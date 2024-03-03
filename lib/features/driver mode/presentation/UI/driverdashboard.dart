@@ -35,7 +35,10 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
           children: [
             Text(
               'Welcome, Delivery Boy!',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              style: GoogleFonts.acme(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 16),
             /* SwitchListTile(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PendingOrdersPage extends StatefulWidget {
   @override
@@ -15,7 +16,13 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pending Orders'),
+        title: Text(
+          'Pending Orders',
+          style: GoogleFonts.acme(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.green[100],
       ),
       body: StreamBuilder<QuerySnapshot>(
