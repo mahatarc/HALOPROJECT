@@ -57,7 +57,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             Row(
               children: [
                 Expanded(
-                  child: _buildOrderStatusCard('Accept Orders', 3, () {
+                  child: _buildOrderStatusCard('Accept Orders', () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -68,7 +68,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
                 ),
                 SizedBox(width: 12),
                 Expanded(
-                  child: _buildOrderStatusCard('Pending Orders', 6, () {
+                  child: _buildOrderStatusCard('Pending Orders', () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -80,7 +80,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               ],
             ),
             SizedBox(height: 18),
-            _buildOrderStatusCard('Completed Orders', 5, () {
+            _buildOrderStatusCard('Completed Orders', () {
               // Navigate to the Completed Orders screen
               Navigator.push(
                 context,
@@ -130,8 +130,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
     );
   }
 
-  Widget _buildOrderStatusCard(
-      String title, int count, VoidCallback onPressed) {
+  Widget _buildOrderStatusCard(String title, VoidCallback onPressed) {
     return Card(
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 8.0),
@@ -151,18 +150,18 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               ],
             ),
           ),
-          Positioned(
+          /* Positioned(
             bottom: 9,
             right: 9,
-            child: CircleAvatar(
+           /* child: CircleAvatar(
               radius: 10,
               backgroundColor: Color.fromARGB(255, 223, 114, 114),
-              child: Text(
-                '$count',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
+              // child: Text(
+
+              // style: TextStyle(color: Colors.black),
+              // ),
+            ),*/
+          ),*/
           Positioned.fill(
             child: Material(
               color: Colors.transparent,

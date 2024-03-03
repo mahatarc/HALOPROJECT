@@ -31,7 +31,7 @@ class YourProductsBloc extends Bloc<YourProductsEvents, YourProductsState> {
         //converts every docs to map string dynamic and made a list of map string dynamic
         products.add(document.data() as Map<String, dynamic>);
       });
-      
+
       for (var productData in products) {
         ProductModel productModel =
             ProductModel.fromMap(productData); //productdata==map string dynamic

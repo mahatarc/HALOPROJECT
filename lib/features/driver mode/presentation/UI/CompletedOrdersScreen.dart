@@ -14,10 +14,10 @@ class CompletedOrdersPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Completed Orders'),
-        backgroundColor: Color.fromARGB(255, 155, 229, 123),
+        backgroundColor: Colors.green[100],
       ),
       body: Container(
-        color: Color.fromARGB(255, 211, 245, 172),
+        // color: Color.fromARGB(255, 211, 245, 172),
         child: ListView.builder(
           itemCount: completedOrders.length,
           itemBuilder: (context, index) {

@@ -17,15 +17,15 @@ class Seller {
     required this.imageUrl,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'businessName': businessName,
-      'contactNumber': contactNumber,
-      'address': address,
-      'city': city,
-      'province': province,
-      'citizenshipNumber': citizenshipNumber,
-      
-    };
+  factory Seller.fromMap(Map<String, dynamic> map) {
+    return Seller(
+      businessName: map['businessName'] ?? '',
+      contactNumber: map['contactNumber'] ?? '',
+      address: map['address'] ?? '',
+      city: map['city'] ?? '',
+      province: map['province'] ?? '',
+      citizenshipNumber: map['citizenshipNumber'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
+    );
   }
 }
