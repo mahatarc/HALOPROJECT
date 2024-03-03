@@ -46,6 +46,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green[100],
         title: Text('Delivery Address'),
       ),
       body: Padding(
