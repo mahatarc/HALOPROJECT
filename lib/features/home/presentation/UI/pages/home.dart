@@ -12,6 +12,7 @@ import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/mapservice/presentation/maps.dart';
+import 'package:flutterproject/features/seller%20mode/model/sellermodel.dart';
 import 'package:flutterproject/nav.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -81,6 +82,26 @@ class _HomeState extends State<Home> {
         if (query.isNotEmpty) {
           _searchedProduct = products.firstWhere((product) =>
               product['name'].toLowerCase().contains(query.toLowerCase()));
+
+          // Retrieve seller information for the searched product
+          final sellerId = _searchedProduct!['user_id'];
+          FirebaseFirestore.instance
+              .collection('sellers')
+              .doc(sellerId)
+              .get()
+              .then((sellerDoc) {
+            if (sellerDoc.exists) {
+              print('Seller information retrieved: ${sellerDoc.data()}');
+              setState(() {
+                _searchedProduct!['sellers'] = sellerDoc.data();
+                print("Successful.......................................");
+              });
+            } else {
+              print('Seller document does not exist.');
+            }
+          }).catchError((error) {
+            print('Error fetching seller details: $error');
+          });
         } else {
           _searchedProduct = null;
           // Remove focus from the search field
@@ -149,27 +170,31 @@ class _HomeState extends State<Home> {
                       SizedBox(height: 20),
                       if (_searchedProduct != null)
                         ListTile(
-                          title: Text(_searchedProduct!['name']),
-                          onTap: () => {
+                          title: Text(_searchedProduct!['name'] ?? ''),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ProductsDetails(
-                                  product_detail_id: _searchedProduct!['id'],
+                                  product_detail_id:
+                                      _searchedProduct!['id'] ?? '',
                                   product_detail_name:
-                                      _searchedProduct!['name'],
+                                      _searchedProduct!['name'] ?? '',
                                   product_detail_price:
-                                      _searchedProduct!['price'],
+                                      _searchedProduct!['price'] ?? '',
                                   product_detail_picture:
-                                      _searchedProduct!['image_url'],
+                                      _searchedProduct!['image_url'] ?? '',
                                   product_detail_details:
-                                      _searchedProduct!['details'],
+                                      _searchedProduct!['product_details'] ??
+                                          '',
+                                  seller: _searchedProduct![
+                                      'sellers'], // Pass the seller information here
                                 ),
                               ),
-                            )
+                            );
                           },
                         ),
-                      // SizedBox to create some space between the search bar and carousel
+
                       SizedBox(height: 20),
                       ImageCarouselSlider(),
                       SizedBox(height: 20),
