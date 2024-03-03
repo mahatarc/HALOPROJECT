@@ -5,21 +5,24 @@ import 'package:flutterproject/buy_now/location.dart';
 import 'package:flutterproject/features/seller%20mode/model/sellermodel.dart';
 
 class ProductsDetails extends StatefulWidget {
-  final product_detail_id;
-  final product_detail_name;
-  final product_detail_price;
-  final product_detail_picture;
-  final product_detail_details;
+  final String product_detail_id;
+  final String product_detail_name;
+  final String product_detail_price;
+  final String product_detail_picture;
+  final String product_detail_details;
+  final Map<String, dynamic>? seller;
 
-  ProductsDetails(
-      {this.product_detail_id,
-      this.product_detail_name,
-      this.product_detail_price,
-      this.product_detail_picture,
-      this.product_detail_details, Map<String, dynamic>? product});
+  ProductsDetails({
+    required this.product_detail_id,
+    required this.product_detail_name,
+    required this.product_detail_price,
+    required this.product_detail_picture,
+    required this.product_detail_details,
+    this.seller,
+  });
 
   @override
-  State<ProductsDetails> createState() => _ProductsDetailsState();
+  _ProductsDetailsState createState() => _ProductsDetailsState();
 }
 
 class _ProductsDetailsState extends State<ProductsDetails> {
@@ -31,7 +34,11 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   @override
   void initState() {
     super.initState();
-    _fetchSellerDetails();
+    if (widget.seller != null) {
+      _seller = Seller.fromMap(widget.seller!);
+    } else {
+      _fetchSellerDetails();
+    }
   }
 
   Future<void> _fetchSellerDetails() async {
@@ -269,22 +276,41 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             ),
             // "Add to Cart" button
             ElevatedButton(
+              // "Add to Cart" button onPressed callback
               onPressed: () async {
                 final user = FirebaseAuth.instance.currentUser;
-                await FirebaseFirestore.instance
+                final cartRef = FirebaseFirestore.instance
                     .collection('carts')
                     .doc(user!.uid)
-                    .collection(user.uid)
-                    .doc(widget.product_detail_id)
-                    .set({'count': selectedQuantity});
+                    .collection(user.uid);
+
+                // Check if the product already exists in the cart
+                final productDoc =
+                    await cartRef.doc(widget.product_detail_id).get();
+                if (productDoc.exists) {
+                  // Product already exists, update the quantity
+                  final currentQuantity = productDoc.data()?['count'] ?? 0;
+                  await cartRef
+                      .doc(widget.product_detail_id)
+                      .update({'count': currentQuantity + selectedQuantity});
+                } else {
+                  // Product does not exist, add a new document
+                  await cartRef
+                      .doc(widget.product_detail_id)
+                      .set({'count': selectedQuantity});
+                }
+
+                // Show dialog to indicate successful addition to cart
                 showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Item added successfully.'),
-                      );
-                    });
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Item added successfully.'),
+                    );
+                  },
+                );
               },
+
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
                 shape: RoundedRectangleBorder(

@@ -129,14 +129,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         final List<CartItemModel> updatedCartItems =
             List<CartItemModel>.from((state as MyCartLoadedState).products);
 
-        // Remove the item from the list based on productId
-        updatedCartItems
-            .removeWhere((item) => item.productId == event.item.productId);
+        // Find the index of the item to delete
+        final index = updatedCartItems
+            .indexWhere((item) => item.productId == event.item.productId);
 
-        emit(MyCartLoadedState(updatedCartItems)); // Update the state
+        if (index != -1) {
+          // Remove the item at the found index
+          updatedCartItems.removeAt(index);
 
-        // Update Firestore with the new list of items
-        await updateFirestoreCart(updatedCartItems);
+          emit(MyCartLoadedState(updatedCartItems)); // Update the state
+
+          // Update Firestore with the new list of items
+          await updateFirestoreCart(updatedCartItems);
+        } else {
+          print('Item to delete not found in cart');
+        }
       }
     } catch (e) {
       print('Error deleting item: $e');
@@ -151,14 +158,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           .doc(userId)
           .collection(userId);
 
-      // Clear existing cart items
+      // Get the list of product IDs for the items to be removed
+      final List<String> productIdsToRemove =
+          cartItems.map((item) => item.productId).toList();
+
+      // Delete only the items that are not present in the updated cart
       await cartRef.get().then((snapshot) {
         for (DocumentSnapshot doc in snapshot.docs) {
-          doc.reference.delete();
+          if (!productIdsToRemove.contains(doc.id)) {
+            doc.reference.delete();
+          }
         }
       });
 
-      // Add updated cart items to Firestore
+      // Add or update the cart items in Firestore
       for (var item in cartItems) {
         await cartRef.doc(item.productId).set(item.toJson());
       }
