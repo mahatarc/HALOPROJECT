@@ -49,7 +49,7 @@ class AcceptedOrdersPage extends StatelessWidget {
                         Text(
                             'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
                         Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                        Text('Price: \$${orderData['productName'] ?? 'N/A'}'),
+                        Text('Price: \रु ${orderData['productName'] ?? 'N/A'}'),
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
@@ -106,17 +106,44 @@ class AcceptedOrdersPage extends StatelessWidget {
     FirebaseFirestore.instance
         .collection('accepted_orders')
         .doc(orderId)
-        .delete()
-        .then((value) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Order $orderId confirmed and deleted'),
-        ),
-      );
+        .get()
+        .then((orderSnapshot) {
+      if (orderSnapshot.exists) {
+        var orderData = orderSnapshot.data() as Map<String, dynamic>;
+
+        // Transfer order to completed_orders collection
+        FirebaseFirestore.instance
+            .collection('completed_orders')
+            .doc(orderId)
+            .set(orderData)
+            .then((_) {
+          // Delete order from accepted_orders collection
+          orderSnapshot.reference.delete().then((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    'Order $orderId confirmed and moved to completed orders'),
+              ),
+            );
+          }).catchError((error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error deleting order: $error'),
+              ),
+            );
+          });
+        }).catchError((error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error transferring order: $error'),
+            ),
+          );
+        });
+      }
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error confirming order: $error'),
+          content: Text('Error fetching order: $error'),
         ),
       );
     });
