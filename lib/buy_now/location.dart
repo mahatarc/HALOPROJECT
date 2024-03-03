@@ -97,7 +97,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CardPaymentScreen(
+                          builder: (context) => PaymentPage(
                             fullName: fullNameController.text,
                             address: addressLine1Controller.text,
                             city: cityController.text,

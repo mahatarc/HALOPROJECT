@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaymentService {
   Future<bool> processPayment(
@@ -63,6 +64,88 @@ class PaymentService {
   }
 }
 
+class PaymentPage extends StatelessWidget {
+  // final PaymentService paymentService = PaymentService();
+  final String fullName;
+  final String address;
+  final String city;
+  final String productName;
+  final double productPrice;
+  final String productPicture;
+  final String? businessName;
+  final String? contactNumber;
+  final String? sellerAddress;
+  final String? sellerCity;
+  final String? sellerProvince;
+
+  PaymentPage({
+    required this.fullName,
+    required this.address,
+    required this.city,
+    required this.productName,
+    required this.productPrice,
+    required this.productPicture,
+    this.businessName,
+    this.contactNumber,
+    this.sellerAddress,
+    this.sellerCity,
+    this.sellerProvince,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Choose Payment Method'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                launch('https://esewa.com.np/');
+              },
+              child: Text('Pay through e-sewa'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CardPaymentScreen(
+                            fullName: fullName,
+                            address: address,
+                            city: city,
+                            productName: productName,
+                            productPrice: productPrice,
+                            productPicture: productPicture,
+                            businessName: businessName,
+                            contactNumber: contactNumber,
+                            sellerAddress: sellerAddress,
+                            sellerCity: sellerCity,
+                            sellerProvince: sellerProvince,
+                          )),
+                );
+              },
+              child: Text('Pay through Credit/Debit Card'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => OrderPlacedPage()),
+                );
+              },
+              child: Text('Pay on Delivery'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
 class CardPaymentScreen extends StatelessWidget {
   final PaymentService paymentService = PaymentService();
   final String fullName;
@@ -94,6 +177,7 @@ class CardPaymentScreen extends StatelessWidget {
   final TextEditingController cardNumberController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
   final TextEditingController expiryDateController = TextEditingController();
+  String? expiryDateError;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +202,6 @@ class CardPaymentScreen extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'CVV'),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
-              SizedBox(height: 10),
               TextField(
                 controller: expiryDateController,
                 decoration: InputDecoration(labelText: 'Expiry Date (MM-YY)'),
@@ -162,7 +245,6 @@ class CardPaymentScreen extends StatelessWidget {
                     city,
                     productName,
                     productPrice.toString(),
-                    // Convert product price to string
                     businessName,
                     contactNumber,
                     sellerAddress,
