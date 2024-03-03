@@ -33,7 +33,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
-            SwitchListTile(
+            /* SwitchListTile(
               title: Text(
                 isAvailable ? 'You are Available' : 'You are Not Available',
                 style: TextStyle(fontSize: 20),
@@ -46,7 +46,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               },
               activeColor: Color.fromARGB(255, 26, 157, 31),
               inactiveTrackColor: Colors.grey,
-            ),
+            ),*/
             SizedBox(height: 5),
             Divider(),
             SizedBox(height: 10),
@@ -81,7 +81,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               ],
             ),
             SizedBox(height: 18),
-            _buildOrderStatusCard('Completed Orders', () {
+            /*  _buildOrderStatusCard('Completed Orders', () {
               // Navigate to the Completed Orders screen
               Navigator.push(
                 context,
@@ -89,7 +89,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
                   builder: (context) => CompletedOrdersPage(),
                 ),
               );
-            }),
+            }),*/
           ],
         ),
       ),
@@ -101,12 +101,8 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on),
-            label: 'My Earnings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.check_box_rounded),
+            label: 'History',
           ),
         ],
         onTap: (index) {
@@ -118,12 +114,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyEarningsPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => DeliveryBoyProfile()),
+              MaterialPageRoute(builder: (context) => CompletedOrdersPage()),
             );
           }
         },
