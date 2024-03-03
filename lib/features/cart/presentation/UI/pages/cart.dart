@@ -78,13 +78,6 @@ class _CartPageState extends State<CartPage> {
                         },
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Save the updated quantities to Firestore
-                        saveQuantitiesToFirestore(updatedProducts);
-                      },
-                      child: const Text('Save'),
-                    ),
                   ],
                 ),
               ),
@@ -116,28 +109,6 @@ class _CartPageState extends State<CartPage> {
         },
       ),
     );
-  }
-
-  void saveQuantitiesToFirestore(List<CartItemModel> updatedProducts) async {
-    try {
-      final userId = FirebaseAuth.instance.currentUser!.uid;
-      final cartRef = FirebaseFirestore.instance
-          .collection('carts')
-          .doc(userId)
-          .collection(userId);
-
-      for (var product in updatedProducts) {
-        await cartRef
-            .doc(product.productId)
-            .update({'quantity': product.quantity});
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Quantities saved successfully')),
-      );
-    } catch (e) {
-      print('Error saving quantities: $e');
-    }
   }
 }
 
