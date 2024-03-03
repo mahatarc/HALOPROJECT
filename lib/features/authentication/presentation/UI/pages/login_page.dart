@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/authentication/presentation/UI/pages/forgot_pass_screen.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
+import 'package:flutterproject/features/driver%20mode/presentation/UI/driverdashboard.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/sign_up_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
+import 'package:flutterproject/features/seller%20mode/presentation/UI/seller.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late SignInBloc signInBloc;
@@ -36,70 +38,89 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignInBloc, SignInStates>(
-        bloc: signInBloc,
-        listenWhen: (previous, current) => current is SignInActionState,
-        buildWhen: (previous, current) => current is! SignInActionState,
-        builder: (context, state) {
-          if (state is SignInInitialState) {
-            return Scaffold(
-              body: Stack(
-                children: [
-                  Image(
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                    image: AssetImage('images/aaa.jpg'),
+      bloc: signInBloc,
+      listenWhen: (previous, current) => current is SignInActionState,
+      buildWhen: (previous, current) => current is! SignInActionState,
+      builder: (context, state) {
+        if (state is SignInInitialState) {
+          return Scaffold(
+            body: Stack(
+              children: [
+                const Image(
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  width: double.infinity,
+                  image: AssetImage('images/aaa.jpg'),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color.fromARGB(255, 51, 76, 56),
+                        Colors.black.withOpacity(0.15)
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                          Color.fromARGB(255, 51, 76, 56),
-                          Colors.black.withOpacity(0.15)
-                        ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter)),
-                  ),
-                  SingleChildScrollView(
-                    child: Align(
-                      alignment: Alignment.center,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset('images/logo.png', width: 200, height: 150),
-                          const SizedBox(
-                            height: 5,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('HA',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text before the icon
+                              Image.asset(
+                                'images/logo.png', // Replace 'custom_icon.png' with the name of your icon file
+                                width:
+                                    60, // Adjust the width of the icon as needed
+                                height:
+                                    60, // Adjust the height of the icon as needed
+                              ),
+                              Text('O',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text after the icon
+                            ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 15),
                           const Text(
                             'Namaste !!',
                             style: TextStyle(
-                                color: Color.fromARGB(255, 248, 249, 247),
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
+                              color: Color.fromARGB(255, 248, 249, 247),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 10),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
                             child: Formcontainerwidget(
                               controller: _emailController,
                               hinttext: "Email Address",
                               isPasswordField: false,
-                              keyboardType: TextInputType.emailAddress,
+                              borderRadius: 10.0,
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
                             child: Formcontainerwidget(
                               controller: _passwordController,
                               hinttext: "Password",
                               isPasswordField: true,
-                              keyboardType: TextInputType.visiblePassword,
+                              borderRadius: 10.0,
                             ),
                           ),
                           Padding(
@@ -107,41 +128,66 @@ class _LoginPageState extends State<LoginPage> {
                             child: GestureDetector(
                               onTap: () {
                                 signInBloc.add(SignInButtonPressedEvent(
-                                    email: _emailController.text,
-                                    password: _passwordController.text));
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                ));
                               },
-                              child: Container(
-                                // width: 100,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(255, 156, 199, 107),
-                                  borderRadius: BorderRadius.circular(10),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  signInBloc.add(SignInButtonPressedEvent(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  ));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 156, 199, 107),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  minimumSize: const Size(double.infinity, 50),
                                 ),
-                                child: const Center(
-                                  child: Text("Login",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20)),
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ForgotPasswordScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 156, 199, 107),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
+                          const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
                                 "Don't have an account?",
                                 style: TextStyle(
-                                    color: Color.fromARGB(255, 248, 249, 247),
-                                    fontWeight: FontWeight.bold),
+                                  color: Color.fromARGB(255, 248, 249, 247),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              const SizedBox(
-                                width: 5,
-                              ),
+                              const SizedBox(width: 5),
                               GestureDetector(
                                 onTap: () {
                                   signInBloc
@@ -150,78 +196,58 @@ class _LoginPageState extends State<LoginPage> {
                                 child: const Text(
                                   'Sign Up',
                                   style: TextStyle(
-                                      color: Color.fromARGB(255, 156, 199, 107),
-                                      fontWeight: FontWeight.bold),
+                                    color: Color.fromRGBO(156, 199, 107, 1),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
-                  )
-                ],
-                /* child: SizedBox(
-          //height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            /* const SizedBox(
-              height: 10,
-            ),*/
-            
-           /* Container(
-              width: w,
-              height: h * 0.3,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("images/logo.png"), fit: BoxFit.cover),
-              ),
-            ),*/
-            //  Image.asset('images/logo.png', width: 150, height: 150),
-            // const SizedBox(
-            // height: 5,
-            // ),
-            const SizedBox(
-              height: 10,
+                  ),
+                ),
+              ],
             ),
-            Container(
-              height: 600,
-              width: 325,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+          );
+        } else if (state is SignInNavigateToBuyerHomePageActionState) {
+          return LandingPage();
+        } else if (state is SignInNavigateToSellerHomePageActionState) {
+          return SellerDashboard();
+        } else {
+          return Scaffold();
+        }
+      },
+      listener: (context, state) {
+        if (state is SignUpPressedNavigateToSignUpActionState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => SignUpBloc(),
+                child: const SignUppage(),
               ),
-
-            )
-          ]),
-        ),*/
+            ),
+          );
+        } else if (state is SignInNavigateToBuyerHomePageActionState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => HomePageBloc(),
+                child: LandingPage(),
               ),
-            );
-          } else if (state is SignInErrorState) {
-            return const Scaffold();
-          } else {
-            return const Scaffold();
-          }
-        },
-        listener: (context, state) {
-          if (state is SignUpPressedNavigateToSignUpActionState) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) => SignUpBloc(),
-                          child: SignUppage(),
-                        )));
-          } else if (state is SignInNavigateToHomePageActionState) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) => HomePageBloc(),
-                          child: Homepage(),
-                        )));
-          }
-        });
+            ),
+          );
+        } else if (state is SignInNavigateToSellerHomePageActionState) {
+          Navigator.of(context, rootNavigator: true).pushReplacement(
+              MaterialPageRoute(builder: (context) => SellerDashboard()));
+        } else if (state is SignInNavigateToDriverHomePageActionState) {
+          Navigator.of(context, rootNavigator: true).pushReplacement(
+              MaterialPageRoute(builder: (context) => DeliveryBoyDashboard()));
+        }
+      },
+    );
   }
 }

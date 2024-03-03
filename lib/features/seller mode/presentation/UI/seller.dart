@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/Bloc/your_products_bloc/your_products_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/add_products.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/orders.dart';
@@ -20,7 +21,7 @@ class _SellerDashboardState extends State<SellerDashboard> {
       appBar: AppBar(
         backgroundColor: Colors.green[200],
         title: Text('Seller Dashboard'),
-       // automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
       ),
       drawer: SellerDrawer(), // Add the drawer here
       body: Padding(
@@ -89,38 +90,47 @@ class _SellerDashboardState extends State<SellerDashboard> {
         ),
       ),
       bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (index) {
-          setState(() {
-            currentIndex = index;
-            if (index == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) => YourProductsBloc(),
-                          child: YourProducts(),
-                        )));
-            }
-            if (index == 2) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Order()),
-              );
-            }
-          });
-        },
-        height: 70,
-        elevation: 0,
-        backgroundColor: Colors.green[100],
-        destinations: [
-          NavigationDestination(
-              icon: const Icon(Icons.home), label: 'Dashboard'),
-          NavigationDestination(
-              icon: Icon(Icons.newspaper), label: 'Your Products'),
-          NavigationDestination(
-              icon: Icon(Icons.add_shopping_cart), label: 'Orders'),
-        ]
-      ),
+          onDestinationSelected: (index) {
+            setState(() {
+              currentIndex = index;
+
+              if (index == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewsFeed()),
+                );
+              }
+              if (index == 2) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                              create: (context) => YourProductsBloc(),
+                              child: YourProducts(),
+                            )));
+              }
+
+              if (index == 3) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => OrderScreen()),
+                );
+              }
+            });
+          },
+          height: 70,
+          elevation: 0,
+          backgroundColor: Colors.green[100],
+          destinations: [
+            NavigationDestination(
+                icon: const Icon(Icons.home), label: 'Dashboard'),
+            NavigationDestination(
+                icon: Icon(Icons.newspaper), label: 'Newsfeed'),
+            NavigationDestination(
+                icon: Icon(Icons.list), label: 'Your Products'),
+            NavigationDestination(
+                icon: Icon(Icons.add_shopping_cart), label: 'Orders'),
+          ]),
     );
   }
 

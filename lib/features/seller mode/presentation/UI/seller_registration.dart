@@ -47,32 +47,38 @@ class _SellerRegistrationFormState extends State<SellerRegistrationForm> {
       return;
     }
 
-    // Upload image to Firebase Storage
-    String imageUrl = '';
-    if (_pickedImage != null) {
-      final Reference ref = FirebaseStorage.instance
-          .ref()
-          .child('seller_images/${DateTime.now().millisecondsSinceEpoch}');
-      await ref.putFile(_pickedImage!);
-      imageUrl = await ref.getDownloadURL();
-      print(imageUrl);
-      await FirebaseFirestore.instance
-          .collection('sellers')
-          .doc(user.uid)
-          .set({'imageUrl': imageUrl});
-    }
-
-    // Register seller in Firestore
     try {
+      // Upload image to Firebase Storage
+      String imageUrl = '';
+      if (_pickedImage != null) {
+        final Reference ref = FirebaseStorage.instance
+            .ref()
+            .child('seller_images/${DateTime.now().millisecondsSinceEpoch}');
+        await ref.putFile(_pickedImage!);
+        imageUrl = await ref.getDownloadURL();
+      }
+
+      // Register seller in Firestore
+      await FirebaseFirestore.instance.collection('sellers').doc(user.uid).set({
+        'businessName': seller.businessName,
+        'contactNumber': seller.contactNumber,
+        'address': seller.address,
+        'city': seller.city,
+        'province': seller.province,
+        'citizenshipNumber': seller.citizenshipNumber,
+        'imageUrl': imageUrl,
+        // Add other fields as needed
+      });
+
+      // Update user role to 'seller'
       await FirebaseFirestore.instance
-          .collection('sellers')
+          .collection('users')
           .doc(user.uid)
-          .set(seller.toJson());
-      // Registration successful, navigate to seller dashboard
-       await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .update({'role': 'seller'});
+          .update({
+        'role': 'seller',
+      });
+
+      // Navigate to seller dashboard
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SellerDashboard()),
@@ -87,9 +93,15 @@ class _SellerRegistrationFormState extends State<SellerRegistrationForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[200],
-        title: const Text("Seller Registration Form"),
-      ),
+          backgroundColor: Colors.green[200],
+          title: const Text("Seller Registration Form"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              // Navigate back to the previous screen (Drawer in this case)
+              Navigator.pop(context);
+            },
+          )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

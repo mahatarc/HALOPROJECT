@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutterproject/buy_now/location.dart';
+import 'package:flutterproject/features/seller%20mode/model/sellermodel.dart';
 
 class ProductsDetails extends StatefulWidget {
+  final product_detail_id;
   final product_detail_name;
   final product_detail_price;
-  final product_detail_old_price;
   final product_detail_picture;
+  final product_detail_details;
 
-  ProductsDetails({
-    this.product_detail_name,
-    this.product_detail_price,
-    this.product_detail_old_price,
-    this.product_detail_picture,
-  });
+  ProductsDetails(
+      {this.product_detail_id,
+      this.product_detail_name,
+      this.product_detail_price,
+      this.product_detail_picture,
+      this.product_detail_details, Map<String, dynamic>? product});
 
   @override
   State<ProductsDetails> createState() => _ProductsDetailsState();
@@ -20,9 +25,91 @@ class ProductsDetails extends StatefulWidget {
 class _ProductsDetailsState extends State<ProductsDetails> {
   int myIndex = 0;
   int selectedQuantity = 1;
+  Seller? _seller;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSellerDetails();
+  }
+
+  Future<void> _fetchSellerDetails() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final productDoc = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(widget.product_detail_id)
+          .get();
+
+      if (productDoc.exists) {
+        final sellerId = productDoc.data()?['user_id'];
+
+        final sellerDoc = await FirebaseFirestore.instance
+            .collection('sellers')
+            .doc(sellerId)
+            .get();
+
+        if (sellerDoc.exists) {
+          setState(() {
+            _seller = Seller.fromMap(sellerDoc.data() as Map<String, dynamic>);
+          });
+        } else {
+          print('Seller document does not exist.');
+        }
+      } else {
+        print('Product document does not exist.');
+      }
+    } catch (error) {
+      print('Error fetching seller details: $error');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Widget buildSellerInformationSection() {
+    if (_isLoading) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CircularProgressIndicator(),
+      );
+    } else if (_seller != null) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Seller Information:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text('Business Name: ${_seller?.businessName ?? 'N/A'}'),
+            Text('Contact Number: ${_seller?.contactNumber ?? 'N/A'}'),
+            Text('Address: ${_seller?.address ?? 'N/A'}'),
+            Text('City: ${_seller?.city ?? 'N/A'}'),
+            Text('Province: ${_seller?.province ?? 'N/A'}'),
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          'Seller Information not available',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final double productPrice =
+        double.parse(widget.product_detail_price.toString());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[200],
@@ -30,13 +117,12 @@ class _ProductsDetailsState extends State<ProductsDetails> {
       ),
       body: ListView(
         children: [
-          // Product image and details section
           Container(
             height: 300,
             child: GridTile(
               child: Container(
                 color: Colors.white,
-                child: Image.asset(
+                child: Image.network(
                   widget.product_detail_picture,
                   fit: BoxFit.contain,
                 ),
@@ -53,17 +139,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                     children: [
                       Expanded(
                         child: Text(
-                          "₹${widget.product_detail_old_price}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "\₹${widget.product_detail_price}",
+                          "\₹$productPrice",
                           style: TextStyle(
                             color: Colors.brown,
                             fontWeight: FontWeight.bold,
@@ -84,7 +160,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   decoration: BoxDecoration(
-                    // border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                   child: Row(
@@ -113,11 +188,22 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           // Product description
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Product Description:\nThis is a high-quality product with a detailed description.',
-              style: TextStyle(fontSize: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Product Description:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  widget.product_detail_details,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ),
+          // Seller information section
+          buildSellerInformationSection(),
           // Customer Reviews
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -142,20 +228,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ],
             ),
           ),
-          // Related Products Section
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Related Products',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 8.0),
-              ],
-            ),
-          ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -165,7 +237,23 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           children: [
             // "Buy Now" button
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DeliveryAddressScreen(
+                            product_detail_name: widget.product_detail_name,
+                            product_detail_price: widget.product_detail_price,
+                            product_detail_picture:
+                                widget.product_detail_picture,
+                            businessName: _seller?.businessName,
+                            contactNumber: _seller?.contactNumber,
+                            address: _seller?.address,
+                            city: _seller?.city,
+                            province: _seller?.province,
+                          )),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
                 shape: RoundedRectangleBorder(
@@ -181,7 +269,22 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             ),
             // "Add to Cart" button
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final user = FirebaseAuth.instance.currentUser;
+                await FirebaseFirestore.instance
+                    .collection('carts')
+                    .doc(user!.uid)
+                    .collection(user.uid)
+                    .doc(widget.product_detail_id)
+                    .set({'count': selectedQuantity});
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Item added successfully.'),
+                      );
+                    });
+              },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green,
                 shape: RoundedRectangleBorder(

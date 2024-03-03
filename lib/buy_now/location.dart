@@ -3,6 +3,25 @@ import 'package:flutter/services.dart';
 import 'package:flutterproject/buy_now/Payment.dart';
 
 class DeliveryAddressScreen extends StatefulWidget {
+  final product_detail_name;
+  final product_detail_price;
+  final product_detail_picture;
+  final String? businessName;
+  final String? contactNumber;
+  final String? address;
+  final String? city;
+  final String? province;
+
+  DeliveryAddressScreen({
+    this.product_detail_name,
+    this.product_detail_price,
+    this.product_detail_picture,
+    this.businessName,
+    this.contactNumber,
+    this.address,
+    this.city,
+    this.province,
+  });
   @override
   _DeliveryAddressScreenState createState() => _DeliveryAddressScreenState();
 }
@@ -27,6 +46,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green[100],
         title: Text('Delivery Address'),
       ),
       body: Padding(
@@ -64,7 +84,8 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
             TextField(
               controller: postalCodeController,
               onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Postal Code (Optional)'),
+              decoration: InputDecoration(labelText: 'Postal Code'),
+              keyboardType: TextInputType.number,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(5),
                 FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
@@ -74,94 +95,28 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
             ElevatedButton(
               onPressed: _isFormValid()
                   ? () {
-                      // Navigate to Payment screen after entering delivery address
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Payment()),
+                        MaterialPageRoute(
+                          builder: (context) => PaymentPage(
+                            fullName: fullNameController.text,
+                            address: addressLine1Controller.text,
+                            city: cityController.text,
+                            productName: widget.product_detail_name,
+                            productPrice:
+                                double.parse(widget.product_detail_price),
+                            productPicture: widget.product_detail_picture,
+                            businessName: widget.businessName,
+                            contactNumber: widget.contactNumber,
+                            sellerAddress: widget.address,
+                            sellerCity: widget.city,
+                            sellerProvince: widget.province,
+                          ),
+                        ),
                       );
                     }
                   : null,
               child: Text('Proceed to Payment'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Payment extends StatelessWidget {
-  const Payment({Key? key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text('Select Payment Method'),
-        backgroundColor: Colors.green[100],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 60,
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to Credit/Debit Card payment screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CardPaymentScreen()),
-                  );
-                },
-                child: Container(
-                  // color: Colors.white,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color.fromARGB(255, 79, 214, 86)),
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.credit_card),
-                      SizedBox(width: 10),
-                      Text('Online Payment'),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              height: 60,
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to Pay on Delivery screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PayOnDeliveryScreen()),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 69, 68, 68)),
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.local_shipping),
-                      SizedBox(width: 10),
-                      Text('Pay on Delivery'),
-                    ],
-                  ),
-                ),
-              ),
             ),
           ],
         ),

@@ -28,7 +28,6 @@ class AddProductsBloc extends Bloc<AddProductsEvent, AddProductsStates> {
         // Validate and parse product price
         double price = double.tryParse(event.price.text) ?? 0.0;
         if (price <= 0) {
-          // Price is not valid, display an error message
           emit(AddProductErrorState());
         }
 
@@ -43,22 +42,42 @@ class AddProductsBloc extends Bloc<AddProductsEvent, AddProductsStates> {
         // Add product data to Firestore
         final user = FirebaseAuth.instance.currentUser;
         if (user == null) {
-          // User not authenticated, handle accordingly
           return;
         }
-        await FirebaseFirestore.instance.collection('products').doc().set({
+        DocumentReference newProductRef =
+            await FirebaseFirestore.instance.collection('products').add({
           'name': event.name.text,
           'price': event.price.text,
           'image_url': imageUrl,
-          'user_id': user.uid,
+          'product_details': event.details.text,
+          'category_type': event.categorytype,
+          'user_id': user.uid, // Store the user ID who added the product
         });
-        
+
+        // Get the seller's information
+        final sellerDoc = await FirebaseFirestore.instance
+            .collection('sellers')
+            .doc(user
+                .uid) // Assuming the seller's document ID is the same as their user ID
+            .get();
+
+        if (sellerDoc.exists) {
+          // Store the seller's information with the product
+          await newProductRef.update({
+            'seller': sellerDoc.data(),
+          });
+        } else {
+          print('Seller document does not exist.');
+        }
+
+        String productId = newProductRef.id;
+        print('Successful');
+        print(productId);
       }
     } catch (e) {
       print('Error uploading product: $e');
     }
-    
+
     emit(AddProductInitialState());
   }
 }
-    

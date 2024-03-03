@@ -1,15 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/authentication/model/usermodel.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutterproject/features/authentication/presentation/bloc/sign_up_bloc/sign_up_bloc.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
 import 'package:flutterproject/features/authentication/presentation/UI/widgets/formcontainer.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 
 class SignUppage extends StatefulWidget {
-  const SignUppage({super.key});
+  const SignUppage({Key? key}) : super(key: key);
   @override
   State<SignUppage> createState() => _SignUpPageState();
 }
@@ -17,11 +18,11 @@ class SignUppage extends StatefulWidget {
 class _SignUpPageState extends State<SignUppage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _firstnameController = TextEditingController();
-  TextEditingController _lastnameController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNoController = TextEditingController();
 
   late SignUpBloc signUpBloc;
+  @override
   void initState() {
     signUpBloc = BlocProvider.of<SignUpBloc>(context);
     signUpBloc.add(SignUpInitialEvent());
@@ -31,188 +32,380 @@ class _SignUpPageState extends State<SignUppage> {
 
   @override
   void dispose() {
-    _firstnameController.dispose();
-    _lastnameController.dispose();
+    _nameController.dispose();
     _phoneNoController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignUpBloc, SignUpState>(
-        bloc: signUpBloc,
-        listenWhen: (previous, current) => current is SignUpActionState,
-        buildWhen: (previous, current) => current is! SignUpActionState,
-        builder: (context, state) {
-          if (state is SignUpInitialState) {
-            return Scaffold(
-              body: SingleChildScrollView(
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Image.asset('images/logo.png', width: 150, height: 150),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Container(
-                          height: 450,
-                          width: 325,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+      bloc: signUpBloc,
+      listenWhen: (previous, current) => current is SignUpActionState,
+      buildWhen: (previous, current) => current is! SignUpActionState,
+      builder: (context, state) {
+        if (state is SignUpInitialState) {
+          return Scaffold(
+            body: Stack(
+              children: [
+                const Image(
+                  fit: BoxFit.cover,
+                  height: double.infinity,
+                  width: double.infinity,
+                  image: AssetImage('images/aaa.jpg'),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color.fromARGB(200, 51, 76, 56),
+                        Colors.black.withOpacity(0.15)
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('HA',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text before the icon
+                              Image.asset(
+                                'images/logo.png', // Replace 'custom_icon.png' with the name of your icon file
+                                width:
+                                    60, // Adjust the width of the icon as needed
+                                height:
+                                    60, // Adjust the height of the icon as needed
+                              ),
+                              Text('O',
+                                  style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold,
+                                  )), // Text after the icon
+                            ],
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 10,
+                          SizedBox(height: 10),
+                          Container(
+                            child: Text(
+                              'Please Sign Up To Your Account',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
                               ),
-                              Text(
-                                'Please Sign Up To Your Account',
-                                style:
-                                    TextStyle(fontSize: 15, color: Colors.grey),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Formcontainerwidget(
-                                controller: _firstnameController,
-                                hinttext: "First Name",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.visiblePassword,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Formcontainerwidget(
-                                controller: _lastnameController,
-                                hinttext: "Last Name",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.name,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Formcontainerwidget(
-                                controller: _phoneNoController,
-                                hinttext: "Phone Number",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.visiblePassword,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Formcontainerwidget(
-                                controller: _emailController,
-                                hinttext: "Email Address",
-                                isPasswordField: false,
-                                keyboardType: TextInputType.visiblePassword,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Formcontainerwidget(
-                                controller: _passwordController,
-                                hinttext: "Password",
-                                isPasswordField: true,
-                                keyboardType: TextInputType.visiblePassword,
-                              ),
-                              SizedBox(
-                                height: 30,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  signUpBloc.add(SignUpButtonPressedEvent(
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                            child: Formcontainerwidget(
+                              controller: _nameController,
+                              hinttext: "Name",
+                              isPasswordField: false,
+                              borderRadius: 10.0,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                            child: Formcontainerwidget(
+                              controller: _phoneNoController,
+                              hinttext: "Phone Number",
+                              isPasswordField: false,
+                              borderRadius: 10.0,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                            child: Formcontainerwidget(
+                              controller: _emailController,
+                              hinttext: "Email Address",
+                              isPasswordField: false,
+                              borderRadius: 10.0,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                            child: Formcontainerwidget(
+                              controller: _passwordController,
+                              hinttext: "Password",
+                              isPasswordField: true,
+                              borderRadius: 10.0,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              signUpBloc.add(
+                                SignUpButtonPressedEvent(
+                                  context: context,
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  user: UserModel(
+                                    email: _emailController.text,
+                                    name: _nameController.text,
+                                    role: 'buyer',
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  signUpBloc.add(
+                                    SignUpButtonPressedEvent(
+                                      context: context,
                                       email: _emailController.text,
                                       password: _passwordController.text,
                                       user: UserModel(
-                                          email: _emailController.text,
-                                          password: _passwordController.text,
-                                          firstname: _firstnameController.text,
-                                          lastname: _lastnameController.text)));
+                                        email: _emailController.text,
+                                        name: _nameController.text,
+                                        role: 'buyer',
+                                      ),
+                                    ),
+                                  );
                                 },
-                                child: Container(
-                                  // width: 100,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 156, 199, 107),
+                                style: ElevatedButton.styleFrom(
+                                  primary:
+                                      const Color.fromARGB(255, 156, 199, 107),
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Center(
-                                    child: Text("Sign Up",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20)),
+                                  minimumSize: const Size(double.infinity, 50),
+                                ),
+                                child: const Text(
+                                  "Sign Up",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
                                   ),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Already have an account?"),
-                                  SizedBox(
-                                    width: 5,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Already have an account?",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  signUpBloc.add(LoginButtonPressedEvent());
+                                },
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: const Color.fromARGB(
+                                        255, 156, 199, 107),
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      signUpBloc.add(LoginButtonPressedEvent());
-                                    },
-                                    child: Text(
-                                      'Login',
-                                      style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              255, 156, 199, 107),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                ],
-                              )
+                                ),
+                              ),
                             ],
                           ),
-                        )
-                      ]),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else if (state is SignUpErrorState) {
+          return const Scaffold();
+        } else {
+          return const Scaffold();
+        }
+      },
+      listener: (context, state) {
+        if (state is LoginPressedNavigateToLoginActionState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => SignInBloc(),
+                child: LoginPage(),
+              ),
+            ),
+          );
+        } else if (state is VerificationEmailSentState) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      VerifyEmailScreen(email: state.email, user: state.user)));
+        }
+      },
+    );
+  }
+}
+
+class VerifyEmailScreen extends StatefulWidget {
+  final String email;
+  final UserModel user;
+
+  const VerifyEmailScreen({Key? key, required this.email, required this.user})
+      : super(key: key);
+
+  @override
+  _VerifyEmailScreenState createState() => _VerifyEmailScreenState();
+}
+
+class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
+  bool _isEmailVerified = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Verify Email'),
+        backgroundColor: Colors.green[100],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              'images/email.png',
+              width: 300,
+              height: 300,
+            ),
+            SizedBox(
+              height: 40,
+              width: 10,
+            ),
+            Text(
+              'A verification email has been sent to ${widget.email}.',
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 30,
+              width: 10,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.currentUser?.reload();
+
+                final user = FirebaseAuth.instance.currentUser;
+                setState(() {
+                  _isEmailVerified = user?.emailVerified ?? false;
+                });
+
+                if (!_isEmailVerified) {
+                  _showErrorDialog(context);
+                } else if (_isEmailVerified) {
+                  _showSignInDialog(context);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 156, 199, 107),
+              ),
+              child: Text(
+                'Confirm Verification',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
                 ),
               ),
-            );
-          } else if (state is SignUpErrorState) {
-            return const Scaffold();
-          } else {
-            return const Scaffold();
-          }
-        },
-        listener: (context, state) {
-          if (state is LoginPressedNavigateToLoginActionState) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSignInDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          title: Text('Email Verified'),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'images/tick1.png',
+                width: 100,
+                height: 100,
+              ),
+              Text('Congratulations!!'),
+              Text('Your email has been verified.'),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                String? uid = FirebaseAuth.instance.currentUser?.uid;
+                await addUserDetails(uid!, widget.user);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
                     builder: (context) => BlocProvider(
-                          create: (context) => SignInBloc(),
-                          child: LoginPage(),
-                        )));
-          } else if (state is SignUpNavigateToHomePageActionState) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                          create: (context) => HomePageBloc(),
-                          child: Homepage(),
-                        )));
-          }
-        });
+                      create: (context) => HomePageBloc(),
+                      child: LandingPage(),
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: const Color.fromARGB(255, 156, 199, 107),
+              ),
+              child: Text(
+                'Go to Dashboard',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please verify your email first.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

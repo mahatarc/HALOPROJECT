@@ -1,40 +1,21 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/editprofile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutterproject/features/authentication/services/firebaseauth.dart';
 import 'package:image_picker/image_picker.dart';
-
-class User {
-  final String name;
-  final String email;
-  final String profilePicture;
-
-  User(this.name, this.email, this.profilePicture);
-}
+import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/editprofile.dart';
 
 class PersonalInformation {
   final String name;
   final String email;
-  final String location;
-  final String phoneNumber;
+  final String role;
 
-  PersonalInformation(this.name, this.email, this.location, this.phoneNumber);
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Profile',
-      home: ProfilePage(),
-      theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromARGB(
-            255, 223, 245, 202), // Set the background color to light green
-      ),
-    );
-  }
+  PersonalInformation({
+    required this.name,
+    required this.email,
+    required this.role,
+  });
 }
 
 class ProfilePage extends StatefulWidget {
@@ -42,12 +23,17 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-// ignore: must_be_immutable
 class _ProfilePageState extends State<ProfilePage> {
-  User user =
-      User("Bill Gates", "bill.gates@example.com", "images/profile.jpg");
-  PersonalInformation personalInfo = PersonalInformation(
-      "Bill Gates", "bill.gates@example.com", "Kathmandu, Nepal", "9867898086");
+  late CollectionReference _usersCollection;
+  final _authService = FirebaseAuthService();
+  File? _image;
+  bool _isImageChanged = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _usersCollection = FirebaseFirestore.instance.collection('users');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,56 +43,173 @@ class _ProfilePageState extends State<ProfilePage> {
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 172, 229, 142),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Center the content vertically
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage(user.profilePicture),
-            ),
-            SizedBox(height: 16),
-            Text(
-              personalInfo.name,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              personalInfo.email,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () async {
-                final updatedInfo = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(
-                        personalInfo), // Navigate to the edit profile screen (you can implement this)
+      body: StreamBuilder<DocumentSnapshot>(
+        stream:
+            _usersCollection.doc(_authService.getCurrentUserId()).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+          var userData = snapshot.data?.data() as Map<String, dynamic>?;
+
+          if (userData == null) {
+            return Text('No user data found.');
+          }
+
+          var personalInfo = PersonalInformation(
+            name: userData['name'] ?? '',
+            email: userData['email'] ?? '',
+            role: userData['role'] ?? '',
+          );
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: _image != null
+                          ? FileImage(_image!)
+                          : userData['profilePicture'] != null
+                              ? NetworkImage(userData['profilePicture'])
+                              : AssetImage('images/profile.jpg')
+                                  as ImageProvider<Object>?,
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        await _showImageOptionsDialog(context);
+                      },
+                      icon: Icon(Icons.camera_alt),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Text(
+                  personalInfo.name,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  personalInfo.email,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditProfilePage(
+                          personalInfo: personalInfo,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Edit Profile'),
+                ),
+                SizedBox(height: 32),
+                _buildSectionTitle('My Personal Information'),
+                _buildPersonalInfoTile('Name', personalInfo.name),
+                _buildPersonalInfoTile('Email', personalInfo.email),
+                _buildPersonalInfoTile('Role', personalInfo.role),
+                if (_isImageChanged) // Show save button only if image is changed
+                  ElevatedButton(
+                    onPressed: () {
+                      // Save image logic
+                      _saveImage();
+                    },
+                    child: Text('Save'),
                   ),
-                );
-                // Handle the result returned from EditProfilePage
-                if (updatedInfo != null && updatedInfo is PersonalInformation) {
-                  // Update the personalInfo with the new information
-                  setState(() {
-                    personalInfo = updatedInfo;
-                  });
-                }
-              },
-              child: Text('Edit Profile'),
+              ],
             ),
-            SizedBox(height: 32),
-            _buildSectionTitle('My Personal Information'),
-            _buildPersonalInfoTile('Name', personalInfo.name),
-            _buildPersonalInfoTile('Email', personalInfo.email),
-            _buildPersonalInfoTile('Location', personalInfo.location),
-            _buildPersonalInfoTile('Phone Number', personalInfo.phoneNumber),
-          ],
-        ),
+          );
+        },
       ),
     );
+  }
+
+  Future<void> _showImageOptionsDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choose an option'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: Text('Gallery'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await _getImage(ImageSource.gallery);
+                    setState(() {
+                      _isImageChanged =
+                          true; // Set flag to indicate image change
+                    });
+                  },
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  child: Text('Camera'),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await _getImage(ImageSource.camera);
+                    setState(() {
+                      _isImageChanged =
+                          true; // Set flag to indicate image change
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      }
+    });
+  }
+
+  void _saveImage() async {
+    // Upload image to Firebase Storage
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('profile_images/${_authService.getCurrentUserId()}');
+    UploadTask uploadTask = ref.putFile(_image!);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+    // Update user profile in Firestore
+    await _usersCollection
+        .doc(_authService.getCurrentUserId())
+        .update({'profilePicture': imageUrl});
+
+    setState(() {
+      _isImageChanged = false;
+    });
   }
 
   Widget _buildSectionTitle(String title) {
@@ -129,32 +232,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-Future<void> pickImage() async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-  if (pickedFile != null) {
-    // Process the picked image
-    // Implement Firebase upload here
-  }
-}
-
-
-Future<void> uploadImageToStorage(String imagePath) async {
-  final Reference storageReference =
-      FirebaseStorage.instance.ref().child('images/').child(imagePath);
-
-  await storageReference.putFile(File(imagePath));
-  String downloadURL = await storageReference.getDownloadURL();
-
-  // Now you can use the downloadURL as needed (e.g., store it in Firestore)
-}
-
-
-Future<void> storeImageUrlInFirestore(String imageUrl) async {
-  await FirebaseFirestore.instance
-      .collection('images')
-      .add({'url': imageUrl});
-}
-
-

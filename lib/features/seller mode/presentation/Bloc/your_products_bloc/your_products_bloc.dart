@@ -38,6 +38,7 @@ class YourProductsBloc extends Bloc<YourProductsEvents, YourProductsState> {
         print(productModel); //product model=object
         productModelList.add(productModel); //added object to list
       }
+      print(productModelList);
       print('successful');
       emit(YourProductsLoadedState(productModelList));
     } catch (e) {

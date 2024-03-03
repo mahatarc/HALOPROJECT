@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "498172769727",
+    "firebase_url": "https://halo-7c6f5-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "halo-7c6f5",
     "storage_bucket": "halo-7c6f5.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.flutterproject"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "498172769727-d8tge55c5fjva13a75097pisiamd68lc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutterproject",
+            "certificate_hash": "bccabba20f45dfadc8d0ff865a745a8e6062b155"
+          }
+        },
+        {
+          "client_id": "498172769727-8bps8nt0gcnu237ktomd2uoqkeu125dj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBdU1t--v-A3JM63PwTiv-O6KEQj1l-N5A"
@@ -20,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498172769727-8bps8nt0gcnu237ktomd2uoqkeu125dj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "498172769727-2im1tk9qol2723b0p4n8tk6uql0llaer.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterproject"
+              }
+            }
+          ]
         }
       }
     }
