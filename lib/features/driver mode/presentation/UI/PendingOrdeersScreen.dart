@@ -88,7 +88,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Product: ${productData['name']}'),
-                                    Text('Price: \$${productData['price']}'),
+                                    Text('Price: \₹${productData['price']}'),
                                     SizedBox(height: 8),
                                   ],
                                 );
@@ -98,7 +98,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                         Text(
                             'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
                         Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                        Text('Price: \$${orderData['productName'] ?? 'N/A'}'),
+                        Text('Price: \₹${orderData['productName'] ?? 'N/A'}'),
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
@@ -138,13 +138,13 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                 _acceptOrder(context, orderId);
               },
             ),
-            ListTile(
+            /*  ListTile(
               title: Text('Reject Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
                 _rejectOrder(orderId);
               },
-            ),
+            ),*/
           ],
         );
       },
