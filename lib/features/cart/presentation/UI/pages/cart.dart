@@ -55,14 +55,12 @@ class _CartPageState extends State<CartPage> {
                           return CartProduct(
                             product: listOfProducts[index],
                             increaseQuantity: () {
-                              // Update the quantity locally
                               setState(() {
                                 listOfProducts[index].quantity++;
                                 updatedProducts = listOfProducts;
                               });
                             },
                             decreaseQuantity: () {
-                              // Update the quantity locally
                               setState(() {
                                 if (listOfProducts[index].quantity > 1) {
                                   listOfProducts[index].quantity--;
