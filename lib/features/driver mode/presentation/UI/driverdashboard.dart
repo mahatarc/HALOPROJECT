@@ -3,8 +3,6 @@ import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrde
 import 'package:flutterproject/features/driver%20mode/presentation/UI/CompletedOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/PendingOrdeersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_drawer.dart';
-import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_profile.dart';
-import 'package:flutterproject/features/driver%20mode/presentation/UI/myearnings.dart';
 
 class DeliveryBoyDashboard extends StatefulWidget {
   @override
@@ -81,15 +79,6 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               ],
             ),
             SizedBox(height: 18),
-            /*  _buildOrderStatusCard('Completed Orders', () {
-              // Navigate to the Completed Orders screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CompletedOrdersPage(),
-                ),
-              );
-            }),*/
           ],
         ),
       ),
