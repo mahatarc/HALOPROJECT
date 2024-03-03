@@ -6,7 +6,7 @@ import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:flutterproject/features/cart/models/cart_model.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+  const CartPage({Key? key}) : super(key: key);
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -71,8 +71,8 @@ class _CartPageState extends State<CartPage> {
                               });
                             },
                             deleteItem: () {
-                              cartBloc
-                                  .add(DeleteItemEvent(listOfProducts[index]));
+                              _showDeleteConfirmationDialog(
+                                  listOfProducts[index]);
                             },
                           );
                         },
@@ -108,6 +108,33 @@ class _CartPageState extends State<CartPage> {
           }
         },
       ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(CartItemModel item) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                cartBloc.add(DeleteItemEvent(item));
+                Navigator.of(context).pop();
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
