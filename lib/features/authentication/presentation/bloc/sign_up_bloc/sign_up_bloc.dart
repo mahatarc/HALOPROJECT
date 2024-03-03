@@ -28,12 +28,19 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         email: event.email,
         password: event.password,
       );
-
       await credential.user!.sendEmailVerification();
-      emit(VerificationEmailSentState(event.email,event.user));
+      emit(VerificationEmailSentState(event.email, event.user));
       print('User data has been successfully added after email verification');
     } on FirebaseAuthException catch (error) {
-      print(error);
+      String errorMessage = '';
+      if (error.code == 'email-already-in-use') {
+        errorMessage = 'The email address is already in use.';
+      } else if (error.code == 'wrong-password') {
+        errorMessage = 'Invalid email or password.';
+      } else {
+        errorMessage = 'An error occurred. Please try again later.';
+      }
+      emit(SignUpErrorState(errorMessage));
     }
   }
 

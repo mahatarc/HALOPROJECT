@@ -229,31 +229,18 @@ class _LoginPageState extends State<LoginPage> {
             errorMessage = 'An error occurred. Please try again later.';
           }
           return Scaffold(
-            body: Builder(
-              builder: (BuildContext context) => Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Display the errorMessage in a dialog box
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text(errorMessage),
-                          actions: <Widget>[
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Text('Show Dialog'),
-                ),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(errorMessage),
+                  ElevatedButton(
+                    onPressed: () {
+                     signInBloc.add(SignInInitialEvent());
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
               ),
             ),
           );

@@ -48,29 +48,26 @@ class SignInBloc extends Bloc<SignInEvent, SignInStates> {
               emit(SignInNavigateToBuyerHomePageActionState());
             }
           } else {
-            // Handle case where user data does not exist
             print('User data does not exist.');
+            emit(SignInErrorState('user-not-found', 'User not found.'));
           }
         } else {
-          // Handle case where user is not logged in
           print('User is not logged in.');
         }
       } else {
-        // User's email is not verified
         print('Please verify your email.');
+        emit(SignInErrorState('email-not-verified', 'Email not verified.'));
       }
     } on FirebaseAuthException catch (e) {
       String errorMessage = '';
       if (e.code == 'user-not-found') {
         errorMessage = 'User not found.';
       } else if (e.code == 'wrong-password') {
-        errorMessage = 'Wrong password provided.';
-      } else if (e.code == 'user-disabled') {
-        errorMessage = 'User account is disabled.';
+        errorMessage = 'Wrong password provided. Please try again.';
       } else if (e.code == 'email-not-verified') {
         errorMessage = 'Email not verified.';
       } else {
-        errorMessage = 'An error occurred.';
+        errorMessage = 'An error occurred. Please try again later.';
       }
       emit(SignInErrorState(e.code, errorMessage));
     }
@@ -80,4 +77,5 @@ class SignInBloc extends Bloc<SignInEvent, SignInStates> {
       SignUpButtonPressedNavigateEvent event, Emitter<SignInStates> emit) {
     emit(SignUpPressedNavigateToSignUpActionState());
   }
+  
 }

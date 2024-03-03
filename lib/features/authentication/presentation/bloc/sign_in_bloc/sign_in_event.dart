@@ -8,9 +8,11 @@ class SignInButtonPressedEvent extends SignInEvent {
   final String email;
   final String password;
 
+
   SignInButtonPressedEvent({
     required this.email,
     required this.password,
+  
   });
 }
 
