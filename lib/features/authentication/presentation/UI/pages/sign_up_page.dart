@@ -283,6 +283,21 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       appBar: AppBar(
         title: Text('Verify Email'),
         backgroundColor: Colors.green[100],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigate back to the sign-up page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => SignUpBloc(),
+                  child: SignUppage(),
+                ),
+              ),
+            );
+          },
+        ),
       ),
       body: Center(
         child: Column(
