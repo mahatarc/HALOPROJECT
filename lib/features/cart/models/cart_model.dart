@@ -21,4 +21,12 @@ class CartItemModel {
         price: json['price'],
         quantity: 1);
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'productId': productId,
+      'name': productName,
+      'image_url': imageUrl,
+      'price': price,
+    };
+  }
 }
