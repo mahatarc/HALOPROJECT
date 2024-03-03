@@ -18,15 +18,6 @@ class Category extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to CategoryDetails page
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => CategoryDetails(
-        //       selectedCategory: categoryName,
-        //     ),
-        //   ),
-        // );
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
             builder: (context) => CategoryDetails(

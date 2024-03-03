@@ -215,6 +215,35 @@ class _LoginPageState extends State<LoginPage> {
           return LandingPage();
         } else if (state is SignInNavigateToSellerHomePageActionState) {
           return SellerDashboard();
+        } else if (state is SignInErrorState) {
+          String errorMessage = state.errorMessage;
+          if (state.errorCode == 'user-not-found') {
+            errorMessage = 'User not found. Please sign up.';
+          } else if (state.errorCode == 'wrong-password') {
+            errorMessage = 'Wrong password provided. Please try again.';
+          } else if (state.errorCode == 'user-disabled') {
+            errorMessage = 'User account is disabled. Please contact support.';
+          } else if (state.errorCode == 'email-not-verified') {
+            errorMessage = 'Email not verified. Please verify your email.';
+          } else {
+            errorMessage = 'An error occurred. Please try again later.';
+          }
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(errorMessage),
+                  ElevatedButton(
+                    onPressed: () {
+                     signInBloc.add(SignInInitialEvent());
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            ),
+          );
         } else {
           return Scaffold();
         }

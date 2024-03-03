@@ -20,11 +20,13 @@ class VerificationEmailSentState extends SignUpActionState {
 
   VerificationEmailSentState(this.email, this.user);
 }
-// class StatusTextChangedState extends SignUpState {
-//   final String text;
 
-//   StatusTextChangedState(this.text);
-// }
 class EmailVerificationInProgressState extends SignUpState {}
 
-class SignUpErrorState extends SignUpState {}
+class SignUpErrorState extends SignUpState {
+  final String errorMessage;
+
+  SignUpErrorState(this.errorMessage);
+}
+
+

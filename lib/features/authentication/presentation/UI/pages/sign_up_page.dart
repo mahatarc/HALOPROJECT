@@ -235,8 +235,33 @@ class _SignUpPageState extends State<SignUppage> {
             ),
           );
         } else if (state is SignUpErrorState) {
-          return const Scaffold();
-        } else {
+          return Scaffold(
+            body: Builder(
+              builder: (BuildContext context) => Center(
+                child: AlertDialog(
+                  alignment: Alignment.center,
+                  actionsAlignment: MainAxisAlignment.center,
+                  title: Text(
+                    'Error',
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Text(state.errorMessage),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        // Handle the try again logic here
+                        signUpBloc.add(SignUpInitialEvent());
+                        // Close the dialog
+                      },
+                      child: Text('Try Again'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        } 
+        else {
           return const Scaffold();
         }
       },
@@ -283,6 +308,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       appBar: AppBar(
         title: Text('Verify Email'),
         backgroundColor: Colors.green[100],
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
