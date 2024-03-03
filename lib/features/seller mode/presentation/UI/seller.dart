@@ -21,6 +21,9 @@ class _SellerDashboardState extends State<SellerDashboard> {
       appBar: AppBar(
         backgroundColor: Colors.green[200],
         title: Text('Seller Dashboard'),
+        actions: [
+          Icon(Icons.notifications_active),
+        ],
         // automaticallyImplyLeading: false,
       ),
       drawer: SellerDrawer(), // Add the drawer here

@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PendingOrdersPage extends StatefulWidget {
   @override
@@ -16,7 +16,13 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pending Orders'),
+        title: Text(
+          'Pending Orders',
+          style: GoogleFonts.acme(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.green[100],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -88,7 +94,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Product: ${productData['name']}'),
-                                    Text('Price: \$${productData['price']}'),
+                                    Text('Price: \₹${productData['price']}'),
                                     SizedBox(height: 8),
                                   ],
                                 );
@@ -98,7 +104,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                         Text(
                             'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
                         Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                        Text('Price: \$${orderData['productName'] ?? 'N/A'}'),
+                        Text('Price: \रु ${orderData['productName'] ?? 'N/A'}'),
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
@@ -138,13 +144,13 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                 _acceptOrder(context, orderId);
               },
             ),
-            ListTile(
+            /*  ListTile(
               title: Text('Reject Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
                 _rejectOrder(orderId);
               },
-            ),
+            ),*/
           ],
         );
       },
@@ -152,7 +158,6 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   }
 
   void _acceptOrder(BuildContext context, String orderId) {
-    String driverId = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance
         .collection('orders')
         .doc(orderId)
@@ -161,22 +166,29 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
       if (orderSnapshot.exists) {
         var orderData = orderSnapshot.data() as Map<String, dynamic>;
 
-        // Store the accepted order in the 'accepted_orders' collection
-        FirebaseFirestore.instance.collection('accepted_orders').add({
-          'orderNumber': orderId,
-          'productName': orderData['productName'],
-          //'orderDate': orderData['orderDate'],
-          'deliveryLocation': orderData['customeraddress'],
-          'driverId': driverId,
-        }).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Order $orderId accepted'),
-            ),
-          );
+        // Store the entire order document in 'accepted_orders'
+        FirebaseFirestore.instance
+            .collection('accepted_orders')
+            .doc(orderId)
+            .set(orderData)
+            .then((_) {
+          // Remove the accepted order from the 'orders' collection
+          orderSnapshot.reference.delete().then((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Order $orderId accepted'),
+              ),
+            );
 
-          // After accepting the order, fetch the accepted orders
-          _fetchAcceptedOrders(context);
+            // After accepting the order, fetch the accepted orders
+            _fetchAcceptedOrders(context);
+          }).catchError((error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to delete order: $error'),
+              ),
+            );
+          });
         }).catchError((error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -212,40 +224,3 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
     );
   }
 }
-
-/*class Order {
-  final String orderNumber;
-  final String productName;
-  final String customerName;
-  final String customeraddress;
-  final double amount;
-  final String paymentStatus;
-  final String businessName;
-  final String sellerLocation;
-  // final String sellerId;
-  Order({
-    required this.orderNumber,
-    required this.productName,
-    required this.customerName,
-    required this.customeraddress,
-    required this.amount,
-    required this.paymentStatus,
-    required this.businessName,
-    required this.sellerLocation,
-    //required this.sellerId,
-  });
-
-  factory Order.fromMap(Map<String, dynamic> map) {
-    return Order(
-      orderNumber: map['orderNumber'] ?? '',
-      productName: map['productName'] ?? '',
-      customerName: map['customerName'] ?? '',
-      customeraddress: map['address'] ?? '',
-      amount: map['amount'] != null ? map['amount'].toDouble() : 0.0,
-      paymentStatus: map['paymentStatus'] ?? '',
-      businessName: map['businessName'] ?? '',
-      sellerLocation: map['sellerAddress'] ?? '',
-      //  sellerId: map['sellerId'] ??'',
-    );
-  }
-}*/
