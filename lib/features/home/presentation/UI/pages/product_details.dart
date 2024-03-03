@@ -5,21 +5,24 @@ import 'package:flutterproject/buy_now/location.dart';
 import 'package:flutterproject/features/seller%20mode/model/sellermodel.dart';
 
 class ProductsDetails extends StatefulWidget {
-  final product_detail_id;
-  final product_detail_name;
-  final product_detail_price;
-  final product_detail_picture;
-  final product_detail_details;
+  final String product_detail_id;
+  final String product_detail_name;
+  final String product_detail_price;
+  final String product_detail_picture;
+  final String product_detail_details;
+  final Map<String, dynamic>? seller;
 
-  ProductsDetails(
-      {this.product_detail_id,
-      this.product_detail_name,
-      this.product_detail_price,
-      this.product_detail_picture,
-      this.product_detail_details, Map<String, dynamic>? product});
+  ProductsDetails({
+    required this.product_detail_id,
+    required this.product_detail_name,
+    required this.product_detail_price,
+    required this.product_detail_picture,
+    required this.product_detail_details,
+    this.seller,
+  });
 
   @override
-  State<ProductsDetails> createState() => _ProductsDetailsState();
+  _ProductsDetailsState createState() => _ProductsDetailsState();
 }
 
 class _ProductsDetailsState extends State<ProductsDetails> {
@@ -31,7 +34,11 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   @override
   void initState() {
     super.initState();
-    _fetchSellerDetails();
+    if (widget.seller != null) {
+      _seller = Seller.fromMap(widget.seller!);
+    } else {
+      _fetchSellerDetails();
+    }
   }
 
   Future<void> _fetchSellerDetails() async {
