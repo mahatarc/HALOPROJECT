@@ -129,12 +129,43 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         final List<CartItemModel> updatedCartItems =
             List<CartItemModel>.from((state as MyCartLoadedState).products);
 
-        updatedCartItems.remove(event.item);
+        // Remove the item from the list based on productId
+        updatedCartItems
+            .removeWhere((item) => item.productId == event.item.productId);
 
-        emit(MyCartLoadedState(updatedCartItems));
+        emit(MyCartLoadedState(updatedCartItems)); // Update the state
+
+        // Update Firestore with the new list of items
+        await updateFirestoreCart(updatedCartItems);
       }
     } catch (e) {
       print('Error deleting item: $e');
+    }
+  }
+
+  Future<void> updateFirestoreCart(List<CartItemModel> cartItems) async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      final cartRef = FirebaseFirestore.instance
+          .collection('carts')
+          .doc(userId)
+          .collection(userId);
+
+      // Clear existing cart items
+      await cartRef.get().then((snapshot) {
+        for (DocumentSnapshot doc in snapshot.docs) {
+          doc.reference.delete();
+        }
+      });
+
+      // Add updated cart items to Firestore
+      for (var item in cartItems) {
+        await cartRef.doc(item.productId).set(item.toJson());
+      }
+
+      print('Firestore cart updated successfully');
+    } catch (e) {
+      print('Error updating Firestore cart: $e');
     }
   }
 }
