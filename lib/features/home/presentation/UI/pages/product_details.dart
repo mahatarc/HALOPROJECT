@@ -92,13 +92,22 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           children: [
             Text(
               'Seller Information:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Text('Business Name: ${_seller?.businessName ?? 'N/A'}'),
-            Text('Contact Number: ${_seller?.contactNumber ?? 'N/A'}'),
-            Text('Address: ${_seller?.address ?? 'N/A'}'),
-            Text('City: ${_seller?.city ?? 'N/A'}'),
-            Text('Province: ${_seller?.province ?? 'N/A'}'),
+            Text(
+              'Business Name: ${_seller?.businessName ?? 'N/A'}',
+            ),
+            Text(
+              'Contact Number: ${_seller?.contactNumber ?? 'N/A'}',
+            ),
+            Text(
+              'Address: ${_seller?.address ?? 'N/A'}',
+            ),
+            Text(
+              'City: ${_seller?.city ?? 'N/A'}',
+            ),
+            Text(
+              'Province: ${_seller?.province ?? 'N/A'}',
+            ),
           ],
         ),
       );
@@ -118,9 +127,16 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     final double productPrice =
         double.parse(widget.product_detail_price.toString());
     return Scaffold(
+      // backgroundColor: Color.fromARGB(255, 243, 247, 241),
       appBar: AppBar(
-        backgroundColor: Colors.green[200],
-        title: Text('Product Details'),
+        backgroundColor: Colors.green[100],
+        title: Text(
+          'Product Details',
+          /*  style: GoogleFonts.merriweather(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),*/
+        ),
       ),
       body: ListView(
         children: [
@@ -160,7 +176,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ),
             ),
           ),
-          // Quantity selection row
+          SizedBox(
+            height: 5,
+          ),
           Row(
             children: [
               Expanded(
@@ -171,7 +189,14 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                   ),
                   child: Row(
                     children: [
-                      Expanded(child: Text("Quantity")),
+                      Expanded(
+                          child: Text(
+                        "Quantity",
+                        /* style: GoogleFonts.firaSans(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),*/
+                      )),
                       DropdownButton<int>(
                         value: selectedQuantity,
                         items: List.generate(10, (index) => index + 1)
@@ -192,6 +217,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ),
             ],
           ),
+          // Divider(),
           // Product description
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -200,17 +226,24 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               children: [
                 Text(
                   'Product Description:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  /*style: GoogleFonts.firaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),*/
                 ),
                 Text(
                   widget.product_detail_details,
-                  style: TextStyle(fontSize: 16),
+                  /* style: GoogleFonts.firaSans(
+                    fontSize: 15,
+                  ),*/
                 ),
               ],
             ),
           ),
+          //     Divider(),
           // Seller information section
           buildSellerInformationSection(),
+          //Divider(),
           // Customer Reviews
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -219,7 +252,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               children: [
                 Text(
                   'Customer Reviews',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  /* style: GoogleFonts.firaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),*/
                 ),
                 SizedBox(height: 8.0),
                 ListTile(
@@ -235,78 +271,81 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ],
             ),
           ),
+          //  Divider(),
+          // "Buy Now" and "Add to Cart" buttons
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // "Buy Now" button
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DeliveryAddressScreen(
+                                product_detail_name: widget.product_detail_name,
+                                product_detail_price:
+                                    widget.product_detail_price,
+                                product_detail_picture:
+                                    widget.product_detail_picture,
+                                businessName: _seller?.businessName,
+                                contactNumber: _seller?.contactNumber,
+                                address: _seller?.address,
+                                city: _seller?.city,
+                                province: _seller?.province,
+                              )),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Buy Now',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                // "Add to Cart" button
+                ElevatedButton(
+                  onPressed: () async {
+                    final user = FirebaseAuth.instance.currentUser;
+                    await FirebaseFirestore.instance
+                        .collection('carts')
+                        .doc(user!.uid)
+                        .collection(user.uid)
+                        .doc(widget.product_detail_id)
+                        .set({'count': selectedQuantity});
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('Item added successfully.'),
+                          );
+                        });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Add to Cart',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.green[100],
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            // "Buy Now" button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DeliveryAddressScreen(
-                            product_detail_name: widget.product_detail_name,
-                            product_detail_price: widget.product_detail_price,
-                            product_detail_picture:
-                                widget.product_detail_picture,
-                            businessName: _seller?.businessName,
-                            contactNumber: _seller?.contactNumber,
-                            address: _seller?.address,
-                            city: _seller?.city,
-                            province: _seller?.province,
-                          )),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-              child: Text(
-                'Buy Now',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            // "Add to Cart" button
-            ElevatedButton(
-              onPressed: () async {
-                final user = FirebaseAuth.instance.currentUser;
-                await FirebaseFirestore.instance
-                    .collection('carts')
-                    .doc(user!.uid)
-                    .collection(user.uid)
-                    .doc(widget.product_detail_id)
-                    .set({'count': selectedQuantity});
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Item added successfully.'),
-                      );
-                    });
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
-              child: Text(
-                'Add to Cart',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrde
 import 'package:flutterproject/features/driver%20mode/presentation/UI/CompletedOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/PendingOrdeersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_drawer.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DeliveryBoyDashboard extends StatefulWidget {
   @override
@@ -22,10 +21,10 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
         backgroundColor: Colors.green[100],
         title: Text(
           "Driver Dashboard",
-          style: GoogleFonts.acme(
+          /*style: GoogleFonts.acme(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-          ),
+          ),*/
         ),
       ),
       body: SingleChildScrollView(
@@ -35,10 +34,10 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
           children: [
             Text(
               'Welcome, Delivery Boy!',
-              style: GoogleFonts.acme(
+              /*style: GoogleFonts.acme(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
-              ),
+              ),*/
             ),
             SizedBox(height: 16),
             /* SwitchListTile(
