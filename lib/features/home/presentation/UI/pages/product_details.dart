@@ -284,7 +284,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         ),
       ),
       body: ListView(
-        padding: EdgeInsets.all(16),
+        //  padding: EdgeInsets.all(16),
         children: [
           Container(
             height: 300,
@@ -295,7 +295,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ),
               footer: Container(
                 color: Colors.white.withOpacity(0.6),
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -320,16 +320,13 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ),
             ),
           ),
-          SizedBox(
-            height: 5,
-          ),
           Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0),
+                topLeft: Radius.circular(35.0),
+                topRight: Radius.circular(35.0),
               ),
               boxShadow: [
                 BoxShadow(
