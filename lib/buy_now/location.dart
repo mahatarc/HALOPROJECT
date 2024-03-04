@@ -47,7 +47,9 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[100],
-        title: Text('Delivery Address'),
+        title: Text(
+          'Delivery Address',
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -56,40 +58,43 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
           children: [
             TextField(
               controller: fullNameController,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Full Name'),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z\s]+$')),
-              ],
+              decoration: InputDecoration(
+                labelText: 'Full Name',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ), // Adding border to text field
+              ),
             ),
             SizedBox(height: 10),
             TextField(
               controller: addressLine1Controller,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Address Line'),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z\s]+$')),
-              ],
+              decoration: InputDecoration(
+                labelText: 'Address Line',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ),
+              ),
             ),
             SizedBox(height: 10),
             TextField(
               controller: cityController,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'City'),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z\s]+$')),
-              ],
+              decoration: InputDecoration(
+                labelText: 'City',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ),
+              ),
             ),
             SizedBox(height: 10),
             TextField(
               controller: postalCodeController,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Postal Code'),
+              decoration: InputDecoration(
+                labelText: 'Postal Code',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ),
+              ),
               keyboardType: TextInputType.number,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(5),
-                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
-              ],
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -116,7 +121,18 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                       );
                     }
                   : null,
-              child: Text('Proceed to Payment'),
+              child: Text(
+                'Proceed to Payment',
+                style: TextStyle(
+                  color: Colors.white, // Button text color
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: _isFormValid() ? Colors.green[200] : Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
           ],
         ),

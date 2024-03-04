@@ -51,7 +51,7 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.green[100],
         title: const Text("Categories"),
         // );
         leading: IconButton(
