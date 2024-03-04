@@ -30,6 +30,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   int selectedQuantity = 1;
   Seller? _seller;
   bool _isLoading = false;
+  List<Map<String, dynamic>> _reviews = [];
+  TextEditingController _reviewController = TextEditingController();
+  int _selectedRating = 5;
 
   @override
   void initState() {
@@ -39,6 +42,8 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     } else {
       _fetchSellerDetails();
     }
+
+    _fetchReviews();
   }
 
   Future<void> _fetchSellerDetails() async {
@@ -75,6 +80,62 @@ class _ProductsDetailsState extends State<ProductsDetails> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _fetchReviews() async {
+    try {
+      final reviewsSnapshot = await FirebaseFirestore.instance
+          .collection('product_reviews')
+          .doc(widget.product_detail_id)
+          .collection('reviews')
+          .get();
+
+      setState(() {
+        _reviews = reviewsSnapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (error) {
+      print('Error fetching reviews: $error');
+    }
+  }
+
+  // Submit review
+  Future<void> _submitReview() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final review = _reviewController.text;
+      final rating = _selectedRating;
+
+      try {
+        final userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        await FirebaseFirestore.instance
+            .collection('product_reviews')
+            .doc(widget.product_detail_id)
+            .collection('reviews')
+            .add({
+          'author': userData.data()?['name'] ?? 'Anonymous',
+          'review': review,
+          'rating': rating,
+          'timestamp': Timestamp.now(),
+        });
+
+        // Clear the input field after submitting
+        _reviewController.clear();
+
+        // Fetch reviews again to update the list
+        _fetchReviews();
+      } catch (error) {
+        print('Error submitting review: $error');
+      }
+    } else {
+      // Handle the case when the user is not authenticated
+      print('User not authenticated');
     }
   }
 
@@ -126,21 +187,100 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     }
   }
 
+  // Build reviews section
+  Widget buildReviewsSection() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Customer Reviews',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8.0),
+          _reviews.isEmpty
+              ? Text('No reviews yet')
+              : Column(
+                  children: _reviews.map((review) {
+                    return ListTile(
+                      title: Text(review['author'] ?? 'Anonymous'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(review['review'] ?? ''),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              ),
+                              Text(review['rating'].toString()),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+          SizedBox(height: 16.0),
+          // Input for new review
+          Text(
+            'Leave a Review',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8.0),
+          TextField(
+            controller: _reviewController,
+            decoration: InputDecoration(
+              hintText: 'Enter your review',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          SizedBox(height: 8.0),
+          DropdownButton<int>(
+            value: _selectedRating,
+            items: List.generate(5, (index) => index + 1)
+                .map((rating) => DropdownMenuItem<int>(
+                      value: rating,
+                      child: Text('$rating stars'),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedRating = value ?? 5;
+              });
+            },
+          ),
+          SizedBox(height: 8.0),
+          ElevatedButton(
+            onPressed: _submitReview,
+            style: ElevatedButton.styleFrom(
+              primary: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            child: Text(
+              'Submit Review',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double productPrice =
         double.parse(widget.product_detail_price.toString());
     return Scaffold(
-      // backgroundColor: Color.fromARGB(255, 243, 247, 241),
-      //   backgroundColor: Color.fromARGB(255, 243, 247, 241),
       appBar: AppBar(
         backgroundColor: Colors.green[100],
         title: Text(
           'Product Details',
-          /*  style: GoogleFonts.merriweather(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),*/
         ),
       ),
       body: ListView(
@@ -148,7 +288,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         children: [
           Container(
             height: 300,
-           
             child: GridTile(
               child: Image.network(
                 widget.product_detail_picture,
@@ -185,7 +324,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             height: 5,
           ),
           Container(
-            //   margin: EdgeInsets.only(top: 20.0),
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -195,13 +333,12 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5), // Color of the shadow
-                  spreadRadius: 5, // Spread radius
-                  blurRadius: 7, // Blur radius
-                  offset: Offset(0, 3), // Changes position of shadow
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
                 ),
               ],
-              // You can also add other decoration properties such as color, border, etc.
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,10 +360,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
-                              /* style: GoogleFonts.firaSans(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),*/
                             )),
                             SizedBox(width: 5),
                             DropdownButton<int>(
@@ -249,8 +382,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                     ),
                   ],
                 ),
-                // Divider(),
-                // Product description
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Column(
@@ -262,10 +393,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
-                        /*style: GoogleFonts.firaSans(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),*/
                       ),
                     ],
                   ),
@@ -274,49 +401,16 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     widget.product_detail_details,
-                
                   ),
                 ),
-             
                 buildSellerInformationSection(),
-               
-               
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Customer Reviews',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                   
-                      ),
-                      SizedBox(height: 8.0),
-                      ListTile(
-                        title: Text('Alpha'),
-                        subtitle: Text('Excellent product!'),
-                        trailing: Icon(Icons.star, color: Colors.yellow),
-                      ),
-                      ListTile(
-                        title: Text('Beta'),
-                        subtitle: Text('Very satisfied with the purchase.'),
-                        trailing: Icon(Icons.star, color: Colors.yellow),
-                      ),
-                    ],
-                  ),
-                ),
-
+                buildReviewsSection(),
                 Divider(),
-                // "Buy Now" and "Add to Cart" buttons
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // "Buy Now" button
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -350,7 +444,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                           ),
                         ),
                       ),
-                      // "Add to Cart" button
                       ElevatedButton(
                         onPressed: () async {
                           final user = FirebaseAuth.instance.currentUser;
