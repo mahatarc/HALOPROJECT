@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
@@ -14,7 +13,6 @@ import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 import 'package:flutterproject/features/seller%20mode/model/sellermodel.dart';
 import 'package:flutterproject/nav.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 List myCart = [];
 int currentIndex = 0;
@@ -124,15 +122,13 @@ class _HomeState extends State<Home> {
             return Scaffold(
               appBar: AppBar(
                 title: Text(
-                  'Halo',
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(),
-                  ),
+                  'HALO',
+                  /* style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),*/
                 ),
                 backgroundColor: Colors.green[100],
-                actions: [
-                  Icon(Icons.notification_add),
-                ],
               ),
               backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
@@ -141,28 +137,28 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.green[100],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: TextFormField(
-                          controller: _searchController,
-                          onChanged: (value) {
-                            fetchProduct(value.trim());
-                          },
-                          decoration: InputDecoration(
-                            label: Text(
-                              "Search your product...",
-                              style: GoogleFonts.lato(
-                                textStyle: TextStyle(),
+                      Card(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: TextFormField(
+                            controller: _searchController,
+                            onChanged: (value) {
+                              fetchProduct(value.trim());
+                            },
+                            decoration: InputDecoration(
+                              label: Text(
+                                "Search your product...",
+                                /* style: GoogleFonts.actor(),*/
                               ),
-                            ),
-                            border: InputBorder.none,
-                            prefixIcon: Icon(
-                              Icons.search,
-                              size: 30,
-                              color: Colors.green[200],
+                              border: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                size: 30,
+                                color: Colors.green[200],
+                              ),
                             ),
                           ),
                         ),
@@ -200,89 +196,100 @@ class _HomeState extends State<Home> {
                       SizedBox(height: 20),
 
                       ///Categoriess---------------------------------------------------------
-                      Container(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Categories',
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                textScaleFactor: 1.5,
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  homePageBloc.add(CategoriesPressedEvent());
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 239, 244, 249),
-                                  onPrimary:
-                                      const Color.fromARGB(255, 11, 3, 3),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: Text(
-                                  'View More',
-                                  style: GoogleFonts.lato(
-                                    textStyle: TextStyle(
+                      Card(
+                        child: Column(
+                          children: [
+                            Container(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Categories',
+                                      /* style: GoogleFonts.firaSans(
+                                        //  fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
+                                      ),*/
+                                      textScaleFactor: 1.5,
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        homePageBloc
+                                            .add(CategoriesPressedEvent());
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        primary:
+                                            Color.fromARGB(255, 239, 244, 249),
+                                        onPrimary:
+                                            const Color.fromARGB(255, 11, 3, 3),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'View More',
+                                        /* style: GoogleFonts.firaSans(
+                                          textStyle: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),*/
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        height: 100.0,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 4,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Category(
-                                imagePath: categoryImages[index],
-                                categoryName: categoriesList[index],
+                            ),
+                            Container(
+                              color: Colors.white,
+                              height: 100.0,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 4,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Category(
+                                      imagePath: categoryImages[index],
+                                      categoryName: categoriesList[index],
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                            ),
+                          ],
                         ),
                       ),
+
                       SizedBox(height: 20),
 
                       // Recommended Section
-                      Container(
-                        color: Colors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Recommended for you',
-                                /* style: TextStyle(fontWeight: FontWeight.bold,
-                                ),*/
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
+                      Card(
+                        child: Container(
+                          color: Colors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Recommended for you',
+                                  /* style: TextStyle(fontWeight: FontWeight.bold,
+                                  ),*/
+                                  /* style: GoogleFonts.firaSans(
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
-                                  ),
+                                  ),*/
+                                  textScaleFactor: 1.5,
                                 ),
-                                textScaleFactor: 1.5,
                               ),
-                            ),
-                            RecommendProduct(),
-                          ],
+                              RecommendProduct(),
+                            ],
+                          ),
                         ),
                       ),
                     ],

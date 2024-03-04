@@ -4,21 +4,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentService {
-  Future<bool> processPayment(
-    String cardNumber,
-    String cvv,
-    String expiryDate,
-    String fullName,
-    String address,
-    String city,
-    String productPrice,
-    String productName,
-    String? businessName,
-    String? contactNumber,
-    String? sellerAddress,
-    String? sellerCity,
-    String? sellerProvince,
-  ) async {
+  Future<bool> processPayment({
+    required String cardNumber,
+    required String cvv,
+    required String expiryDate,
+    required String fullName,
+    required String address,
+    required String city,
+    required String productPrice,
+    required String productName,
+    required String? businessName,
+    required String? contactNumber,
+    required String? sellerAddress,
+    required String? sellerCity,
+    required String? sellerProvince,
+  }) async {
     await Future.delayed(Duration(seconds: 2));
 
     if (_isExpired(expiryDate)) {
@@ -238,19 +238,19 @@ class CardPaymentScreen extends StatelessWidget {
                   }
 
                   bool isSuccess = await paymentService.processPayment(
-                    cardNumberController.text,
-                    cvvController.text,
-                    expiryDateController.text,
-                    fullName,
-                    address,
-                    city,
-                    productName,
-                    productPrice.toString(),
-                    businessName,
-                    contactNumber,
-                    sellerAddress,
-                    sellerCity,
-                    sellerProvince,
+                    cardNumber: cardNumberController.text,
+                    cvv: cvvController.text,
+                    expiryDate: expiryDateController.text,
+                    fullName: fullName,
+                    address: address,
+                    city: city,
+                    productName: productName,
+                    productPrice: productPrice.toString(),
+                    businessName: businessName,
+                    contactNumber: contactNumber,
+                    sellerAddress: sellerAddress,
+                    sellerCity: sellerCity,
+                    sellerProvince: sellerProvince,
                   );
 
                   if (isSuccess) {
