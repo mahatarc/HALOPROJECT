@@ -323,7 +323,8 @@ class RecommendProduct extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12),
       child: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection('products').get(),
+        future:
+            FirebaseFirestore.instance.collection('products').limit(1).get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             print('Loading');
