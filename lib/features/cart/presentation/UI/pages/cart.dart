@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
@@ -44,7 +42,7 @@ class _CartPageState extends State<CartPage> {
               ),
               body: RefreshIndicator(
                 onRefresh: () async {
-                  cartBloc.add(MyCartInitialEvent());
+                   cartBloc.add(MyCartInitialEvent());
                 },
                 child: Column(
                   children: [
