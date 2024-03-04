@@ -132,6 +132,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         double.parse(widget.product_detail_price.toString());
     return Scaffold(
       // backgroundColor: Color.fromARGB(255, 243, 247, 241),
+      //   backgroundColor: Color.fromARGB(255, 243, 247, 241),
       appBar: AppBar(
         backgroundColor: Colors.green[100],
         title: Text(
@@ -142,19 +143,24 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           ),*/
         ),
       ),
-
       body: ListView(
         padding: EdgeInsets.all(16),
         children: [
           Container(
             height: 300,
+            /* decoration: BoxDecoration(
+              color: Color.fromARGB(255, 217, 236, 220),
+              borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(40.0),
+                //  topRight: Radius.circular(40.0),
+                bottomLeft:
+                    Radius.circular(40.0), // Circular bottom left corner
+              ),
+            ),*/
             child: GridTile(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Image.network(
-                  widget.product_detail_picture,
-                  fit: BoxFit.cover,
-                ),
+              child: Image.network(
+                widget.product_detail_picture,
+                fit: BoxFit.cover,
               ),
               footer: Container(
                 color: Colors.white.withOpacity(0.6),
@@ -186,179 +192,210 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           SizedBox(
             height: 5,
           ),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Row(
+          Container(
+            //   margin: EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5), // Color of the shadow
+                  spreadRadius: 5, // Spread radius
+                  blurRadius: 7, // Blur radius
+                  offset: Offset(0, 3), // Changes position of shadow
+                ),
+              ],
+              // You can also add other decoration properties such as color, border, etc.
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              "Quantity",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                              /* style: GoogleFonts.firaSans(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),*/
+                            )),
+                            SizedBox(width: 5),
+                            DropdownButton<int>(
+                              value: selectedQuantity,
+                              items: List.generate(10, (index) => index + 1)
+                                  .map((quantity) => DropdownMenuItem<int>(
+                                        value: quantity,
+                                        child: Text('$quantity'),
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedQuantity = value ?? 1;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Divider(),
+                // Product description
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                          child: Text(
-                        "Quantity",
+                      Text(
+                        'Product Description:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        /*style: GoogleFonts.firaSans(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),*/
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    widget.product_detail_details,
+                    /* style: GoogleFonts.firaSans(
+                                    fontSize: 15,
+                                  ),*/
+                  ),
+                ),
+                //     Divider(),
+                // Seller information section
+                buildSellerInformationSection(),
+                //Divider(),
+                // Customer Reviews
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Customer Reviews',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                         /* style: GoogleFonts.firaSans(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),*/
-                      )),
-                      DropdownButton<int>(
-                        value: selectedQuantity,
-                        items: List.generate(10, (index) => index + 1)
-                            .map((quantity) => DropdownMenuItem<int>(
-                                  value: quantity,
-                                  child: Text('$quantity'),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedQuantity = value ?? 1;
-                          });
-                        },
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),*/
+                      ),
+                      SizedBox(height: 8.0),
+                      ListTile(
+                        title: Text('Alpha'),
+                        subtitle: Text('Excellent product!'),
+                        trailing: Icon(Icons.star, color: Colors.yellow),
+                      ),
+                      ListTile(
+                        title: Text('Beta'),
+                        subtitle: Text('Very satisfied with the purchase.'),
+                        trailing: Icon(Icons.star, color: Colors.yellow),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          // Divider(),
-          // Product description
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Product Description:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                  /*style: GoogleFonts.firaSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),*/
-                ),
-                Text(
-                  widget.product_detail_details,
-                  /* style: GoogleFonts.firaSans(
-                    fontSize: 15,
-                  ),*/
-                ),
-              ],
-            ),
-          ),
-          //     Divider(),
-          // Seller information section
-          buildSellerInformationSection(),
-          //Divider(),
-          // Customer Reviews
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Customer Reviews',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                  /* style: GoogleFonts.firaSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),*/
-                ),
-                SizedBox(height: 8.0),
-                ListTile(
-                  title: Text('Alpha'),
-                  subtitle: Text('Excellent product!'),
-                  trailing: Icon(Icons.star, color: Colors.yellow),
-                ),
-                ListTile(
-                  title: Text('Beta'),
-                  subtitle: Text('Very satisfied with the purchase.'),
-                  trailing: Icon(Icons.star, color: Colors.yellow),
-                ),
-              ],
-            ),
-          ),
-          //  Divider(),
-          // "Buy Now" and "Add to Cart" buttons
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // "Buy Now" button
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DeliveryAddressScreen(
-                                product_detail_name: widget.product_detail_name,
-                                product_detail_price:
-                                    widget.product_detail_price,
-                                product_detail_picture:
-                                    widget.product_detail_picture,
-                                businessName: _seller?.businessName,
-                                contactNumber: _seller?.contactNumber,
-                                address: _seller?.address,
-                                city: _seller?.city,
-                                province: _seller?.province,
-                              )),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  child: Text(
-                    'Buy Now',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                // "Add to Cart" button
-                ElevatedButton(
-                  onPressed: () async {
-                    final user = FirebaseAuth.instance.currentUser;
-                    await FirebaseFirestore.instance
-                        .collection('carts')
-                        .doc(user!.uid)
-                        .collection(user.uid)
-                        .doc(widget.product_detail_id)
-                        .set({'count': selectedQuantity});
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('Item added successfully.'),
+
+                Divider(),
+                // "Buy Now" and "Add to Cart" buttons
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // "Buy Now" button
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DeliveryAddressScreen(
+                                      product_detail_name:
+                                          widget.product_detail_name,
+                                      product_detail_price:
+                                          widget.product_detail_price,
+                                      product_detail_picture:
+                                          widget.product_detail_picture,
+                                      businessName: _seller?.businessName,
+                                      contactNumber: _seller?.contactNumber,
+                                      address: _seller?.address,
+                                      city: _seller?.city,
+                                      province: _seller?.province,
+                                    )),
                           );
-                        });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  child: Text(
-                    'Add to Cart',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        child: Text(
+                          'Buy Now',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      // "Add to Cart" button
+                      ElevatedButton(
+                        onPressed: () async {
+                          final user = FirebaseAuth.instance.currentUser;
+                          await FirebaseFirestore.instance
+                              .collection('carts')
+                              .doc(user!.uid)
+                              .collection(user.uid)
+                              .doc(widget.product_detail_id)
+                              .set({'count': selectedQuantity});
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Item added successfully.'),
+                                );
+                              });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        child: Text(
+                          'Add to Cart',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

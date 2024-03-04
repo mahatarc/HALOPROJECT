@@ -230,104 +230,125 @@ class _HomeState extends State<Home> {
                       SizedBox(height: 15),
 
                       ///Categoriess---------------------------------------------------------
-                      Padding(
+                      Container(
                         padding: const EdgeInsets.all(8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'CATEGORIES',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              /* style: GoogleFonts.firaSans(
-                                //  fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),*/
-                              textScaleFactor: 1.5,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                homePageBloc.add(CategoriesPressedEvent());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Color.fromARGB(255, 239, 244, 249),
-                                onPrimary: const Color.fromARGB(255, 11, 3, 3),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              child: Text(
-                                'View More',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                /* style: GoogleFonts.firaSans(
-                                  textStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),*/
-                              ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
                             ),
                           ],
                         ),
-                      ),
-                      Container(
-                        height: 120.0,
-                        child: Card(
-                          color: Colors.white,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 4,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Category(
-                                  imagePath: categoryImages[index],
-                                  categoryName: categoriesList[index],
-                                ),
-                              );
-                            },
-                          ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Categories',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textScaleFactor: 1.5,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      homePageBloc
+                                          .add(CategoriesPressedEvent());
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shadowColor: Colors.lightGreenAccent,
+                                      primary:
+                                          Color.fromARGB(255, 239, 244, 249),
+                                      onPrimary:
+                                          const Color.fromARGB(255, 11, 3, 3),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      //    minimumSize: Size(50, 35),
+                                    ),
+                                    child: Text(
+                                      'View More',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 120.0,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 4,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Category(
+                                      imagePath: categoryImages[index],
+                                      categoryName: categoriesList[index],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 
                       SizedBox(height: 15),
 
                       // Recommended Section
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'RECOMMENDED',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          /* style: GoogleFonts.firaSans(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),*/
-                          textScaleFactor: 1.5,
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      ),
-                      Card(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            /*  Padding(
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Recommended for you',
-                                /* style: TextStyle(fontWeight: FontWeight.bold,
-                                ),*/
-                                /* style: GoogleFonts.firaSans(
-                                  fontSize: 14,
+                                'Recommended',
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                ),*/
+                                ),
                                 textScaleFactor: 1.5,
                               ),
-                            ),*/
-                            RecommendProduct(),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                /*  Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Recommended for you',
+                                            textScaleFactor: 1.5,
+                                          ),
+                                        ),*/
+                                RecommendProduct(),
+                              ],
+                            ),
                           ],
                         ),
                       ),
