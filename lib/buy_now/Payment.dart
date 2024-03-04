@@ -99,47 +99,97 @@ class PaymentPage extends StatelessWidget {
         title: Text('Choose Payment Method'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                launch('https://esewa.com.np/');
-              },
-              child: Text('Pay through e-sewa'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CardPaymentScreen(
-                            fullName: fullName,
-                            address: address,
-                            city: city,
-                            productName: productName,
-                            productPrice: productPrice,
-                            productPicture: productPicture,
-                            businessName: businessName,
-                            contactNumber: contactNumber,
-                            sellerAddress: sellerAddress,
-                            sellerCity: sellerCity,
-                            sellerProvince: sellerProvince,
-                          )),
-                );
-              },
-              child: Text('Pay through Credit/Debit Card'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => OrderPlacedPage()),
-                );
-              },
-              child: Text('Pay on Delivery'),
-            ),
-          ],
+        child: Container(
+          height: 360,
+          width: 300,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    launch('https://esewa.com.np/');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 204, 223, 205),
+                    onPrimary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      //  side: BorderSide(color: Colors.green),
+                    ),
+                  ),
+                  child: Text('Pay through e-sewa'),
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CardPaymentScreen(
+                                fullName: fullName,
+                                address: address,
+                                city: city,
+                                productName: productName,
+                                productPrice: productPrice,
+                                productPicture: productPicture,
+                                businessName: businessName,
+                                contactNumber: contactNumber,
+                                sellerAddress: sellerAddress,
+                                sellerCity: sellerCity,
+                                sellerProvince: sellerProvince,
+                              )),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 204, 223, 205),
+                    onPrimary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      //  side: BorderSide(color: Colors.green),
+                    ),
+                  ),
+                  child: Text('Pay through Credit/Debit Card'),
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => OrderPlacedPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 204, 223, 205),
+                    onPrimary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      //  side: BorderSide(color: Colors.green),
+                    ),
+                  ),
+                  child: Text('Pay on Delivery'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -184,6 +234,7 @@ class CardPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green[100],
         title: Text('Credit/Debit Card Payment'),
       ),
       body: Center(
@@ -194,18 +245,34 @@ class CardPaymentScreen extends StatelessWidget {
             children: [
               TextField(
                 controller: cardNumberController,
-                decoration: InputDecoration(labelText: 'Card Number'),
+                decoration: InputDecoration(
+                  labelText: 'Card Number',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                ),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 10),
               TextField(
                 controller: cvvController,
-                decoration: InputDecoration(labelText: 'CVV'),
+                decoration: InputDecoration(
+                  labelText: 'CVV',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                ),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: expiryDateController,
-                decoration: InputDecoration(labelText: 'Expiry Date (MM-YY)'),
+                decoration: InputDecoration(
+                  labelText: 'Expiry Date (MM-YY)',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                ),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(
                       RegExp(r'^\d{0,2}-?\d{0,2}$')),

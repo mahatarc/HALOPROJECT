@@ -26,8 +26,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     nameController.text = widget.personalInfo.name;
     emailController.text = widget.personalInfo.email;
-
-   
   }
 
   @override
@@ -36,7 +34,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       appBar: AppBar(
         title: Text('Edit Profile'),
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 172, 229, 142),
+        backgroundColor: Colors.green[100],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -45,9 +43,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTextField('Name', nameController),
+              _buildTextField(
+                'Name',
+                nameController,
+              ),
               _buildTextField('Email', emailController),
-              
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -56,6 +56,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.grey[100], // Background color
+                      onPrimary: Colors.black, // Text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            10), // Adjust the border radius
+                      ),
+                    ),
                     child: Text('Cancel'),
                   ),
                   ElevatedButton(
@@ -77,6 +85,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         Navigator.pop(context, updatedInfo);
                       }
                     },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.grey[100], // Background color
+                      onPrimary: Colors.black, // Text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            10), // Adjust the border radius
+                      ),
+                    ),
                     child: Text('Save'),
                   ),
                 ],
@@ -94,6 +110,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: TextFormField(
         decoration: InputDecoration(
           labelText: label,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green),
+          ),
         ),
         controller: controller,
         validator: (value) {

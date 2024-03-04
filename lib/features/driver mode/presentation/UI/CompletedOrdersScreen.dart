@@ -50,8 +50,9 @@ class CompletedOrdersPage extends StatelessWidget {
                       ),
                       Text(
                           'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
-                      Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                      Text('Price: \रु ${orderData['productName'] ?? 'N/A'}'),
+                      Text(
+                          'Product Name: ${orderData['productName'] ?? 'N/A'}'),
+                      Text('Price: \रु ${orderData['amount'] ?? 'N/A'}'),
                       Text(
                           'Customer Location: ${orderData['customeraddress'] ?? 'N/A'}'),
                       Text(
