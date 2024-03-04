@@ -11,7 +11,6 @@ import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/mapservice/presentation/maps.dart';
-import 'package:flutterproject/features/seller%20mode/model/sellermodel.dart';
 import 'package:flutterproject/nav.dart';
 
 List myCart = [];
@@ -61,6 +60,8 @@ class _HomeState extends State<Home> {
   late TextEditingController _searchController;
   late List<Map<String, dynamic>> _filteredProducts;
   Map<String, dynamic>? _searchedProduct;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     homePageBloc = BlocProvider.of<HomePageBloc>(context);
@@ -120,7 +121,9 @@ class _HomeState extends State<Home> {
         builder: (context, state) {
           if (state is HomePageInitialState) {
             return Scaffold(
-              appBar: AppBar(
+              drawer: Mydrawer(),
+              key: _scaffoldKey,
+              /*appBar: AppBar(
                 title: Text(
                   'HALO',
                   /* style: TextStyle(
@@ -129,7 +132,7 @@ class _HomeState extends State<Home> {
                   ),*/
                 ),
                 backgroundColor: Colors.green[100],
-              ),
+              ),*/
               backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
@@ -137,33 +140,65 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Card(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: TextFormField(
-                            controller: _searchController,
-                            onChanged: (value) {
-                              fetchProduct(value.trim());
+                      Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _scaffoldKey.currentState?.openDrawer();
                             },
-                            decoration: InputDecoration(
-                              label: Text(
-                                "Search your product...",
-                                /* style: GoogleFonts.actor(),*/
-                              ),
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                size: 30,
-                                color: Colors.green[200],
+                            child: Icon(
+                              Icons.sort_rounded,
+                              size: 33,
+                            ),
+                            splashColor: Color.fromARGB(255, 190, 230, 184)
+                                .withOpacity(0.5),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            'HALO',
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                      Divider(),
+                      SizedBox(
+                        height: 10,
+                      ),
+
+                      Card(
+                        child: SizedBox(
+                          height: 50, // Adjust the height as needed
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextFormField(
+                              controller: _searchController,
+                              onChanged: (value) {
+                                fetchProduct(value.trim());
+                              },
+                              decoration: InputDecoration(
+                                label: Text(
+                                  "Search your product...",
+                                  /* style: GoogleFonts.actor(),*/
+                                ),
+                                border: InputBorder.none,
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  size: 30,
+                                  color: Color.fromARGB(255, 242, 243, 241),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+
+                      SizedBox(height: 15),
                       if (_searchedProduct != null)
                         ListTile(
                           title: Text(_searchedProduct!['name'] ?? ''),
@@ -191,61 +226,67 @@ class _HomeState extends State<Home> {
                           },
                         ),
 
-                      SizedBox(height: 20),
                       ImageCarouselSlider(),
-                      SizedBox(height: 20),
+                      SizedBox(height: 15),
 
                       ///Categoriess---------------------------------------------------------
-                      Card(
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
                         child: Column(
                           children: [
-                            Container(
-                              color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Categories',
-                                      /* style: GoogleFonts.firaSans(
-                                        //  fontSize: 18,
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Categories',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textScaleFactor: 1.5,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      homePageBloc
+                                          .add(CategoriesPressedEvent());
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      shadowColor: Colors.lightGreenAccent,
+                                      primary:
+                                          Color.fromARGB(255, 239, 244, 249),
+                                      onPrimary:
+                                          const Color.fromARGB(255, 11, 3, 3),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      //    minimumSize: Size(50, 35),
+                                    ),
+                                    child: Text(
+                                      'View More',
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                      ),*/
-                                      textScaleFactor: 1.5,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        homePageBloc
-                                            .add(CategoriesPressedEvent());
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary:
-                                            Color.fromARGB(255, 239, 244, 249),
-                                        onPrimary:
-                                            const Color.fromARGB(255, 11, 3, 3),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        'View More',
-                                        /* style: GoogleFonts.firaSans(
-                                          textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),*/
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                             Container(
-                              color: Colors.white,
-                              height: 100.0,
+                              height: 120.0,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: 4,
@@ -264,39 +305,57 @@ class _HomeState extends State<Home> {
                         ),
                       ),
 
-                      SizedBox(height: 20),
+                      SizedBox(height: 15),
 
                       // Recommended Section
-                      Card(
-                        child: Container(
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
                           color: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Recommended for you',
-                                  /* style: TextStyle(fontWeight: FontWeight.bold,
-                                  ),*/
-                                  /* style: GoogleFonts.firaSans(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),*/
-                                  textScaleFactor: 1.5,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Recommended',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                 ),
+                                textScaleFactor: 1.5,
                               ),
-                              RecommendProduct(),
-                            ],
-                          ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                /*  Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Recommended for you',
+                                            textScaleFactor: 1.5,
+                                          ),
+                                        ),*/
+                                RecommendProduct(),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              drawer: Mydrawer(),
             );
           } else {
             return const Scaffold();
@@ -328,10 +387,10 @@ class RecommendProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(10),
       child: FutureBuilder<QuerySnapshot>(
         future:
-            FirebaseFirestore.instance.collection('products').limit(1).get(),
+            FirebaseFirestore.instance.collection('products').limit(4).get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             print('Loading');
@@ -400,7 +459,7 @@ class ImageCarouselSlider extends StatelessWidget {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
+                    color: Colors.grey.withOpacity(0.1),
                     spreadRadius: 2,
                     blurRadius: 5,
                     offset: Offset(0, 3),

@@ -8,10 +8,6 @@ class AcceptedOrdersPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Accepted Orders',
-          /* style: GoogleFonts.acme(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),*/
         ),
         backgroundColor: Colors.green[100],
       ),
@@ -54,8 +50,9 @@ class AcceptedOrdersPage extends StatelessWidget {
                         ),
                         Text(
                             'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
-                        Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                        Text('Price: \रु ${orderData['productName'] ?? 'N/A'}'),
+                        Text(
+                            'Product Name: ${orderData['productName'] ?? 'N/A'}'),
+                        Text('Price: \रु ${orderData['amount'] ?? 'N/A'}'),
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),

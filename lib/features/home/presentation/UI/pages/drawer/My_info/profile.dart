@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: Text('Profile'),
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 172, 229, 142),
+        backgroundColor: Colors.green[100],
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream:
@@ -112,19 +112,55 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     );
                   },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.grey[100], // Background color
+                    onPrimary: Colors.black, // Text color
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Adjust the border radius
+                    ),
+                  ),
                   child: Text('Edit Profile'),
                 ),
                 SizedBox(height: 32),
-                _buildSectionTitle('My Personal Information'),
-                _buildPersonalInfoTile('Name', personalInfo.name),
-                _buildPersonalInfoTile('Email', personalInfo.email),
-                _buildPersonalInfoTile('Role', personalInfo.role),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('My Personal Information'),
+                      _buildPersonalInfoTile('Name', personalInfo.name),
+                      _buildPersonalInfoTile('Email', personalInfo.email),
+                      _buildPersonalInfoTile('Role', personalInfo.role),
+                    ],
+                  ),
+                ),
                 if (_isImageChanged) // Show save button only if image is changed
                   ElevatedButton(
                     onPressed: () {
                       // Save image logic
                       _saveImage();
                     },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.grey[100], // Background color
+                      onPrimary: Colors.black, // Text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            10), // Adjust the border radius
+                      ),
+                    ),
                     child: Text('Save'),
                   ),
               ],
