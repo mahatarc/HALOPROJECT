@@ -144,42 +144,41 @@ class _ProductsDetailsState extends State<ProductsDetails> {
       ),
 
       body: ListView(
+        padding: EdgeInsets.all(16),
         children: [
-          SizedBox(
-            height: 10,
-          ),
           Container(
             height: 300,
             child: GridTile(
-              child: Container(
-                color: Colors.white,
+              child: AspectRatio(
+                aspectRatio: 1,
                 child: Image.network(
                   widget.product_detail_picture,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
               ),
               footer: Container(
-                color: Colors.white60,
-                child: ListTile(
-                  leading: Text(
-                    widget.product_detail_name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "\₹$productPrice",
-                          style: TextStyle(
-                            color: Colors.brown,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
+                color: Colors.white.withOpacity(0.6),
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.product_detail_name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "\₹$productPrice",
+                      style: TextStyle(
+                        color: Colors.brown,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
