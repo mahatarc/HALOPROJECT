@@ -19,7 +19,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.green[100],
         title: Text("Feed"),
@@ -43,7 +43,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
             },
           ),
         ],*/
-      ),
+      ),*/
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context, snapshot) {
