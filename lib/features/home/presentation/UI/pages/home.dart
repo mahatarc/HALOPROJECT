@@ -190,7 +190,7 @@ class _HomeState extends State<Home> {
                                 prefixIcon: Icon(
                                   Icons.search,
                                   size: 30,
-                                  color: Colors.green[200],
+                                  color: Color.fromARGB(255, 242, 243, 241),
                                 ),
                               ),
                             ),
