@@ -92,6 +92,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           children: [
             Text(
               'Seller Information:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
             Text(
               'Business Name: ${_seller?.businessName ?? 'N/A'}',
@@ -192,6 +196,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                       Expanded(
                           child: Text(
                         "Quantity",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                         /* style: GoogleFonts.firaSans(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -226,6 +234,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               children: [
                 Text(
                   'Product Description:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                   /*style: GoogleFonts.firaSans(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -252,6 +264,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               children: [
                 Text(
                   'Customer Reviews',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                   /* style: GoogleFonts.firaSans(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
