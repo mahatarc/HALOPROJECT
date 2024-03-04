@@ -13,3 +13,5 @@ class MyCartLoadedState extends CartState {
 }
 
 class CheckoutPressedState extends CartState {}
+
+class CartEmptyState extends CartState{}

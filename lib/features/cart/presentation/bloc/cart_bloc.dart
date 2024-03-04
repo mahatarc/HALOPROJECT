@@ -48,6 +48,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             .collection('products')
             .doc(item)
             .get();
+        print(singleItem.data());
         if (singleItem != null) {
           documentSnapshot.add(singleItem);
         }
@@ -64,7 +65,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
       print('Converted Firestore data to CartItemModel');
 
+      for (int i = 0; i < productIDList.length; i++) {
+        cartItems[i].productId = productIDList[i];
+      }
+      print(cartItems.first.productId);
       emit(MyCartLoadedState(cartItems));
+
       print('Cart data loaded successfully');
     } catch (e) {
       print('Error getting cart: $e');
@@ -128,19 +134,25 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (state is MyCartLoadedState) {
         final List<CartItemModel> updatedCartItems =
             List<CartItemModel>.from((state as MyCartLoadedState).products);
-
+        print('..............................................');
+        print(event.item.productId);
         // Find the index of the item to delete
-        final index = updatedCartItems
-            .indexWhere((item) => item.productId == event.item.productId);
-
+        final index = updatedCartItems.indexWhere((item) {
+          // print(item.productId);
+          // print(event.item.productId);
+          return item.productId == event.item.productId;
+        });
+        print(index);
+        print(
+            '.....................................................................');
         if (index != -1) {
           // Remove the item at the found index
           updatedCartItems.removeAt(index);
 
-          emit(MyCartLoadedState(updatedCartItems)); // Update the state
-
           // Update Firestore with the new list of items
           await updateFirestoreCart(updatedCartItems);
+
+          emit(MyCartLoadedState(updatedCartItems)); // Update the state
         } else {
           print('Item to delete not found in cart');
         }
@@ -159,17 +171,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           .collection(userId);
 
       // Get the list of product IDs for the items to be removed
-      final List<String> productIdsToRemove =
+      final List<String?> productIdsInCart =
           cartItems.map((item) => item.productId).toList();
 
-      // Delete only the items that are not present in the updated cart
-      await cartRef.get().then((snapshot) {
-        for (DocumentSnapshot doc in snapshot.docs) {
-          if (!productIdsToRemove.contains(doc.id)) {
-            doc.reference.delete();
-          }
+      // Get all documents in the cart collection
+      final snapshot = await cartRef.get();
+
+      // Iterate through each document
+      for (DocumentSnapshot doc in snapshot.docs) {
+        // Check if the product ID of the current document is in the updated cart
+        if (!productIdsInCart.contains(doc.id)) {
+          // If the product ID is not in the updated cart, delete the document
+          await doc.reference.delete();
         }
-      });
+      }
 
       // Add or update the cart items in Firestore
       for (var item in cartItems) {

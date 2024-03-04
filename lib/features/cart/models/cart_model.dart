@@ -3,7 +3,7 @@ class CartItemModel {
   final String imageUrl;
   final String price;
   int quantity;
-  final String productId;
+   String? productId; // Nullable productId
 
   CartItemModel({
     required this.productName,
@@ -13,16 +13,13 @@ class CartItemModel {
     required this.productId,
   });
 
-  // Create CartItemModel from JSON data
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
-    final productId = json['productId'] ?? 'defaultID';
-
     return CartItemModel(
-      productId: productId.isNotEmpty ? productId : 'defaultID',
+      productId: json['productId'],
       productName: json['name'],
       imageUrl: json['image_url'],
       price: json['price'],
-      quantity: json['quantity'] ?? 1, // Initialize quantity from JSON
+      quantity: json['quantity'] ?? 1,
     );
   }
 
@@ -32,7 +29,7 @@ class CartItemModel {
       'name': productName,
       'image_url': imageUrl,
       'price': price,
-      'count': quantity, // Include the quantity field in JSON data
+      'count': quantity,
     };
   }
 }

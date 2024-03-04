@@ -173,8 +173,8 @@ class _AddProductFormState extends State<AddProductForm> {
                               child: Text('Pesticides and Insecticides'),
                             ),
                             DropdownMenuItem<String>(
-                              value: 'Pots',
-                              child: Text('Pots'),
+                              value: 'Books',
+                              child: Text('Books'),
                             ),
                             DropdownMenuItem<String>(
                               value: 'Animal Feed',
