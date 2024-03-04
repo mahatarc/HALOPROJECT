@@ -23,7 +23,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
         automaticallyImplyLeading: true,
         backgroundColor: Colors.green[100],
         title: Text("Feed"),
-        actions: [
+        /*  actions: [
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
@@ -42,7 +42,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
               );
             },
           ),
-        ],
+        ],*/
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
@@ -94,6 +94,33 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
             },
           );
         },
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FeedProfile()),
+              );
+            },
+            child: Icon(Icons.person),
+            backgroundColor: Colors.green[100],
+          ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddPost()),
+              );
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.green[100],
+          ),
+        ],
       ),
     );
   }
