@@ -236,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(errorMessage),
                   ElevatedButton(
                     onPressed: () {
-                     signInBloc.add(SignInInitialEvent());
+                      signInBloc.add(SignInInitialEvent());
                     },
                     child: Text('OK'),
                   ),
@@ -260,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (state is SignInNavigateToBuyerHomePageActionState) {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => BlocProvider(
