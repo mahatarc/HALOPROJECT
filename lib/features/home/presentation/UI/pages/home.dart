@@ -137,32 +137,36 @@ class _HomeState extends State<Home> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Card(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: TextFormField(
-                            controller: _searchController,
-                            onChanged: (value) {
-                              fetchProduct(value.trim());
-                            },
-                            decoration: InputDecoration(
-                              label: Text(
-                                "Search your product...",
-                                /* style: GoogleFonts.actor(),*/
-                              ),
-                              border: InputBorder.none,
-                              prefixIcon: Icon(
-                                Icons.search,
-                                size: 30,
-                                color: Colors.green[200],
+                        child: SizedBox(
+                          height: 50, // Adjust the height as needed
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: TextFormField(
+                              controller: _searchController,
+                              onChanged: (value) {
+                                fetchProduct(value.trim());
+                              },
+                              decoration: InputDecoration(
+                                label: Text(
+                                  "Search your product...",
+                                  /* style: GoogleFonts.actor(),*/
+                                ),
+                                border: InputBorder.none,
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  size: 30,
+                                  color: Colors.green[200],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+
+                      SizedBox(height: 15),
                       if (_searchedProduct != null)
                         ListTile(
                           title: Text(_searchedProduct!['name'] ?? ''),

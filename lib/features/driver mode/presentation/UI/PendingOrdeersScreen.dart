@@ -102,8 +102,9 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                           }).toList(),
                         Text(
                             'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
-                        Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                        Text('Price: \रु ${orderData['productName'] ?? 'N/A'}'),
+                        Text(
+                            'Product Name: ${orderData['productName'] ?? 'N/A'}'),
+                        Text('Price: \रु ${orderData['amount'] ?? 'N/A'}'),
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
