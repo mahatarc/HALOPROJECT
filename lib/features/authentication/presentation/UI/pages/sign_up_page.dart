@@ -236,23 +236,49 @@ class _SignUpPageState extends State<SignUppage> {
           );
         } else if (state is SignUpErrorState) {
           return Scaffold(
-            body: Builder(
-              builder: (BuildContext context) => Center(
-                child: AlertDialog(
-                  alignment: Alignment.center,
-                  actionsAlignment: MainAxisAlignment.center,
-                  title: Text(
-                    'Error',
-                    textAlign: TextAlign.center,
-                  ),
-                  content: Text(state.errorMessage),
-                  actions: <Widget>[
+            body: Center(
+              child: Container(
+                height: 300,
+                width: 320,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Error!',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Invalid credentials.',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: () {
-                        // Handle the try again logic here
                         signUpBloc.add(SignUpInitialEvent());
-                        // Close the dialog
                       },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.grey[100],
+                        onPrimary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                       child: Text('Try Again'),
                     ),
                   ],
@@ -260,8 +286,7 @@ class _SignUpPageState extends State<SignUppage> {
               ),
             ),
           );
-        } 
-        else {
+        } else {
           return const Scaffold();
         }
       },

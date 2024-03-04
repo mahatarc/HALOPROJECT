@@ -22,31 +22,21 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       //   backgroundColor: Color.fromARGB(255, 243, 247, 241),
-      /*appBar: AppBar(
-        automaticallyImplyLeading: true,
-        backgroundColor: Colors.green[100],
-        title: Text("Feed"),
-        /*  actions: [
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FeedProfile()),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddPost()),
-              );
-            },
-          ),
-        ],*/
-      ),*/
+      appBar: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.green[100],
+          title: Text("Feed"),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FeedProfile()),
+                );
+              },
+            ),
+          ]),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context, snapshot) {
@@ -84,51 +74,13 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
                   }
                   final commentsCount = commentSnapshot.data!.docs.length;
 
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          //   mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FeedProfile()),
-                                );
-                                // _scaffoldKey.currentState?.openDrawer();
-                              },
-                              child: Icon(
-                                Icons.person_2_outlined,
-                                size: 30,
-                              ),
-                              splashColor: Color.fromARGB(255, 190, 230, 184)
-                                  .withOpacity(0.5),
-                            ),
-                            SizedBox(
-                              width: 25,
-                            ),
-                            Text(
-                              'Feed',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      PostView(
-                        content: content,
-                        imageUrl: imageUrl,
-                        postId: postId,
-                        userId: userId,
-                        likes: likes,
-                        comments: commentsCount,
-                      ),
-                    ],
+                  return PostView(
+                    content: content,
+                    imageUrl: imageUrl,
+                    postId: postId,
+                    userId: userId,
+                    likes: likes,
+                    comments: commentsCount,
                   );
                 },
               );
@@ -140,7 +92,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          /*  FloatingActionButton(
+          /*FloatingActionButton(
             onPressed: () {
               Navigator.push(
                 context,

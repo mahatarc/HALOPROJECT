@@ -489,15 +489,12 @@ class OrderPlacedPage extends StatelessWidget {
               SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => HomePageBloc(),
-                        child: LandingPage(),
-                      ),
-                    ),
-                  );
+                  Navigator.of(context, rootNavigator: true)
+                      .pushReplacement(MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                                create: (context) => HomePageBloc(),
+                                child: const LandingPage(),
+                              )));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
