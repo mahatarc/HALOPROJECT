@@ -142,8 +142,12 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           ),*/
         ),
       ),
+
       body: ListView(
         children: [
+          SizedBox(
+            height: 10,
+          ),
           Container(
             height: 300,
             child: GridTile(
