@@ -79,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ? FileImage(_image!)
                           : userData['profilePicture'] != null
                               ? NetworkImage(userData['profilePicture'])
-                              : AssetImage('images/profile.jpg')
+                              : AssetImage('images/profile1.jpeg')
                                   as ImageProvider<Object>?,
                     ),
                     IconButton(
