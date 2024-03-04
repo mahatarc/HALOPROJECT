@@ -11,6 +11,7 @@ import 'package:flutterproject/features/cart/presentation/UI/pages/cart.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/product_details.dart';
 import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutterproject/features/mapservice/presentation/maps.dart';
+import 'package:flutterproject/features/seller%20mode/model/sellermodel.dart';
 import 'package:flutterproject/nav.dart';
 
 List myCart = [];
