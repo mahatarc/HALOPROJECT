@@ -14,6 +14,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   late CartBloc cartBloc;
   late List<CartItemModel> updatedProducts;
+  int? selectedIndex;
 
   @override
   void initState() {
@@ -62,26 +63,26 @@ class _CartPageState extends State<CartPage> {
                         itemBuilder: (BuildContext context, int index) {
                           return CartProduct(
                             product: listOfProducts[index],
+                            isSelected: selectedIndex == index,
+                            onTap: () {
+                              setState(() {
+                                selectedIndex =
+                                    selectedIndex == index ? null : index;
+                              });
+                            },
                             increaseQuantity: () {
                               setState(() {
-                                // listOfProducts[index].quantity++;
                                 updatedProducts = listOfProducts;
                               });
                             },
                             decreaseQuantity: () {
                               setState(() {
-                                // if (listOfProducts[index].quantity > 1) {
-                                //   listOfProducts[index].quantity--;
-                                //   updatedProducts = listOfProducts;
-                                // }
+                                updatedProducts = listOfProducts;
                               });
                             },
                             deleteItem: () {
                               _showDeleteConfirmationDialog(
                                   listOfProducts[index]);
-                            },
-                            onCheckboxChanged: (isChecked) {
-                              // Handle checkbox changes here
                             },
                           );
                         },
@@ -108,20 +109,24 @@ class _CartPageState extends State<CartPage> {
                       ), // Display total amount
                       ElevatedButton(
                         onPressed: () {
-                          // Navigate to the DeliveryAddressScreen and pass product details
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DeliveryAddressScreen(
-                                product_detail_name:
-                                    listOfProducts.first.productName,
-                                product_detail_picture:
-                                    listOfProducts.first.imageUrl,
-                                product_detail_price:
-                                    listOfProducts.first.price,
+                          if (selectedIndex != null) {
+                            final selectedProduct =
+                                listOfProducts[selectedIndex!];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DeliveryAddressScreen(
+                                  product_detail_name:
+                                      selectedProduct.productName,
+                                  product_detail_picture:
+                                      selectedProduct.imageUrl,
+                                  product_detail_price: selectedProduct.price,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            // Handle case where no item is selected
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -175,14 +180,16 @@ class CartProduct extends StatefulWidget {
   final VoidCallback increaseQuantity;
   final VoidCallback decreaseQuantity;
   final VoidCallback deleteItem;
-  final ValueChanged<bool> onCheckboxChanged;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   const CartProduct({
     required this.product,
     required this.increaseQuantity,
     required this.decreaseQuantity,
     required this.deleteItem,
-    required this.onCheckboxChanged,
+    required this.isSelected,
+    required this.onTap,
   });
 
   @override
@@ -190,74 +197,83 @@ class CartProduct extends StatefulWidget {
 }
 
 class _CartProductState extends State<CartProduct> {
-  bool _isChecked = false;
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Checkbox(
-                value: _isChecked,
-                onChanged: (newValue) {
-                  setState(() {
-                    _isChecked = newValue!;
-                    widget.onCheckboxChanged(newValue!);
-                  });
-                },
-              ),
-              SizedBox(
-                width: 80.0,
-                height: 80.0,
-                child: Image.network(
-                  widget.product.imageUrl,
-                  fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Column(
+        children: [
+          ListTile(
+            leading: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Checkbox(
+                  value: widget.isSelected,
+                  onChanged: (newValue) {
+                    setState(() {
+                      if (newValue == true) {
+                        // If the checkbox is checked
+                        widget.onTap();
+                      } else {
+                        // If the checkbox is unchecked
+                        if (widget.isSelected) {
+                          // Deselect the item
+                          widget.onTap();
+                        }
+                      }
+                    });
+                  },
                 ),
-              ),
-            ],
-          ),
-          title: Text(
-            widget.product.productName,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "रु${widget.product.price}",
-                style: const TextStyle(
-                  color: Colors.brown,
-                  fontWeight: FontWeight.w800,
+                SizedBox(
+                  width: 80.0,
+                  height: 80.0,
+                  child: Image.network(
+                    widget.product.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Qty=${widget.product.selectedQuantity}',
-                        style: TextStyle(
-                          fontSize: 18,
+              ],
+            ),
+            title: Text(
+              widget.product.productName,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "रु${widget.product.price}",
+                  style: const TextStyle(
+                    color: Colors.brown,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Qty=${widget.product.selectedQuantity}',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    alignment: Alignment.topRight,
-                    onPressed: widget.deleteItem,
-                    icon: const Icon(Icons.delete),
-                  ),
-                ],
-              ),
-            ],
+                      ],
+                    ),
+                    IconButton(
+                      alignment: Alignment.topRight,
+                      onPressed: widget.deleteItem,
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        const Divider(),
-      ],
+          const Divider(),
+        ],
+      ),
     );
   }
 }
