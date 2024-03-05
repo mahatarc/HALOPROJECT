@@ -13,7 +13,7 @@ class PaymentService {
     required String expiryDate,
     required String fullName,
     required String address,
-    required String city,
+    required String contact,
     required String productPrice,
     required String productName,
     required String? businessName,
@@ -34,7 +34,7 @@ class PaymentService {
         'productName': productName,
         'customerName': fullName,
         'customerAddress': address,
-        'city': city,
+        'contact': contact,
         'amount': productPrice,
         'paymentStatus': 'Successful',
         'timestamp': Timestamp.now(),
@@ -54,7 +54,7 @@ class PaymentService {
   Future<bool> placeOrderOnDelivery({
     required String fullName,
     required String address,
-    required String city,
+    required String contact,
     required String productPrice,
     required String productName,
     required String? businessName,
@@ -68,7 +68,7 @@ class PaymentService {
         'productName': productName,
         'customerName': fullName,
         'customerAddress': address,
-        'city': city,
+        'contact': contact,
         'amount': productPrice,
         'paymentStatus': 'Pending',
         'timestamp': Timestamp.now(),
@@ -105,7 +105,7 @@ class PaymentPage extends StatelessWidget {
   final PaymentService paymentService = PaymentService();
   final String fullName;
   final String address;
-  final String city;
+  final String contact;
   final String productName;
   final double productPrice;
   final String productPicture;
@@ -118,7 +118,7 @@ class PaymentPage extends StatelessWidget {
   PaymentPage({
     required this.fullName,
     required this.address,
-    required this.city,
+    required this.contact,
     required this.productName,
     required this.productPrice,
     required this.productPicture,
@@ -181,7 +181,7 @@ class PaymentPage extends StatelessWidget {
                         builder: (context) => CardPaymentScreen(
                           fullName: fullName,
                           address: address,
-                          city: city,
+                          contact: contact,
                           productName: productName,
                           productPrice: productPrice,
                           productPicture: productPicture,
@@ -211,7 +211,7 @@ class PaymentPage extends StatelessWidget {
                     bool isSuccess = await paymentService.placeOrderOnDelivery(
                       fullName: fullName,
                       address: address,
-                      city: city,
+                      contact: contact,
                       productName: productName,
                       productPrice: productPrice.toString(),
                       businessName: businessName,
@@ -228,7 +228,7 @@ class PaymentPage extends StatelessWidget {
                           builder: (context) => OrderPlacedPage(
                             fullName: fullName,
                             address: address,
-                            city: city,
+                            contact: contact,
                             productName: productName,
                             productPrice: productPrice,
                             productPicture: productPicture,
@@ -266,7 +266,7 @@ class CardPaymentScreen extends StatelessWidget {
   final PaymentService paymentService = PaymentService();
   final String fullName;
   final String address;
-  final String city;
+  final String contact;
   final String productName;
   final double productPrice;
   final String productPicture;
@@ -279,7 +279,7 @@ class CardPaymentScreen extends StatelessWidget {
   CardPaymentScreen({
     required this.fullName,
     required this.address,
-    required this.city,
+    required this.contact,
     required this.productName,
     required this.productPrice,
     required this.productPicture,
@@ -375,7 +375,7 @@ class CardPaymentScreen extends StatelessWidget {
                     expiryDate: expiryDateController.text,
                     fullName: fullName,
                     address: address,
-                    city: city,
+                    contact: contact,
                     productName: productName,
                     productPrice: productPrice.toString(),
                     businessName: businessName,
@@ -392,7 +392,7 @@ class CardPaymentScreen extends StatelessWidget {
                         builder: (context) => OrderPlacedPage(
                           fullName: fullName,
                           address: address,
-                          city: city,
+                          contact: contact,
                           productName: productName,
                           productPrice: productPrice,
                           productPicture: productPicture,
@@ -424,7 +424,7 @@ class OrderPlacedPage extends StatelessWidget {
   final PaymentService paymentService = PaymentService();
   final String fullName;
   final String address;
-  final String city;
+  final String contact;
   final String productName;
   final double productPrice;
   final String productPicture;
@@ -437,7 +437,7 @@ class OrderPlacedPage extends StatelessWidget {
   OrderPlacedPage({
     required this.fullName,
     required this.address,
-    required this.city,
+    required this.contact,
     required this.productName,
     required this.productPrice,
     required this.productPicture,

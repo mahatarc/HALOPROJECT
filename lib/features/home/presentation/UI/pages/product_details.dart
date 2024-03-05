@@ -177,7 +177,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      "\₹$productPrice",
+                      "\रु$productPrice",
                       style: TextStyle(
                         color: Colors.brown,
                         fontWeight: FontWeight.bold,
