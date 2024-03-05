@@ -34,6 +34,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
           children: [
             Text(
               'Welcome, Delivery Boy!',
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
               /*style: GoogleFonts.acme(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -65,7 +66,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             Row(
               children: [
                 Expanded(
-                  child: _buildOrderStatusCard('Accept Orders', () {
+                  child: _buildOrderStatusCard('Accepted Orders', () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(

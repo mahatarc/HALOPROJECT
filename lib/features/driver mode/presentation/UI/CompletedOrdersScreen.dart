@@ -48,30 +48,155 @@ class CompletedOrdersPage extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                          'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
-                      Text(
-                          'Product Name: ${orderData['productName'] ?? 'N/A'}'),
-                      Text('Price: \रु ${orderData['amount'] ?? 'N/A'}'),
-                      Text(
-                          'Customer Location: ${orderData['customeraddress'] ?? 'N/A'}'),
-                      Text(
-                          'Payment Status: ${orderData['paymentStatus'] ?? 'N/A'}'),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Customer Name: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${orderData['customerName'] ?? 'N/A'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Product Name: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${orderData['productName'] ?? 'N/A'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Price: \रु ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${orderData['amount'] ?? 'N/A'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Customer Location: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${orderData['customeraddress'] ?? 'N/A'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Payment Status: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${orderData['paymentStatus'] ?? 'N/A'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 10),
                       Text(
                         'Seller Information:',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                          'Business Name: ${orderData['businessName'] ?? 'N/A'}'),
-                      Text(
-                          'Seller Location: ${orderData['sellerAddress'] ?? 'N/A'}'),
-                      Text(
-                          'Seller Contact: ${orderData['contactNumber'] ?? 'N/A'}'),
-                      Text('Seller City: ${orderData['sellerCity'] ?? 'N/A'}'),
-                      Text(
-                          'Seller Province: ${orderData['sellerProvince'] ?? 'N/A'}'),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Business Name: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text:
+                                  '${orderData['businessName'] ?? 'Agro Market'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Seller Location: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text:
+                                  '${orderData['sellerAddress'] ?? 'Kalimati'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Seller Contact: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text:
+                                  '${orderData['contactNumber'] ?? '9851098124'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Seller City: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${orderData['sellerCity'] ?? 'Kathmandu'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Seller Province: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '${orderData['sellerProvince'] ?? '3'}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight
+                                      .normal), // Non-bold style for children text
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
