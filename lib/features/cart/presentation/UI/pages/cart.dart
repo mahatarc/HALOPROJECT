@@ -105,12 +105,20 @@ class _CartPageState extends State<CartPage> {
                       ), // Display total amount
                       ElevatedButton(
                         onPressed: () {
-                          print('Checkout pressed');
+                          // Navigate to the DeliveryAddressScreen and pass product details
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      DeliveryAddressScreen()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DeliveryAddressScreen(
+                                product_detail_name:
+                                    listOfProducts.first.productName,
+                                product_detail_picture:
+                                    listOfProducts.first.imageUrl,
+                                product_detail_price:
+                                    listOfProducts.first.price,
+                              ),
+                            ),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
