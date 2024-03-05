@@ -315,7 +315,7 @@ class _AddPostState extends State<AddPost> {
             style: TextStyle(color: Colors.white),
           ),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
+            backgroundColor: Color.fromARGB(255, 153, 231, 156),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0.0),
             ),
@@ -330,7 +330,7 @@ class _AddPostState extends State<AddPost> {
           ),
           label: Text('Add Photo', style: TextStyle(color: Colors.white)),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
+            backgroundColor: Color.fromARGB(255, 153, 231, 156),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0.0),
             ),

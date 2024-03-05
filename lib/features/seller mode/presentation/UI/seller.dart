@@ -72,10 +72,9 @@ class _SellerDashboardState extends State<SellerDashboard> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(
-                          255, 224, 246, 220), // Change the background color
-                      onPrimary: const Color.fromARGB(
-                          255, 11, 3, 3), // Change the text color
+                      foregroundColor: const Color.fromARGB(
+                          255, 11, 3, 3), backgroundColor: Color.fromARGB(
+                          255, 224, 246, 220), // Change the text color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),

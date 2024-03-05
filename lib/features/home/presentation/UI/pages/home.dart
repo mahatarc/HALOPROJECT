@@ -145,10 +145,9 @@ class _HomeState extends State<Home> {
                                 homePageBloc.add(CategoriesPressedEvent());
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Color.fromARGB(255, 239, 244,
-                                      249), // Change the background color
-                                  onPrimary: const Color.fromARGB(
-                                      255, 11, 3, 3), // Change the text color
+                                  foregroundColor: const Color.fromARGB(
+                                      255, 11, 3, 3), backgroundColor: Color.fromARGB(255, 239, 244,
+                                      249), // Change the text color
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   )),
