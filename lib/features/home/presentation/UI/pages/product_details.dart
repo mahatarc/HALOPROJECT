@@ -148,7 +148,15 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         children: [
           Container(
             height: 300,
-           
+            /* decoration: BoxDecoration(
+              color: Color.fromARGB(255, 217, 236, 220),
+              borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(40.0),
+                //  topRight: Radius.circular(40.0),
+                bottomLeft:
+                    Radius.circular(40.0), // Circular bottom left corner
+              ),
+            ),*/
             child: GridTile(
               child: Image.network(
                 widget.product_detail_picture,
@@ -241,6 +249,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                                 setState(() {
                                   selectedQuantity = value ?? 1;
                                 });
+                                print(selectedQuantity);
+                                print(
+                                    '.............................................');
                               },
                             ),
                           ],
@@ -274,13 +285,16 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     widget.product_detail_details,
-                
+                    /* style: GoogleFonts.firaSans(
+                                    fontSize: 15,
+                                  ),*/
                   ),
                 ),
-             
+                //     Divider(),
+                // Seller information section
                 buildSellerInformationSection(),
-               
-               
+                //Divider(),
+                // Customer Reviews
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Column(
@@ -292,7 +306,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
-                   
+                        /* style: GoogleFonts.firaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),*/
                       ),
                       SizedBox(height: 8.0),
                       ListTile(
@@ -359,7 +376,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                               .doc(user!.uid)
                               .collection(user.uid)
                               .doc(widget.product_detail_id)
-                              .set({'count': selectedQuantity});
+                              .set({'selectedQuantity': selectedQuantity});
                           showDialog(
                               context: context,
                               builder: (context) {

@@ -2,24 +2,26 @@ class CartItemModel {
   final String productName;
   final String imageUrl;
   final String price;
-  int quantity;
-   String? productId; // Nullable productId
+  late final int selectedQuantity; // New field for the selected quantity
+  String? productId; // Nullable productId
 
   CartItemModel({
     required this.productName,
     required this.imageUrl,
     required this.price,
-    required this.quantity,
+    required this.selectedQuantity,
     required this.productId,
   });
 
-  factory CartItemModel.fromJson(Map<String, dynamic> json) {
+  factory CartItemModel.fromJson(Map<String, dynamic> json,
+      {int selectedQuantity = 1}) {
     return CartItemModel(
       productId: json['productId'],
       productName: json['name'],
       imageUrl: json['image_url'],
       price: json['price'],
-      quantity: json['quantity'] ?? 1,
+      selectedQuantity:
+          selectedQuantity, // Set selected quantity from parameter
     );
   }
 
@@ -29,7 +31,7 @@ class CartItemModel {
       'name': productName,
       'image_url': imageUrl,
       'price': price,
-      'count': quantity,
+      'selectedQuantity': selectedQuantity
     };
   }
 }
