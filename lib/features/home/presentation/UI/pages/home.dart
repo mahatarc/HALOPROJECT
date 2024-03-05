@@ -140,32 +140,6 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          // InkWell(
-                          //   onTap: () {
-                          //     _scaffoldKey.currentState?.openDrawer();
-                          //   },
-                          //   child: Icon(
-                          //     Icons.sort_rounded,
-                          //     size: 33,
-                          //   ),
-                          //   splashColor: Color.fromARGB(255, 190, 230, 184)
-                          //       .withOpacity(0.5),
-                          // ),
-                          //     SizedBox(
-                          //       width: 20,
-                          //     ),
-                          //     Text(
-                          //       'Welcome',
-                          //       style: TextStyle(
-                          //         fontSize: 20,
-                          //       ),
-                          //     )
-                        ],
-                      ),
-                      // Divider(),
-
                       SizedBox(
                         height: 40,
                         // Adjust the height as needed
