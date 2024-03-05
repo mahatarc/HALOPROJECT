@@ -42,7 +42,7 @@ class _CartPageState extends State<CartPage> {
               0,
               (previousValue, product) =>
                   previousValue +
-                  (double.parse(product.price) * product.selectedQuantity + 50),
+                  (double.parse(product.price) * product.selectedQuantity),
             );
 
             return Scaffold(
@@ -99,7 +99,7 @@ class _CartPageState extends State<CartPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('Delivery Charge: रु50'),
-                            Text('Total Amount: रु${totalAmount}'),
+                            Text('Total Amount: रु${totalAmount + 50}'),
                           ],
                         ),
                       ), // Display total amount
