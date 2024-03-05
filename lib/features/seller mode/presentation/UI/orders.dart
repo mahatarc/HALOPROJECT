@@ -69,9 +69,10 @@ class OrderScreen extends StatelessWidget {
                                 );
                               }).toList(),
                             Text('Customer: ${orderData['customerName']}'),
-                            Text('Location: ${orderData['address']}'),
+                            Text('Location: ${orderData['customeraddress']}'),
+                            Text('Price: \$${orderData['amount'] ?? 'N/A'}'),
                             Text(
-                                'Price: \$${orderData['amount'] ?? 'N/A'}'), // Use 'totalAmount' with a fallback value of 'N/A' if it's null
+                                'productName: ${orderData['productName']}'), // Use 'totalAmount' with a fallback value of 'N/A' if it's null
                             Text(
                                 'Payment Status: ${orderData['paymentStatus']}'),
                             SizedBox(height: 16),
