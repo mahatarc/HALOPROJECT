@@ -43,7 +43,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               _buildTextField('Name', nameController),
               _buildPasswordField(
-                  'Current Password', currentPasswordController),
+                  'Current Paassword', currentPasswordController),
               _buildPasswordField('New Password', newPasswordController),
               SizedBox(height: 16),
               Row(
