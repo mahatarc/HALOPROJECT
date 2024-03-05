@@ -262,8 +262,12 @@ class _HomeState extends State<Home> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
+                          // color: Color.fromARGB(255, 172, 195, 173),
                           color: Color.fromARGB(255, 251, 255, 251),
-                          borderRadius: BorderRadius.circular(10),
+                          /*  borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40.0),
+                            topRight: Radius.circular(40.0),
+                          ),*/
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.2),
@@ -329,37 +333,22 @@ class _HomeState extends State<Home> {
                                 },
                               ),
                             ),
-                            SizedBox(height: 15),
+                            // SizedBox(height: 15),
                             // Recommended section...
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                //    color: Color.fromARGB(255, 172, 195, 173),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: Offset(0, 3),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Recommended',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                    textScaleFactor: 1.5,
                                   ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Recommended',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                      textScaleFactor: 1.5,
-                                    ),
-                                  ),
-                                  RecommendProduct(),
-                                ],
-                              ),
+                                ),
+                                RecommendProduct(),
+                              ],
                             ),
                           ],
                         ),
@@ -402,41 +391,43 @@ class RecommendProduct extends StatelessWidget {
       child: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance
             .collection('products')
-            .limit(2) // Limiting to two products
+            .limit(4) // Limiting to four products
             .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print('Loading');
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            print('Error');
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (snapshot.connectionState == ConnectionState.done) {
             List<QueryDocumentSnapshot> products =
                 snapshot.data!.docs.cast<QueryDocumentSnapshot>();
-            print(products.first);
-            print('Products received');
-            return CarouselSlider.builder(
+
+            return CarouselSlider(
               options: CarouselOptions(
-                height: 200.0,
-                enlargeCenterPage: true,
+                initialPage: 1,
+                padEnds: false,
+                height: 210.0,
                 autoPlay: false,
-                aspectRatio: 3 / 2,
-                autoPlayCurve: Curves.easeInOut,
                 enableInfiniteScroll: false,
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
-                viewportFraction: 0.8,
+                viewportFraction: 0.5,
               ),
-              itemCount: products.length,
-              itemBuilder: (BuildContext context, int index, _) {
-                var productData =
-                    products[index].data() as Map<String, dynamic>;
-                var productId = products[index].id;
+              items: products.map((product) {
+                var productData = product.data() as Map<String, dynamic>;
+                var productId = product.id;
                 return Container(
+                  padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    color: Color.fromARGB(255, 251, 255, 251),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
                   ),
                   child: SingleProduct(
                     productId: productId,
@@ -446,7 +437,7 @@ class RecommendProduct extends StatelessWidget {
                     prod_details: productData['product_details'],
                   ),
                 );
-              },
+              }).toList(),
             );
           }
           return SizedBox(); // Return an empty widget if none of the conditions are met
@@ -464,11 +455,11 @@ class ImageCarouselSlider extends StatelessWidget {
         height: 180.0,
         enlargeCenterPage: true,
         autoPlay: true,
-        aspectRatio: 16 / 15,
-        autoPlayCurve: Curves.easeInOut,
+        aspectRatio: 20 / 15,
+        autoPlayCurve: Curves.easeOutQuint,
         enableInfiniteScroll: true,
         autoPlayAnimationDuration: Duration(milliseconds: 800),
-        viewportFraction: 1,
+        viewportFraction: 0.9,
       ),
       items: [
         'images/advertisement.png',
