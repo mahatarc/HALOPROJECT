@@ -103,7 +103,11 @@ class _CartPageState extends State<CartPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text('Delivery Charge: रु50'),
-                            Text('Total Amount: रु${totalAmount}'),
+                            Text(
+                              selectedIndex != null
+                                  ? 'Total Amount: रु${listOfProducts[selectedIndex!].price}'
+                                  : 'Total Amount: रु${totalAmount + 50}',
+                            ),
                           ],
                         ),
                       ), // Display total amount
@@ -120,7 +124,9 @@ class _CartPageState extends State<CartPage> {
                                       selectedProduct.productName,
                                   product_detail_picture:
                                       selectedProduct.imageUrl,
-                                  product_detail_price: selectedProduct.price,
+                                  product_detail_price:
+                                      (double.parse(selectedProduct.price) + 50)
+                                          .toString(),
                                 ),
                               ),
                             );
