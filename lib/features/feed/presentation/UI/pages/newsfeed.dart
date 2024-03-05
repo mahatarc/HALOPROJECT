@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsFeed extends StatefulWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   State<NewsFeed> createState() => _NewsFeedState();
 }
@@ -19,12 +18,11 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //   backgroundColor: Color.fromARGB(255, 243, 247, 241),
-      /*appBar: AppBar(
+      appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.green[100],
         title: Text("Feed"),
-        /*  actions: [
+        actions: [
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
@@ -34,7 +32,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
               );
             },
           ),
-          IconButton(
+          /*  IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.push(
@@ -42,9 +40,9 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
                 MaterialPageRoute(builder: (context) => AddPost()),
               );
             },
-          ),
-        ],*/
-      ),*/
+          ),*/
+        ],
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
         builder: (context, snapshot) {
@@ -82,51 +80,13 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
                   }
                   final commentsCount = commentSnapshot.data!.docs.length;
 
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          //   mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => FeedProfile()),
-                                );
-                                // _scaffoldKey.currentState?.openDrawer();
-                              },
-                              child: Icon(
-                                Icons.person_2_outlined,
-                                size: 30,
-                              ),
-                              splashColor: Color.fromARGB(255, 190, 230, 184)
-                                  .withOpacity(0.5),
-                            ),
-                            SizedBox(
-                              width: 25,
-                            ),
-                            Text(
-                              'Feed',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      PostView(
-                        content: content,
-                        imageUrl: imageUrl,
-                        postId: postId,
-                        userId: userId,
-                        likes: likes,
-                        comments: commentsCount,
-                      ),
-                    ],
+                  return PostView(
+                    content: content,
+                    imageUrl: imageUrl,
+                    postId: postId,
+                    userId: userId,
+                    likes: likes,
+                    comments: commentsCount,
                   );
                 },
               );
@@ -138,7 +98,7 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          /*  FloatingActionButton(
+          /*FloatingActionButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -201,6 +161,31 @@ class _PostViewState extends State<PostView> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // Check if the current user has already liked the post
+    _checkUserLiked();
+  }
+
+  void _checkUserLiked() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+    final postSnapshot = await postRef.get();
+    final likes = List<String>.from(postSnapshot.data()!['likes'] ?? []);
+
+    if (likes.contains(userId)) {
+      setState(() {
+        isLiked = true;
+      });
+    } else {
+      setState(() {
+        isLiked = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
@@ -252,7 +237,7 @@ class _PostViewState extends State<PostView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
+                /*IconButton(
                   color: isLiked ? Colors.blue : null,
                   icon: Icon(Icons.thumb_up),
                   onPressed: () {
@@ -264,6 +249,21 @@ class _PostViewState extends State<PostView> {
                       _toggleLike();
                     });
                   },
+                ),*/
+                GestureDetector(
+                  onTap: () {
+                    /*setState(() {
+                      isLiked = !isLiked;
+                      if (isDisliked) {
+                        isDisliked = false;
+                      }*/
+                    _toggleLike();
+                  },
+                  // },
+                  child: Icon(
+                    Icons.thumb_up,
+                    color: isLiked ? Colors.lightGreen : null,
+                  ),
                 ),
                 Text('${widget.likes}',
                     style:
@@ -337,10 +337,25 @@ class _PostViewState extends State<PostView> {
     final postSnapshot = await postRef.get();
     final likes = List<String>.from(postSnapshot.data()!['likes'] ?? []);
 
-    if (isLiked) {
+    /* if (isLiked) {
       likes.add(userId);
     } else {
       likes.remove(userId);
+    }*/
+    if (likes.contains(userId)) {
+      //User already liked the post, so remove the like
+      likes.remove(userId);
+      setState(() {
+        isLiked = false;
+      });
+      //isLiked = false;
+    } else {
+      //User hasn't liked the post yet, so add the like
+      likes.add(userId);
+      setState(() {
+        isLiked = true;
+      });
+      //isLiked = true;
     }
 
     // Update the 'likes' field in Firestore

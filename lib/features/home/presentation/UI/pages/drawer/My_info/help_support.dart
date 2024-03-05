@@ -31,12 +31,12 @@ class HelpAndSupportPage extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                'Email: support@agricultureecommerce.com',
+                'Email: haloapphelpdesk@gmail.com',
                 style: TextStyle(fontSize: 18),
               ),
               SizedBox(height: 10),
               Text(
-                'Phone: +1 (800) 123-4567',
+                'Phone: +977 9813590861',
                 style: TextStyle(fontSize: 18),
               ),
               SizedBox(height: 20),
@@ -58,11 +58,6 @@ class HelpAndSupportPage extends StatelessWidget {
                 answer:
                     'A: You can place an order by selecting the desired products and proceeding to checkout.',
               ),
-              /*FAQWidget(
-                question: 'Q: How can I track my order?',
-                answer:
-                    'A: You can track your order in the "Orders" section of the app.',
-              ),*/
               FAQWidget(
                 question: 'Q: How do I update my account information?',
                 answer:
@@ -157,7 +152,7 @@ class _MessageFormState extends State<MessageForm> {
                 // Here you can send the message to your backend or perform any other action
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Message sent: $_message'),
+                    content: Text('Message sent'),
                   ),
                 );
               }

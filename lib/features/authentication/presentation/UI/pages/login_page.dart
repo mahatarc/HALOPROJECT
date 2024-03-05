@@ -230,17 +230,52 @@ class _LoginPageState extends State<LoginPage> {
           }
           return Scaffold(
             body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(errorMessage),
-                  ElevatedButton(
-                    onPressed: () {
-                      signInBloc.add(SignInInitialEvent());
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
+              child: Container(
+                height: 300,
+                width: 320,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Error!',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Invalid username or password.',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: () {
+                        signInBloc.add(SignInInitialEvent());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.grey[100],
+                        onPrimary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text('Try Again'),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
