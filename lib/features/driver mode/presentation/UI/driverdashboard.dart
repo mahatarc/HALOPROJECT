@@ -3,8 +3,6 @@ import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrde
 import 'package:flutterproject/features/driver%20mode/presentation/UI/CompletedOrdersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/PendingOrdeersScreen.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_drawer.dart';
-import 'package:flutterproject/features/driver%20mode/presentation/UI/driver_profile.dart';
-import 'package:flutterproject/features/driver%20mode/presentation/UI/myearnings.dart';
 
 class DeliveryBoyDashboard extends StatefulWidget {
   @override
@@ -21,7 +19,13 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
       backgroundColor: Color.fromARGB(255, 228, 234, 232),
       appBar: AppBar(
         backgroundColor: Colors.green[100],
-        title: Text("Driver Dashboard"),
+        title: Text(
+          "Driver Dashboard",
+          /*style: GoogleFonts.acme(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),*/
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -30,10 +34,13 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
           children: [
             Text(
               'Welcome, Delivery Boy!',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              /*style: GoogleFonts.acme(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),*/
             ),
             SizedBox(height: 16),
-            SwitchListTile(
+            /* SwitchListTile(
               title: Text(
                 isAvailable ? 'You are Available' : 'You are Not Available',
                 style: TextStyle(fontSize: 20),
@@ -46,7 +53,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               },
               activeColor: Color.fromARGB(255, 26, 157, 31),
               inactiveTrackColor: Colors.grey,
-            ),
+            ),*/
             SizedBox(height: 5),
             Divider(),
             SizedBox(height: 10),
@@ -81,15 +88,6 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
               ],
             ),
             SizedBox(height: 18),
-            _buildOrderStatusCard('Completed Orders', () {
-              // Navigate to the Completed Orders screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CompletedOrdersPage(),
-                ),
-              );
-            }),
           ],
         ),
       ),
@@ -101,12 +99,8 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on),
-            label: 'My Earnings',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.check_box_rounded),
+            label: 'History',
           ),
         ],
         onTap: (index) {
@@ -118,12 +112,7 @@ class _DeliveryBoyDashboardState extends State<DeliveryBoyDashboard> {
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyEarningsPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => DeliveryBoyProfile()),
+              MaterialPageRoute(builder: (context) => CompletedOrdersPage()),
             );
           }
         },

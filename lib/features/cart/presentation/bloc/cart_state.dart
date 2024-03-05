@@ -7,9 +7,11 @@ class MyCartInitialState extends CartState {}
 class MyCartLoadingState extends CartState {}
 
 class MyCartLoadedState extends CartState {
-final List<CartItemModel> products;
+  final List<CartItemModel> products;
 
- MyCartLoadedState(this.products);
+  MyCartLoadedState(this.products);
 }
 
-class CheckoutPressedState extends CartState{}
+class CheckoutPressedState extends CartState {}
+
+class CartEmptyState extends CartState{}

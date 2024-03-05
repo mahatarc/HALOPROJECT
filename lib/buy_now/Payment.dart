@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/home/presentation/UI/pages/home.dart';
+import 'package:flutterproject/features/home/presentation/bloc/home_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PaymentService {
-  Future<bool> processPayment(
-    String cardNumber,
-    String cvv,
-    String expiryDate,
-    String fullName,
-    String address,
-    String city,
-    String productPrice,
-    String productName,
-    String? businessName,
-    String? contactNumber,
-    String? sellerAddress,
-    String? sellerCity,
-    String? sellerProvince,
-  ) async {
+  Future<bool> processPayment({
+    required String cardNumber,
+    required String cvv,
+    required String expiryDate,
+    required String fullName,
+    required String address,
+    required String city,
+    required String productPrice,
+    required String productName,
+    required String? businessName,
+    required String? contactNumber,
+    required String? sellerAddress,
+    required String? sellerCity,
+    required String? sellerProvince,
+  }) async {
     await Future.delayed(Duration(seconds: 2));
 
     if (_isExpired(expiryDate)) {
@@ -30,7 +33,7 @@ class PaymentService {
       await FirebaseFirestore.instance.collection('orders').add({
         'productName': productName,
         'customerName': fullName,
-        'customeraddress': address,
+        'customerAddress': address,
         'city': city,
         'amount': productPrice,
         'paymentStatus': 'Successful',
@@ -44,6 +47,40 @@ class PaymentService {
       return true;
     } catch (e) {
       print("Error storing order details: $e");
+      return false;
+    }
+  }
+
+  Future<bool> placeOrderOnDelivery({
+    required String fullName,
+    required String address,
+    required String city,
+    required String productPrice,
+    required String productName,
+    required String? businessName,
+    required String? contactNumber,
+    required String? sellerAddress,
+    required String? sellerCity,
+    required String? sellerProvince,
+  }) async {
+    try {
+      await FirebaseFirestore.instance.collection('orders').add({
+        'productName': productName,
+        'customerName': fullName,
+        'customerAddress': address,
+        'city': city,
+        'amount': productPrice,
+        'paymentStatus': 'Pending',
+        'timestamp': Timestamp.now(),
+        'businessName': businessName,
+        'contactNumber': contactNumber,
+        'sellerAddress': sellerAddress,
+        'sellerCity': sellerCity,
+        'sellerProvince': sellerProvince,
+      });
+      return true;
+    } catch (e) {
+      print("Error placing order on delivery: $e");
       return false;
     }
   }
@@ -65,7 +102,7 @@ class PaymentService {
 }
 
 class PaymentPage extends StatelessWidget {
-  // final PaymentService paymentService = PaymentService();
+  final PaymentService paymentService = PaymentService();
   final String fullName;
   final String address;
   final String city;
@@ -91,6 +128,7 @@ class PaymentPage extends StatelessWidget {
     this.sellerCity,
     this.sellerProvince,
   });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,21 +137,95 @@ class PaymentPage extends StatelessWidget {
         title: Text('Choose Payment Method'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                launch('https://esewa.com.np/');
-              },
-              child: Text('Pay through e-sewa'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CardPaymentScreen(
+        child: Container(
+          height: 360,
+          width: 300,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    launch('https://esewa.com.np/');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 204, 223, 205),
+                    onPrimary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Pay through e-sewa'),
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CardPaymentScreen(
+                          fullName: fullName,
+                          address: address,
+                          city: city,
+                          productName: productName,
+                          productPrice: productPrice,
+                          productPicture: productPicture,
+                          businessName: businessName,
+                          contactNumber: contactNumber,
+                          sellerAddress: sellerAddress,
+                          sellerCity: sellerCity,
+                          sellerProvince: sellerProvince,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 204, 223, 205),
+                    onPrimary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Pay through Credit/Debit Card'),
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    bool isSuccess = await paymentService.placeOrderOnDelivery(
+                      fullName: fullName,
+                      address: address,
+                      city: city,
+                      productName: productName,
+                      productPrice: productPrice.toString(),
+                      businessName: businessName,
+                      contactNumber: contactNumber,
+                      sellerAddress: 'sellerAddress',
+                      sellerCity: 'sellerCity',
+                      sellerProvince: 'sellerProvince',
+                    );
+
+                    if (isSuccess) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderPlacedPage(
                             fullName: fullName,
                             address: address,
                             city: city,
@@ -125,28 +237,31 @@ class PaymentPage extends StatelessWidget {
                             sellerAddress: sellerAddress,
                             sellerCity: sellerCity,
                             sellerProvince: sellerProvince,
-                          )),
-                );
-              },
-              child: Text('Pay through Credit/Debit Card'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => OrderPlacedPage()),
-                );
-              },
-              child: Text('Pay on Delivery'),
-            ),
-          ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      // Handle failure
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 204, 223, 205),
+                    onPrimary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Pay on Delivery'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// ignore: must_be_immutable
 class CardPaymentScreen extends StatelessWidget {
   final PaymentService paymentService = PaymentService();
   final String fullName;
@@ -184,6 +299,7 @@ class CardPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green[100],
         title: Text('Credit/Debit Card Payment'),
       ),
       body: Center(
@@ -194,18 +310,34 @@ class CardPaymentScreen extends StatelessWidget {
             children: [
               TextField(
                 controller: cardNumberController,
-                decoration: InputDecoration(labelText: 'Card Number'),
+                decoration: InputDecoration(
+                  labelText: 'Card Number',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                ),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               SizedBox(height: 10),
               TextField(
                 controller: cvvController,
-                decoration: InputDecoration(labelText: 'CVV'),
+                decoration: InputDecoration(
+                  labelText: 'CVV',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                ),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: expiryDateController,
-                decoration: InputDecoration(labelText: 'Expiry Date (MM-YY)'),
+                decoration: InputDecoration(
+                  labelText: 'Expiry Date (MM-YY)',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                ),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(
                       RegExp(r'^\d{0,2}-?\d{0,2}$')),
@@ -238,26 +370,39 @@ class CardPaymentScreen extends StatelessWidget {
                   }
 
                   bool isSuccess = await paymentService.processPayment(
-                    cardNumberController.text,
-                    cvvController.text,
-                    expiryDateController.text,
-                    fullName,
-                    address,
-                    city,
-                    productName,
-                    productPrice.toString(),
-                    businessName,
-                    contactNumber,
-                    sellerAddress,
-                    sellerCity,
-                    sellerProvince,
+                    cardNumber: cardNumberController.text,
+                    cvv: cvvController.text,
+                    expiryDate: expiryDateController.text,
+                    fullName: fullName,
+                    address: address,
+                    city: city,
+                    productName: productName,
+                    productPrice: productPrice.toString(),
+                    businessName: businessName,
+                    contactNumber: contactNumber,
+                    sellerAddress: sellerAddress,
+                    sellerCity: sellerCity,
+                    sellerProvince: sellerProvince,
                   );
 
                   if (isSuccess) {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => OrderPlacedPage()),
+                        builder: (context) => OrderPlacedPage(
+                          fullName: fullName,
+                          address: address,
+                          city: city,
+                          productName: productName,
+                          productPrice: productPrice,
+                          productPicture: productPicture,
+                          businessName: businessName,
+                          contactNumber: contactNumber,
+                          sellerAddress: sellerAddress,
+                          sellerCity: sellerCity,
+                          sellerProvince: sellerProvince,
+                        ),
+                      ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -276,6 +421,33 @@ class CardPaymentScreen extends StatelessWidget {
 }
 
 class OrderPlacedPage extends StatelessWidget {
+  final PaymentService paymentService = PaymentService();
+  final String fullName;
+  final String address;
+  final String city;
+  final String productName;
+  final double productPrice;
+  final String productPicture;
+  final String? businessName;
+  final String? contactNumber;
+  final String? sellerAddress;
+  final String? sellerCity;
+  final String? sellerProvince;
+
+  OrderPlacedPage({
+    required this.fullName,
+    required this.address,
+    required this.city,
+    required this.productName,
+    required this.productPrice,
+    required this.productPicture,
+    this.businessName,
+    this.contactNumber,
+    this.sellerAddress,
+    this.sellerCity,
+    this.sellerProvince,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -317,10 +489,12 @@ class OrderPlacedPage extends StatelessWidget {
               SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.popUntil(
-                    context,
-                    ModalRoute.withName(Navigator.defaultRouteName),
-                  );
+                  Navigator.of(context, rootNavigator: true)
+                      .pushReplacement(MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                                create: (context) => HomePageBloc(),
+                                child: const LandingPage(),
+                              )));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,

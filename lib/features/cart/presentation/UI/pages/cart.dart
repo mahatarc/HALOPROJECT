@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:flutterproject/features/cart/models/cart_model.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+  const CartPage({Key? key}) : super(key: key);
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -44,7 +42,7 @@ class _CartPageState extends State<CartPage> {
               ),
               body: RefreshIndicator(
                 onRefresh: () async {
-                  cartBloc.add(MyCartInitialEvent());
+                   cartBloc.add(MyCartInitialEvent());
                 },
                 child: Column(
                   children: [
@@ -55,14 +53,12 @@ class _CartPageState extends State<CartPage> {
                           return CartProduct(
                             product: listOfProducts[index],
                             increaseQuantity: () {
-                              // Update the quantity locally
                               setState(() {
                                 listOfProducts[index].quantity++;
                                 updatedProducts = listOfProducts;
                               });
                             },
                             decreaseQuantity: () {
-                              // Update the quantity locally
                               setState(() {
                                 if (listOfProducts[index].quantity > 1) {
                                   listOfProducts[index].quantity--;
@@ -71,19 +67,12 @@ class _CartPageState extends State<CartPage> {
                               });
                             },
                             deleteItem: () {
-                              cartBloc
-                                  .add(DeleteItemEvent(listOfProducts[index]));
+                              _showDeleteConfirmationDialog(
+                                  listOfProducts[index]);
                             },
                           );
                         },
                       ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Save the updated quantities to Firestore
-                        saveQuantitiesToFirestore(updatedProducts);
-                      },
-                      child: const Text('Save'),
                     ),
                   ],
                 ),
@@ -118,26 +107,31 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  void saveQuantitiesToFirestore(List<CartItemModel> updatedProducts) async {
-    try {
-      final userId = FirebaseAuth.instance.currentUser!.uid;
-      final cartRef = FirebaseFirestore.instance
-          .collection('carts')
-          .doc(userId)
-          .collection(userId);
-
-      for (var product in updatedProducts) {
-        await cartRef
-            .doc(product.productId)
-            .update({'quantity': product.quantity});
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Quantities saved successfully')),
-      );
-    } catch (e) {
-      print('Error saving quantities: $e');
-    }
+  void _showDeleteConfirmationDialog(CartItemModel item) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                cartBloc.add(DeleteItemEvent(item));
+                Navigator.of(context).pop();
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

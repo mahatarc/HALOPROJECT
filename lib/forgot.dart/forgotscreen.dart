@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterproject/features/authentication/presentation/bloc/forgot_bloc/forgot_bloc.dart';
+import 'package:flutterproject/forgot.dart/forgot_bloc/forgot_bloc.dart';
 import 'forgot_pass_screen.dart'; // Import the ForgotPasswordScreen widget
 
 void main() {

@@ -18,15 +18,6 @@ class Category extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to CategoryDetails page
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => CategoryDetails(
-        //       selectedCategory: categoryName,
-        //     ),
-        //   ),
-        // );
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
             builder: (context) => CategoryDetails(
@@ -60,7 +51,7 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.green[100],
         title: const Text("Categories"),
         // );
         leading: IconButton(

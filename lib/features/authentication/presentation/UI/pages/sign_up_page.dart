@@ -235,7 +235,57 @@ class _SignUpPageState extends State<SignUppage> {
             ),
           );
         } else if (state is SignUpErrorState) {
-          return const Scaffold();
+          return Scaffold(
+            body: Center(
+              child: Container(
+                height: 300,
+                width: 320,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Error!',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Invalid credentials.',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: () {
+                        signUpBloc.add(SignUpInitialEvent());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.grey[100],
+                        onPrimary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text('Try Again'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         } else {
           return const Scaffold();
         }
@@ -283,6 +333,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       appBar: AppBar(
         title: Text('Verify Email'),
         backgroundColor: Colors.green[100],
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(

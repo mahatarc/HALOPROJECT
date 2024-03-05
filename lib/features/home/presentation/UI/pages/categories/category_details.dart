@@ -86,8 +86,6 @@ class SingleProduct extends StatelessWidget {
   final product_picture;
   final prod_price;
   final prod_details;
-  // final prod_quantity;
-  // final prod_id;
 
   SingleProduct({
     this.productId,
@@ -95,49 +93,51 @@ class SingleProduct extends StatelessWidget {
     this.product_picture,
     this.prod_price,
     this.prod_details,
-    //   this.prod_quantity
-    // this.prod_id,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Material(
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-            //passing the values of products of this page to product details page
+      child: Material(
+        child: InkWell(
+          onTap: () => Navigator.of(context).push(new MaterialPageRoute(
             builder: (context) => new ProductsDetails(
-              product_detail_id:productId ,
-                  product_detail_name: product_name,
-                  product_detail_price: prod_price,
-                  product_detail_picture: product_picture,
-                  //  product_detail_id: prod_id,
-                  product_detail_details: prod_details,
-                  // product_detail_quantity: prod_quantity,
-                ))),
-        child: GridTile(
-          footer: Container(
-            color: Colors.white70,
-            child: ListTile(
-              title: Text(
-                product_name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+              product_detail_id: productId,
+              product_detail_name: product_name,
+              product_detail_price: prod_price,
+              product_detail_picture: product_picture,
+              product_detail_details: prod_details,
+            ),
+          )),
+          child: GridTile(
+            footer: Container(
+              color: Color.fromARGB(179, 230, 238, 224),
+              height: 60,
+              child: ListTile(
+                title: Text(
+                  product_name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
                 ),
-              ),
-              subtitle: Text(
-                "\रु$prod_price",
-                style: TextStyle(
-                  color: Colors.brown,
-                  fontWeight: FontWeight.w800,
+                subtitle: Text(
+                  "\रु$prod_price",
+                  style: TextStyle(
+                    color: Colors.brown,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height *
+                  100, // Adjust the height as needed
+              child: Image.network(product_picture, fit: BoxFit.fill),
+            ),
           ),
-          child: Image.network(product_picture, fit: BoxFit.fill),
         ),
       ),
-    ));
+    );
   }
 }

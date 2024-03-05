@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
@@ -16,7 +15,13 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pending Orders'),
+        title: Text(
+          'Pending Orders',
+          /* style: GoogleFonts.acme(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),*/
+        ),
         backgroundColor: Colors.green[100],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -88,7 +93,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Product: ${productData['name']}'),
-                                    Text('Price: \$${productData['price']}'),
+                                    Text('Price: \₹${productData['price']}'),
                                     SizedBox(height: 8),
                                   ],
                                 );
@@ -97,8 +102,9 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                           }).toList(),
                         Text(
                             'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
-                        Text('Product Name: ${orderData['amount'] ?? 'N/A'}'),
-                        Text('Price: \$${orderData['productName'] ?? 'N/A'}'),
+                        Text(
+                            'Product Name: ${orderData['productName'] ?? 'N/A'}'),
+                        Text('Price: \रु ${orderData['amount'] ?? 'N/A'}'),
                         Text(
                             'Customer Location: ${orderData['customeraddress']}'),
                         Text('Payment Status: ${orderData['paymentStatus']}'),
@@ -138,13 +144,13 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                 _acceptOrder(context, orderId);
               },
             ),
-            ListTile(
+            /*  ListTile(
               title: Text('Reject Order'),
               onTap: () {
                 Navigator.pop(context); // Close the modal
                 _rejectOrder(orderId);
               },
-            ),
+            ),*/
           ],
         );
       },
@@ -152,7 +158,6 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   }
 
   void _acceptOrder(BuildContext context, String orderId) {
-    String driverId = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance
         .collection('orders')
         .doc(orderId)
