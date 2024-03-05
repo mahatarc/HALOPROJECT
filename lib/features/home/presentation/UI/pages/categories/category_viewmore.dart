@@ -82,11 +82,6 @@ class CategoryScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                // Navigator.of(context, rootNavigator: true)
-                //     .pushReplacement(MaterialPageRoute(
-                //   builder: (context) =>
-                //       CategoryDetails(selectedCategory: categoriesList[index]),
-                // ));
                 Navigator.push(
                   context,
                   MaterialPageRoute(
