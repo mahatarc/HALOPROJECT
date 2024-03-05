@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
             return Scaffold(
               drawer: Mydrawer(),
               key: _scaffoldKey,
-              /*appBar: AppBar(
+              appBar: AppBar(
                 title: Text(
                   'HALO',
                   /* style: TextStyle(
@@ -132,7 +132,7 @@ class _HomeState extends State<Home> {
                   ),*/
                 ),
                 backgroundColor: Color.fromARGB(255, 171, 201, 173),
-              ),*/
+              ),
               backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
@@ -140,7 +140,7 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      /*Row(
                         children: [
                           Expanded(
                             child: Row(
@@ -197,7 +197,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),*/
                         ],
-                      ),
+                      ),*/
                       SizedBox(height: 10),
                       SizedBox(
                         height: 40,
@@ -260,14 +260,9 @@ class _HomeState extends State<Home> {
 
                       ///Categoriess---------------------------------------------------------
                       Container(
-                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          // color: Color.fromARGB(255, 172, 195, 173),
-                          color: Color.fromARGB(255, 251, 255, 251),
-                          /*  borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(40.0),
-                            topRight: Radius.circular(40.0),
-                          ),*/
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.2),
@@ -277,11 +272,12 @@ class _HomeState extends State<Home> {
                             ),
                           ],
                         ),
+                        padding: const EdgeInsets.all(8),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Categories...
                             Padding(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.only(bottom: 8),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -316,7 +312,6 @@ class _HomeState extends State<Home> {
                                 ],
                               ),
                             ),
-                            // Categories list...
                             Container(
                               height: 120.0,
                               child: ListView.builder(
@@ -333,23 +328,38 @@ class _HomeState extends State<Home> {
                                 },
                               ),
                             ),
-                            // SizedBox(height: 15),
-                            // Recommended section...
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'Recommended',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                    textScaleFactor: 1.5,
-                                  ),
-                                ),
-                                RecommendProduct(),
-                              ],
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: 15),
+                      // Recommended section...
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3),
                             ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Recommended',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                textScaleFactor: 1.5,
+                              ),
+                            ),
+                            RecommendProduct(),
                           ],
                         ),
                       ),
@@ -387,62 +397,60 @@ class RecommendProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance
-            .collection('products')
-            .limit(4) // Limiting to four products
-            .get(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            List<QueryDocumentSnapshot> products =
-                snapshot.data!.docs.cast<QueryDocumentSnapshot>();
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('products')
+          .limit(4) // Limiting to four products
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          List<QueryDocumentSnapshot> products =
+              snapshot.data!.docs.cast<QueryDocumentSnapshot>();
 
-            return CarouselSlider(
-              options: CarouselOptions(
-                initialPage: 1,
-                padEnds: false,
-                height: 210.0,
-                autoPlay: false,
-                enableInfiniteScroll: false,
-                viewportFraction: 0.5,
-              ),
-              items: products.map((product) {
-                var productData = product.data() as Map<String, dynamic>;
-                var productId = product.id;
-                return Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 251, 255, 251),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: SingleProduct(
-                    productId: productId,
-                    product_name: productData['name'],
-                    product_picture: productData['image_url'],
-                    prod_price: productData['price'],
-                    prod_details: productData['product_details'],
-                  ),
-                );
-              }).toList(),
-            );
-          }
-          return SizedBox(); // Return an empty widget if none of the conditions are met
-        },
-      ),
+          return CarouselSlider(
+            options: CarouselOptions(
+              initialPage: 1,
+              padEnds: false,
+              height: 210.0,
+              autoPlay: false,
+              enableInfiniteScroll: false,
+              viewportFraction: 0.5,
+            ),
+            items: products.map((product) {
+              var productData = product.data() as Map<String, dynamic>;
+              var productId = product.id;
+              return Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 251, 255, 251),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: SingleProduct(
+                  productId: productId,
+                  product_name: productData['name'],
+                  product_picture: productData['image_url'],
+                  prod_price: productData['price'],
+                  prod_details: productData['product_details'],
+                ),
+              );
+            }).toList(),
+          );
+        }
+        return SizedBox(); // Return an empty widget if none of the conditions are met
+      },
     );
   }
 }
