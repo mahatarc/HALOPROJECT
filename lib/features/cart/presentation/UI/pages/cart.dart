@@ -80,6 +80,9 @@ class _CartPageState extends State<CartPage> {
                               _showDeleteConfirmationDialog(
                                   listOfProducts[index]);
                             },
+                            onCheckboxChanged: (isChecked) {
+                              // Handle checkbox changes here
+                            },
                           );
                         },
                       ),
@@ -167,40 +170,64 @@ class _CartPageState extends State<CartPage> {
   }
 }
 
-// CartProduct widget
-class CartProduct extends StatelessWidget {
+class CartProduct extends StatefulWidget {
   final CartItemModel product;
   final VoidCallback increaseQuantity;
   final VoidCallback decreaseQuantity;
   final VoidCallback deleteItem;
+  final ValueChanged<bool> onCheckboxChanged;
 
   const CartProduct({
     required this.product,
     required this.increaseQuantity,
     required this.decreaseQuantity,
     required this.deleteItem,
+    required this.onCheckboxChanged,
   });
+
+  @override
+  _CartProductState createState() => _CartProductState();
+}
+
+class _CartProductState extends State<CartProduct> {
+  bool _isChecked = false;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
-          leading: Image.network(
-            product.imageUrl,
-            fit: BoxFit.contain,
-            width: 80.0,
-            height: 80.0,
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Checkbox(
+                value: _isChecked,
+                onChanged: (newValue) {
+                  setState(() {
+                    _isChecked = newValue!;
+                    widget.onCheckboxChanged(newValue!);
+                  });
+                },
+              ),
+              SizedBox(
+                width: 80.0,
+                height: 80.0,
+                child: Image.network(
+                  widget.product.imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
           ),
           title: Text(
-            product.productName,
+            widget.product.productName,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "रु${product.price}",
+                "रु${widget.product.price}",
                 style: const TextStyle(
                   color: Colors.brown,
                   fontWeight: FontWeight.w800,
@@ -211,26 +238,17 @@ class CartProduct extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      // IconButton(
-                      //   onPressed: decreaseQuantity,
-                      //   icon: const Icon(Icons.remove),
-                      // ),
                       Text(
-                        'Qty=${product.selectedQuantity}',
-                        // Display the current count from the database
+                        'Qty=${widget.product.selectedQuantity}',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
-                      // IconButton(
-                      //   onPressed: increaseQuantity,
-                      //   icon: const Icon(Icons.add),
-                      // ),
                     ],
                   ),
                   IconButton(
                     alignment: Alignment.topRight,
-                    onPressed: deleteItem,
+                    onPressed: widget.deleteItem,
                     icon: const Icon(Icons.delete),
                   ),
                 ],
