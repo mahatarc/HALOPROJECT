@@ -124,7 +124,7 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
-const categoriesList = ['Seed', 'Tools', 'Plant', 'Fertilizer', 'Book'];
+const categoriesList = ['Seed', 'Tools', 'Plant', 'Fertilizer', 'Books'];
 
 const categoryImages = [
   'images/seed.png',
