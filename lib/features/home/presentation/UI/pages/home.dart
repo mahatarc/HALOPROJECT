@@ -207,16 +207,13 @@ class _HomeState extends State<Home> {
                             color: Color.fromARGB(255, 222, 233, 223),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: TextFormField(
+                          child: TextField(
                             controller: _searchController,
                             onChanged: (value) {
                               fetchProduct(value.trim());
                             },
                             decoration: InputDecoration(
-                              label: Text(
-                                "Search your product...",
-                                /* style: GoogleFonts.actor(),*/
-                              ),
+                              hintText: "Search your product...",
                               border: InputBorder.none,
                               prefixIcon: Icon(
                                 Icons.search,
