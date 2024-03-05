@@ -216,9 +216,9 @@ class PaymentPage extends StatelessWidget {
                       productPrice: productPrice.toString(),
                       businessName: businessName,
                       contactNumber: contactNumber,
-                      sellerAddress: 'sellerAddress',
-                      sellerCity: 'sellerCity',
-                      sellerProvince: 'sellerProvince',
+                      sellerAddress: sellerAddress,
+                      sellerCity: sellerCity,
+                      sellerProvince: sellerProvince,
                     );
 
                     if (isSuccess) {

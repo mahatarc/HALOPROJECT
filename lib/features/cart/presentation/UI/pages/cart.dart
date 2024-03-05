@@ -14,6 +14,7 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   late CartBloc cartBloc;
   late List<CartItemModel> updatedProducts;
+  int? selectedIndex;
 
   @override
   void initState() {
@@ -62,18 +63,21 @@ class _CartPageState extends State<CartPage> {
                         itemBuilder: (BuildContext context, int index) {
                           return CartProduct(
                             product: listOfProducts[index],
+                            isSelected: selectedIndex == index,
+                            onTap: () {
+                              setState(() {
+                                selectedIndex =
+                                    selectedIndex == index ? null : index;
+                              });
+                            },
                             increaseQuantity: () {
                               setState(() {
-                                // listOfProducts[index].quantity++;
                                 updatedProducts = listOfProducts;
                               });
                             },
                             decreaseQuantity: () {
                               setState(() {
-                                // if (listOfProducts[index].quantity > 1) {
-                                //   listOfProducts[index].quantity--;
-                                //   updatedProducts = listOfProducts;
-                                // }
+                                updatedProducts = listOfProducts;
                               });
                             },
                             deleteItem: () {
@@ -98,27 +102,41 @@ class _CartPageState extends State<CartPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Delivery Charge: रु50'),
-                            Text('Total Amount: रु${totalAmount + 50}'),
+                            Text(
+                              'Delivery Charge: रु50',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              selectedIndex != null
+                                  ? 'Total Amount: रु${listOfProducts[selectedIndex!].price}'
+                                  : 'Total Amount: रु${totalAmount + 50}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ],
                         ),
                       ), // Display total amount
                       ElevatedButton(
                         onPressed: () {
-                          // Navigate to the DeliveryAddressScreen and pass product details
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DeliveryAddressScreen(
-                                product_detail_name:
-                                    listOfProducts.first.productName,
-                                product_detail_picture:
-                                    listOfProducts.first.imageUrl,
-                                product_detail_price:
-                                    listOfProducts.first.price,
+                          if (selectedIndex != null) {
+                            final selectedProduct =
+                                listOfProducts[selectedIndex!];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DeliveryAddressScreen(
+                                  product_detail_name:
+                                      selectedProduct.productName,
+                                  product_detail_picture:
+                                      selectedProduct.imageUrl,
+                                  product_detail_price:
+                                      (double.parse(selectedProduct.price) + 50)
+                                          .toString(),
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            // Handle case where no item is selected
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -167,79 +185,105 @@ class _CartPageState extends State<CartPage> {
   }
 }
 
-// CartProduct widget
-class CartProduct extends StatelessWidget {
+class CartProduct extends StatefulWidget {
   final CartItemModel product;
   final VoidCallback increaseQuantity;
   final VoidCallback decreaseQuantity;
   final VoidCallback deleteItem;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   const CartProduct({
     required this.product,
     required this.increaseQuantity,
     required this.decreaseQuantity,
     required this.deleteItem,
+    required this.isSelected,
+    required this.onTap,
   });
 
   @override
+  _CartProductState createState() => _CartProductState();
+}
+
+class _CartProductState extends State<CartProduct> {
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          leading: Image.network(
-            product.imageUrl,
-            fit: BoxFit.contain,
-            width: 80.0,
-            height: 80.0,
-          ),
-          title: Text(
-            product.productName,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "रु${product.price}",
-                style: const TextStyle(
-                  color: Colors.brown,
-                  fontWeight: FontWeight.w800,
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Column(
+        children: [
+          ListTile(
+            leading: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Checkbox(
+                  value: widget.isSelected,
+                  onChanged: (newValue) {
+                    setState(() {
+                      if (newValue == true) {
+                        // If the checkbox is checked
+                        widget.onTap();
+                      } else {
+                        // If the checkbox is unchecked
+                        if (widget.isSelected) {
+                          // Deselect the item
+                          widget.onTap();
+                        }
+                      }
+                    });
+                  },
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      // IconButton(
-                      //   onPressed: decreaseQuantity,
-                      //   icon: const Icon(Icons.remove),
-                      // ),
-                      Text(
-                        'Qty=${product.selectedQuantity}',
-                        // Display the current count from the database
-                        style: TextStyle(
-                          fontSize: 18,
+                SizedBox(
+                  width: 80.0,
+                  height: 80.0,
+                  child: Image.network(
+                    widget.product.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
+            title: Text(
+              widget.product.productName,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "रु${widget.product.price}",
+                  style: const TextStyle(
+                    color: Colors.brown,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Qty=${widget.product.selectedQuantity}',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                      // IconButton(
-                      //   onPressed: increaseQuantity,
-                      //   icon: const Icon(Icons.add),
-                      // ),
-                    ],
-                  ),
-                  IconButton(
-                    alignment: Alignment.topRight,
-                    onPressed: deleteItem,
-                    icon: const Icon(Icons.delete),
-                  ),
-                ],
-              ),
-            ],
+                      ],
+                    ),
+                    IconButton(
+                      alignment: Alignment.topRight,
+                      onPressed: widget.deleteItem,
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        const Divider(),
-      ],
+          const Divider(),
+        ],
+      ),
     );
   }
 }
