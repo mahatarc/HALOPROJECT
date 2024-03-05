@@ -50,7 +50,7 @@ class SellerDrawer extends StatelessWidget {
                   backgroundImage: userData['profilePicture'] != null
                       ? NetworkImage(userData['profilePicture'])
                           as ImageProvider
-                      : AssetImage('images/profile.jpg'),
+                      : AssetImage('images/profile1.jpeg'),
                 ),
               ),
               GestureDetector(

@@ -36,7 +36,7 @@ class _YourProductsState extends State<YourProducts> {
                 state.products; //access productModelList from Bloc
             return Scaffold(
                 appBar: AppBar(
-                  backgroundColor: Colors.green[200],
+                  backgroundColor: Colors.green[100],
                   title: Text('Your Products'),
                 ),
                 body: RefreshIndicator(

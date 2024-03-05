@@ -66,7 +66,7 @@ class _SellerDashboardState extends State<SellerDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.green[100],
         title: Text('Seller Dashboard'),
       ),
       drawer: SellerDrawer(),
@@ -82,16 +82,17 @@ class _SellerDashboardState extends State<SellerDashboard> {
                     Colors.green),
                 _buildInfoBox(
                     'Orders', totalOrders, Icons.shopping_bag, Colors.green),
+                // _buildInfoBox('Rating', 4, Icons.star, Colors.green),
               ],
             ),
             SizedBox(height: 16.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildInfoBox('Rating', 4, Icons.star,
-                    Colors.green), // Assuming a constant rating for now
-                _buildInfoBox('Total Sales', totalSales, Icons.monetization_on,
-                    Colors.green),
+                // _buildInfoBox('Rating', 4, Icons.star,
+                //     Colors.green), // Assuming a constant rating for now
+                // _buildInfoBox('Total Sales', totalSales, Icons.monetization_on,
+                //     Colors.green),
               ],
             ),
             SizedBox(height: 16.0),

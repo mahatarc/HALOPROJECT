@@ -48,7 +48,7 @@ class _CartPageState extends State<CartPage> {
 
             return Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.green[200],
+                backgroundColor: Colors.green[100],
                 title: const Text('My Cart'),
               ),
               body: RefreshIndicator(
@@ -271,12 +271,12 @@ class _CartProductState extends State<CartProduct> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          'Qty=${widget.product.selectedQuantity}',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
+                        // Text(
+                        //   'Qty=${widget.product.selectedQuantity}',
+                        //   style: TextStyle(
+                        //     fontSize: 18,
+                        //   ),
+                        // ),
                       ],
                     ),
                     IconButton(

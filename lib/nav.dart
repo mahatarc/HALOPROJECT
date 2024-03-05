@@ -63,7 +63,7 @@ class BottomBar2 extends StatelessWidget {
       ],
       confineInSafeArea: true,
       backgroundColor:
-          Color.fromARGB(255, 222, 233, 223), // Default is Colors.white.
+          const Color.fromRGBO(200, 230, 201, 1), // Default is Colors.white.
       handleAndroidBackButtonPress: true, // Default is true.
       resizeToAvoidBottomInset:
           false, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.

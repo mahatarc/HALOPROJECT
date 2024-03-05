@@ -31,9 +31,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           .doc(userId)
           .collection(userId)
           .get();
-      if (cartSnapshot == null) {
-        print('Error: No cart snapshot available');
-        return;
+      if (cartSnapshot.docs.isEmpty) {
+        print('Cart is empty');
+        emit(MyCartLoadedState([])); // Emit empty list
+        return; // Exit the function
       }
       cartSnapshot.docs.forEach((doc) {
         productIDList.add(doc.id);
@@ -47,6 +48,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             .collection('products')
             .doc(item)
             .get();
+
         print(singleItem.data());
         if (singleItem != null) {
           documentSnapshot.add(singleItem);
@@ -198,7 +200,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           // Use the selected quantity instead of the default quantity
         };
         print(cartItems.first.selectedQuantity);
-        print('...................................................................');
+        print(
+            '...................................................................');
 
         // Set the data in Firestore using the product ID as the document ID
         await cartRef.doc(item.productId).set(data);
