@@ -15,22 +15,16 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
   TextEditingController currentPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    nameController.text = widget.personalInfo.name;
-  }
+  bool _obscureNewPassword = true;
+  bool _obscureCurrentPassword = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: Text('Reset Password'),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 172, 229, 142),
       ),
@@ -41,10 +35,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTextField('Name', nameController),
+              _buildPasswordField('Current Password', currentPasswordController,
+                  _obscureCurrentPassword),
               _buildPasswordField(
-                  'Current Paassword', currentPasswordController),
-              _buildPasswordField('New Password', newPasswordController),
+                  'New Password', newPasswordController, _obscureNewPassword),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -53,7 +47,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('Cancel'),
+                    child:
+                        Text('Cancel', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 172, 229, 142)),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -63,8 +60,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           String currentPassword =
                               currentPasswordController.text;
                           String newPassword = newPasswordController.text;
+
+                          if (newPassword.length < 6) {
+                            _showPasswordLengthDialog();
+                            return; // Stop further execution
+                          }
+
                           try {
-                            // Re-authenticate the user with their current password
                             AuthCredential credential =
                                 EmailAuthProvider.credential(
                               email: FirebaseAuth.instance.currentUser!.email!,
@@ -73,52 +75,60 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             await FirebaseAuth.instance.currentUser!
                                 .reauthenticateWithCredential(credential);
 
-                            // Update the password
                             await FirebaseAuth.instance.currentUser!
                                 .updatePassword(newPassword);
 
-                            // Show success dialog
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Password Reset Successful"),
+                                  title: Text("Password Reset Successful",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 172, 229, 142))),
                                   content: Text(
-                                      "Your password has been updated successfully."),
+                                      "Your password has been updated successfully.",
+                                      style: TextStyle(color: Colors.black)),
                                   actions: [
                                     TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("OK"),
-                                    ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK",
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 172, 229, 142)))),
                                   ],
+                                  backgroundColor: Colors.white,
                                 );
                               },
                             );
 
-                            // Clear form fields
                             currentPasswordController.clear();
                             newPasswordController.clear();
-
-                            // You may also sign out the user if needed
                           } catch (error) {
-                            // Show error dialog
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Password Reset Failed"),
+                                  title: Text("Password Reset Failed",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 172, 229, 142))),
                                   content: Text(
-                                      "Invalid current password. Please try again."),
+                                      "Invalid current password. Please try again.",
+                                      style: TextStyle(color: Colors.black)),
                                   actions: [
                                     TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("OK"),
-                                    ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK",
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 172, 229, 142)))),
                                   ],
+                                  backgroundColor: Colors.white,
                                 );
                               },
                             );
@@ -126,7 +136,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         }
                       }
                     },
-                    child: Text('Save'),
+                    child: Text('Save', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 172, 229, 142)),
                   ),
                 ],
               ),
@@ -137,33 +149,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildPasswordField(
+      String label, TextEditingController controller, bool obscureText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         decoration: InputDecoration(
           labelText: label,
+          suffixIcon: IconButton(
+            icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+            onPressed: () {
+              setState(() {
+                if (label == 'New Password') {
+                  _obscureNewPassword = !_obscureNewPassword;
+                } else if (label == 'Current Password') {
+                  _obscureCurrentPassword = !_obscureCurrentPassword;
+                }
+              });
+            },
+          ),
         ),
         controller: controller,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter a $label';
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget _buildPasswordField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-        ),
-        controller: controller,
-        obscureText: true,
+        obscureText: obscureText,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter a $label';
@@ -179,22 +186,51 @@ class _EditProfilePageState extends State<EditProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Confirm Password Change"),
-          content: Text("Are you sure you want to change the password?"),
+          title: Text("Confirm Password Change",
+              style: TextStyle(color: Color.fromARGB(255, 172, 229, 142))),
+          content: Text("Are you sure you want to change the password?",
+              style: TextStyle(color: Colors.black)),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // No, cancel action
-              },
-              child: Text("No"),
-            ),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("No",
+                    style:
+                        TextStyle(color: Color.fromARGB(255, 172, 229, 142)))),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Yes, confirm action
-              },
-              child: Text("Yes"),
-            ),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Yes",
+                    style:
+                        TextStyle(color: Color.fromARGB(255, 172, 229, 142)))),
           ],
+          backgroundColor: Colors.white,
+        );
+      },
+    );
+  }
+
+  void _showPasswordLengthDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Password Length",
+              style: TextStyle(color: Color.fromARGB(255, 172, 229, 142))),
+          content: Text("Please enter a password of 6 or more characters.",
+              style: TextStyle(color: Colors.black)),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK",
+                    style:
+                        TextStyle(color: Color.fromARGB(255, 172, 229, 142)))),
+          ],
+          backgroundColor: Colors.white,
         );
       },
     );
