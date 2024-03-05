@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
             return Scaffold(
               drawer: Mydrawer(),
               key: _scaffoldKey,
-              /*appBar: AppBar(
+              appBar: AppBar(
                 title: Text(
                   'HALO',
                   /* style: TextStyle(
@@ -131,8 +131,8 @@ class _HomeState extends State<Home> {
                     fontWeight: FontWeight.bold,
                   ),*/
                 ),
-                backgroundColor: Colors.green[100],
-              ),*/
+                backgroundColor: Color.fromARGB(255, 171, 201, 173),
+              ),
               backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
@@ -142,56 +142,53 @@ class _HomeState extends State<Home> {
                     children: [
                       Row(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              _scaffoldKey.currentState?.openDrawer();
-                            },
-                            child: Icon(
-                              Icons.sort_rounded,
-                              size: 33,
-                            ),
-                            splashColor: Color.fromARGB(255, 190, 230, 184)
-                                .withOpacity(0.5),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            'HALO',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          )
+                          // InkWell(
+                          //   onTap: () {
+                          //     _scaffoldKey.currentState?.openDrawer();
+                          //   },
+                          //   child: Icon(
+                          //     Icons.sort_rounded,
+                          //     size: 33,
+                          //   ),
+                          //   splashColor: Color.fromARGB(255, 190, 230, 184)
+                          //       .withOpacity(0.5),
+                          // ),
+                          //     SizedBox(
+                          //       width: 20,
+                          //     ),
+                          //     Text(
+                          //       'Welcome',
+                          //       style: TextStyle(
+                          //         fontSize: 20,
+                          //       ),
+                          //     )
                         ],
                       ),
-                      Divider(),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      // Divider(),
 
-                      Card(
-                        child: SizedBox(
-                          height: 50, // Adjust the height as needed
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextFormField(
-                              controller: _searchController,
-                              onChanged: (value) {
-                                fetchProduct(value.trim());
-                              },
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "Search your product...",
-                                  /* style: GoogleFonts.actor(),*/
-                                ),
-                                border: InputBorder.none,
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  size: 30,
-                                  color: Color.fromARGB(255, 242, 243, 241),
-                                ),
+                      SizedBox(
+                        height: 40,
+                        // Adjust the height as needed
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 222, 233, 223),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextFormField(
+                            controller: _searchController,
+                            onChanged: (value) {
+                              fetchProduct(value.trim());
+                            },
+                            decoration: InputDecoration(
+                              label: Text(
+                                "Search your product...",
+                                /* style: GoogleFonts.actor(),*/
+                              ),
+                              border: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                size: 30,
+                                color: Color.fromARGB(31, 10, 10, 10),
                               ),
                             ),
                           ),
@@ -233,7 +230,7 @@ class _HomeState extends State<Home> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 251, 255, 251),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -271,7 +268,7 @@ class _HomeState extends State<Home> {
                                       onPrimary:
                                           const Color.fromARGB(255, 11, 3, 3),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
                                       //    minimumSize: Size(50, 35),
                                     ),
@@ -311,7 +308,7 @@ class _HomeState extends State<Home> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 172, 195, 173),
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
@@ -387,10 +384,11 @@ class RecommendProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
       child: FutureBuilder<QuerySnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('products').limit(4).get(),
+        future: FirebaseFirestore.instance
+            .collection('products')
+            .limit(2) // Limiting to two products
+            .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             print('Loading');
@@ -404,24 +402,34 @@ class RecommendProduct extends StatelessWidget {
             List<QueryDocumentSnapshot> products =
                 snapshot.data!.docs.cast<QueryDocumentSnapshot>();
             print(products.first);
-            print('Categories received');
-            return GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+            print('Products received');
+            return CarouselSlider.builder(
+              options: CarouselOptions(
+                height: 200.0,
+                enlargeCenterPage: true,
+                autoPlay: false,
+                aspectRatio: 3 / 2,
+                autoPlayCurve: Curves.easeInOut,
+                enableInfiniteScroll: false,
+                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                viewportFraction: 0.8,
               ),
-              itemBuilder: (BuildContext context, int index) {
+              itemCount: products.length,
+              itemBuilder: (BuildContext context, int index, _) {
                 var productData =
                     products[index].data() as Map<String, dynamic>;
                 var productId = products[index].id;
-                return SingleProduct(
-                  productId: productId,
-                  product_name: productData['name'],
-                  product_picture: productData['image_url'],
-                  prod_price: productData['price'],
-                  prod_details: productData['product_details'],
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SingleProduct(
+                    productId: productId,
+                    product_name: productData['name'],
+                    product_picture: productData['image_url'],
+                    prod_price: productData['price'],
+                    prod_details: productData['product_details'],
+                  ),
                 );
               },
             );

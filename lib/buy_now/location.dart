@@ -51,7 +51,8 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
           'Delivery Address',
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+        // Wrap with SingleChildScrollView
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

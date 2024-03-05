@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/buy_now/location.dart';
 import 'package:flutterproject/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:flutterproject/features/cart/models/cart_model.dart';
 
@@ -35,6 +36,15 @@ class _CartPageState extends State<CartPage> {
             );
           } else if (state is MyCartLoadedState) {
             final listOfProducts = state.products;
+
+            //calculate total
+            double totalAmount = listOfProducts.fold<double>(
+              0,
+              (previousValue, product) =>
+                  previousValue +
+                  (double.parse(product.price) * product.selectedQuantity + 50),
+            );
+
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.green[200],
@@ -42,7 +52,7 @@ class _CartPageState extends State<CartPage> {
               ),
               body: RefreshIndicator(
                 onRefresh: () async {
-                   cartBloc.add(MyCartInitialEvent());
+                  cartBloc.add(MyCartInitialEvent());
                 },
                 child: Column(
                   children: [
@@ -54,16 +64,16 @@ class _CartPageState extends State<CartPage> {
                             product: listOfProducts[index],
                             increaseQuantity: () {
                               setState(() {
-                                listOfProducts[index].quantity++;
+                                // listOfProducts[index].quantity++;
                                 updatedProducts = listOfProducts;
                               });
                             },
                             decreaseQuantity: () {
                               setState(() {
-                                if (listOfProducts[index].quantity > 1) {
-                                  listOfProducts[index].quantity--;
-                                  updatedProducts = listOfProducts;
-                                }
+                                // if (listOfProducts[index].quantity > 1) {
+                                //   listOfProducts[index].quantity--;
+                                //   updatedProducts = listOfProducts;
+                                // }
                               });
                             },
                             deleteItem: () {
@@ -83,10 +93,24 @@ class _CartPageState extends State<CartPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Delivery Charge: रु50'),
+                      Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Delivery Charge: रु50'),
+                            Text('Total Amount: रु${totalAmount}'),
+                          ],
+                        ),
+                      ), // Display total amount
                       ElevatedButton(
                         onPressed: () {
                           print('Checkout pressed');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      DeliveryAddressScreen()));
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
@@ -175,17 +199,29 @@ class CartProduct extends StatelessWidget {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: decreaseQuantity,
-                    icon: const Icon(Icons.remove),
+                  Row(
+                    children: [
+                      // IconButton(
+                      //   onPressed: decreaseQuantity,
+                      //   icon: const Icon(Icons.remove),
+                      // ),
+                      Text(
+                        'Qty=${product.selectedQuantity}',
+                        // Display the current count from the database
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      // IconButton(
+                      //   onPressed: increaseQuantity,
+                      //   icon: const Icon(Icons.add),
+                      // ),
+                    ],
                   ),
-                  Text(product.quantity.toString()),
                   IconButton(
-                    onPressed: increaseQuantity,
-                    icon: const Icon(Icons.add),
-                  ),
-                  IconButton(
+                    alignment: Alignment.topRight,
                     onPressed: deleteItem,
                     icon: const Icon(Icons.delete),
                   ),
