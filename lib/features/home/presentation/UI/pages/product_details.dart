@@ -30,6 +30,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   int selectedQuantity = 1;
   Seller? _seller;
   bool _isLoading = false;
+  List<Map<String, dynamic>> _reviews = [];
+  TextEditingController _reviewController = TextEditingController();
+  int _selectedRating = 5; // Default rating
 
   @override
   void initState() {
@@ -39,6 +42,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     } else {
       _fetchSellerDetails();
     }
+    _fetchReviews();
   }
 
   Future<void> _fetchSellerDetails() async {
@@ -76,6 +80,147 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         _isLoading = false;
       });
     }
+  }
+
+  // Fetch reviews
+  Future<void> _fetchReviews() async {
+    try {
+      final reviewsSnapshot = await FirebaseFirestore.instance
+          .collection('product_reviews')
+          .doc(widget.product_detail_id)
+          .collection('reviews')
+          .get();
+
+      setState(() {
+        _reviews = reviewsSnapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList();
+      });
+    } catch (error) {
+      print('Error fetching reviews: $error');
+    }
+  }
+
+  // Submit review
+  Future<void> _submitReview() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final review = _reviewController.text;
+      final rating = _selectedRating;
+
+      try {
+        final userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        await FirebaseFirestore.instance
+            .collection('product_reviews')
+            .doc(widget.product_detail_id)
+            .collection('reviews')
+            .add({
+          'author': userData.data()?['name'] ?? 'Anonymous',
+          'review': review,
+          'rating': rating,
+          'timestamp': Timestamp.now(),
+        });
+
+        // Clear the input field after submitting
+        _reviewController.clear();
+
+        // Fetch reviews again to update the list
+        _fetchReviews();
+      } catch (error) {
+        print('Error submitting review: $error');
+      }
+    } else {
+      // Handle the case when the user is not authenticated
+      print('User not authenticated');
+    }
+  }
+
+  // Build reviews section
+  Widget buildReviewsSection() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Customer Reviews',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8.0),
+          _reviews.isEmpty
+              ? Text('No reviews yet')
+              : Column(
+                  children: _reviews.map((review) {
+                    return ListTile(
+                      title: Text(review['author'] ?? 'Anonymous'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(review['review'] ?? ''),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              ),
+                              Text(review['rating'].toString()),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+          SizedBox(height: 16.0),
+          // Input for new review
+          Text(
+            'Leave a Review',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 8.0),
+          TextField(
+            controller: _reviewController,
+            decoration: InputDecoration(
+              hintText: 'Enter your review',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          SizedBox(height: 8.0),
+          DropdownButton<int>(
+            value: _selectedRating,
+            items: List.generate(5, (index) => index + 1)
+                .map((rating) => DropdownMenuItem<int>(
+                      value: rating,
+                      child: Text('$rating stars'),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedRating = value ?? 5;
+              });
+            },
+          ),
+          SizedBox(height: 8.0),
+          ElevatedButton(
+            onPressed: _submitReview,
+            style: ElevatedButton.styleFrom(
+                primary:
+                    Colors.green[200], // Change the background color to green
+                textStyle: TextStyle(color: Colors.white),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        10)) // Change the text color to white
+                ),
+            child: Text('Submit Review'),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildSellerInformationSection() {
@@ -294,37 +439,8 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                 // Seller information section
                 buildSellerInformationSection(),
                 //Divider(),
-                // Customer Reviews
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Customer Reviews',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                        /* style: GoogleFonts.firaSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),*/
-                      ),
-                      SizedBox(height: 8.0),
-                      ListTile(
-                        title: Text('Alpha'),
-                        subtitle: Text('Excellent product!'),
-                        trailing: Icon(Icons.star, color: Colors.yellow),
-                      ),
-                      ListTile(
-                        title: Text('Beta'),
-                        subtitle: Text('Very satisfied with the purchase.'),
-                        trailing: Icon(Icons.star, color: Colors.yellow),
-                      ),
-                    ],
-                  ),
-                ),
+                // Reviews section
+                buildReviewsSection(),
 
                 Divider(),
                 // "Buy Now" and "Add to Cart" buttons

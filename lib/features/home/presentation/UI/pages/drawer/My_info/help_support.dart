@@ -7,7 +7,6 @@ class HelpAndSupportPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Help and Support',
-          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green[100], // Green color added to app bar
       ),
@@ -31,7 +30,7 @@ class HelpAndSupportPage extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                'Email: haloapphelpdesk@gmail.com',
+                'Email: haloapp59@gmail.com',
                 style: TextStyle(fontSize: 18),
               ),
               SizedBox(height: 10),
@@ -157,7 +156,13 @@ class _MessageFormState extends State<MessageForm> {
                 );
               }
             },
-            child: Text('Send Message'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green[200],
+            ),
+            child: Text(
+              'Send Message',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
