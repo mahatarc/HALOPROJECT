@@ -103,7 +103,6 @@ class _HomeState extends State<Home> {
           });
         } else {
           _searchedProduct = null;
-          // Remove focus from the search field
           FocusScope.of(context).requestFocus(FocusNode());
         }
       });
@@ -126,10 +125,6 @@ class _HomeState extends State<Home> {
               appBar: AppBar(
                 title: Text(
                   'HALO',
-                  /* style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),*/
                 ),
                 backgroundColor: Color.fromARGB(255, 171, 201, 173),
               ),
@@ -148,16 +143,13 @@ class _HomeState extends State<Home> {
                             color: Color.fromARGB(255, 222, 233, 223),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: TextFormField(
+                          child: TextField(
                             controller: _searchController,
                             onChanged: (value) {
                               fetchProduct(value.trim());
                             },
                             decoration: InputDecoration(
-                              label: Text(
-                                "Search your product...",
-                                /* style: GoogleFonts.actor(),*/
-                              ),
+                              hintText: 'Search your product...',
                               border: InputBorder.none,
                               prefixIcon: Icon(
                                 Icons.search,
