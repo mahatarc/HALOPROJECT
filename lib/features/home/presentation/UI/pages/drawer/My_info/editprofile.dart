@@ -26,7 +26,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       appBar: AppBar(
         title: Text('Reset Password'),
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 172, 229, 142),
+        backgroundColor: Colors.green[100],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

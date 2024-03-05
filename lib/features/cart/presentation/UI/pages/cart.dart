@@ -139,10 +139,12 @@ class _CartPageState extends State<CartPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 156, 199, 107),
+                          backgroundColor: Colors.green[200],
                         ),
-                        child: const Text('Checkout'),
+                        child: const Text(
+                          'Checkout',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -169,14 +171,20 @@ class _CartPageState extends State<CartPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cancel"),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
                 cartBloc.add(DeleteItemEvent(item));
                 Navigator.of(context).pop();
               },
-              child: const Text("Delete"),
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );

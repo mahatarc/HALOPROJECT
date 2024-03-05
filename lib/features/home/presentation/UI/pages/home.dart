@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
                     fontWeight: FontWeight.bold,
                   ),*/
                 ),
-                backgroundColor: Color.fromARGB(255, 171, 201, 173),
+                backgroundColor: Colors.green[100],
               ),
               // backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
