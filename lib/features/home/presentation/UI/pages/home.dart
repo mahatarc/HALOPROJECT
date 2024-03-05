@@ -133,7 +133,7 @@ class _HomeState extends State<Home> {
                 ),
                 backgroundColor: Color.fromARGB(255, 171, 201, 173),
               ),
-              backgroundColor: Color.fromARGB(255, 243, 247, 241),
+              // backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -198,7 +198,7 @@ class _HomeState extends State<Home> {
                           ),*/
                         ],
                       ),*/
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       SizedBox(
                         height: 40,
                         // Adjust the height as needed
