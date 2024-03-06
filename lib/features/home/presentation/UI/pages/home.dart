@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
             return Scaffold(
               drawer: Mydrawer(),
               key: _scaffoldKey,
-              /*appBar: AppBar(
+              appBar: AppBar(
                 title: Text(
                   'HALO',
                   /* style: TextStyle(
@@ -132,72 +132,98 @@ class _HomeState extends State<Home> {
                   ),*/
                 ),
                 backgroundColor: Colors.green[100],
-              ),*/
-              backgroundColor: Color.fromARGB(255, 243, 247, 241),
+              ),
+              // backgroundColor: Color.fromARGB(255, 243, 247, 241),
               body: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      /*Row(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              _scaffoldKey.currentState?.openDrawer();
-                            },
-                            child: Icon(
-                              Icons.sort_rounded,
-                              size: 33,
+                          Expanded(
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    _scaffoldKey.currentState?.openDrawer();
+                                  },
+                                  child: Icon(
+                                    Icons.sort_rounded,
+                                    size: 33,
+                                  ),
+                                  splashColor:
+                                      Color.fromARGB(255, 190, 230, 184)
+                                          .withOpacity(0.5),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  'HALO',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                            splashColor: Color.fromARGB(255, 190, 230, 184)
-                                .withOpacity(0.5),
                           ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            'HALO',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          )
+                          // SizedBox(width: 1), // Adjust the width as needed
+                          /*Expanded(
+                            child: SizedBox(
+                              height: 40,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 222, 233, 223),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: TextFormField(
+                                  controller: _searchController,
+                                  onChanged: (value) {
+                                    fetchProduct(value.trim());
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: "Search your product...",
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.search,
+                                      size: 30,
+                                      color: Color.fromARGB(31, 10, 10, 10),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),*/
                         ],
-                      ),
-                      Divider(),
+                      ),*/
+                      SizedBox(height: 5),
                       SizedBox(
-                        height: 10,
-                      ),
-
-                      Card(
-                        child: SizedBox(
-                          height: 50, // Adjust the height as needed
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: TextFormField(
-                              controller: _searchController,
-                              onChanged: (value) {
-                                fetchProduct(value.trim());
-                              },
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "Search your product...",
-                                  /* style: GoogleFonts.actor(),*/
-                                ),
-                                border: InputBorder.none,
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  size: 30,
-                                  color: Color.fromARGB(255, 242, 243, 241),
-                                ),
+                        height: 40,
+                        // Adjust the height as needed
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 222, 233, 223),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: (value) {
+                              fetchProduct(value.trim());
+                            },
+                            decoration: InputDecoration(
+                              hintText: "Search your product...",
+                              border: InputBorder.none,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                size: 30,
+                                color: Color.fromARGB(31, 10, 10, 10),
                               ),
                             ),
                           ),
                         ),
                       ),
-
                       SizedBox(height: 15),
                       if (_searchedProduct != null)
                         ListTile(
@@ -231,7 +257,6 @@ class _HomeState extends State<Home> {
 
                       ///Categoriess---------------------------------------------------------
                       Container(
-                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -244,19 +269,20 @@ class _HomeState extends State<Home> {
                             ),
                           ],
                         ),
+                        padding: const EdgeInsets.all(8),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.only(bottom: 8),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Categories',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                     textScaleFactor: 1.5,
                                   ),
                                   ElevatedButton(
@@ -271,15 +297,13 @@ class _HomeState extends State<Home> {
                                       onPrimary:
                                           const Color.fromARGB(255, 11, 3, 3),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                      //    minimumSize: Size(50, 35),
                                     ),
                                     child: Text(
                                       'View More',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ],
@@ -289,7 +313,7 @@ class _HomeState extends State<Home> {
                               height: 120.0,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: 4,
+                                itemCount: 5,
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -306,10 +330,8 @@ class _HomeState extends State<Home> {
                       ),
 
                       SizedBox(height: 15),
-
-                      // Recommended Section
+                      // Recommended section...
                       Container(
-                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
@@ -322,6 +344,7 @@ class _HomeState extends State<Home> {
                             ),
                           ],
                         ),
+                        padding: const EdgeInsets.all(8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -329,26 +352,11 @@ class _HomeState extends State<Home> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                 'Recommended',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                                 textScaleFactor: 1.5,
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                /*  Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Recommended for you',
-                                            textScaleFactor: 1.5,
-                                          ),
-                                        ),*/
-                                RecommendProduct(),
-                              ],
-                            ),
+                            RecommendProduct(),
                           ],
                         ),
                       ),
@@ -386,49 +394,60 @@ class RecommendProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: FutureBuilder<QuerySnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('products').limit(4).get(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            print('Loading');
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            print('Error');
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (snapshot.connectionState == ConnectionState.done) {
-            List<QueryDocumentSnapshot> products =
-                snapshot.data!.docs.cast<QueryDocumentSnapshot>();
-            print(products.first);
-            print('Categories received');
-            return GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                var productData =
-                    products[index].data() as Map<String, dynamic>;
-                var productId = products[index].id;
-                return SingleProduct(
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('products')
+          .limit(4) // Limiting to four products
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          List<QueryDocumentSnapshot> products =
+              snapshot.data!.docs.cast<QueryDocumentSnapshot>();
+
+          return CarouselSlider(
+            options: CarouselOptions(
+              initialPage: 1,
+              padEnds: false,
+              height: 210.0,
+              autoPlay: false,
+              enableInfiniteScroll: false,
+              viewportFraction: 0.5,
+            ),
+            items: products.map((product) {
+              var productData = product.data() as Map<String, dynamic>;
+              var productId = product.id;
+              return Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 251, 255, 251),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: SingleProduct(
                   productId: productId,
                   product_name: productData['name'],
                   product_picture: productData['image_url'],
                   prod_price: productData['price'],
                   prod_details: productData['product_details'],
-                );
-              },
-            );
-          }
-          return SizedBox(); // Return an empty widget if none of the conditions are met
-        },
-      ),
+                ),
+              );
+            }).toList(),
+          );
+        }
+        return SizedBox(); // Return an empty widget if none of the conditions are met
+      },
     );
   }
 }
@@ -438,14 +457,14 @@ class ImageCarouselSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 150.0,
+        height: 180.0,
         enlargeCenterPage: true,
         autoPlay: true,
-        aspectRatio: 16 / 9,
-        autoPlayCurve: Curves.easeInOut,
+        aspectRatio: 20 / 15,
+        autoPlayCurve: Curves.easeOutQuint,
         enableInfiniteScroll: true,
         autoPlayAnimationDuration: Duration(milliseconds: 800),
-        viewportFraction: 0.8,
+        viewportFraction: 0.9,
       ),
       items: [
         'images/advertisement.png',

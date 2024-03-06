@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterproject/features/authentication/presentation/UI/pages/login_page.dart';
+import 'package:flutterproject/features/authentication/presentation/bloc/sign_in_bloc/sign_in_bloc.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   final String email;
@@ -17,7 +20,17 @@ class ResetPasswordScreen extends StatelessWidget {
           content: Text('Password reset email sent to $email.'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => SignInBloc(),
+                      child: LoginPage(),
+                    ),
+                  ),
+                );
+              },
               child: Text('OK'),
             ),
           ],

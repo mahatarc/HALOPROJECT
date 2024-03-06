@@ -32,7 +32,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   bool _isLoading = false;
   List<Map<String, dynamic>> _reviews = [];
   TextEditingController _reviewController = TextEditingController();
-  int _selectedRating = 5;
+  int _selectedRating = 5; // Default rating
 
   @override
   void initState() {
@@ -42,7 +42,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     } else {
       _fetchSellerDetails();
     }
-
     _fetchReviews();
   }
 
@@ -83,6 +82,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     }
   }
 
+  // Fetch reviews
   Future<void> _fetchReviews() async {
     try {
       final reviewsSnapshot = await FirebaseFirestore.instance
@@ -136,54 +136,6 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     } else {
       // Handle the case when the user is not authenticated
       print('User not authenticated');
-    }
-  }
-
-  Widget buildSellerInformationSection() {
-    if (_isLoading) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: CircularProgressIndicator(),
-      );
-    } else if (_seller != null) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Seller Information:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              'Business Name: ${_seller?.businessName ?? 'N/A'}',
-            ),
-            Text(
-              'Contact Number: ${_seller?.contactNumber ?? 'N/A'}',
-            ),
-            Text(
-              'Address: ${_seller?.address ?? 'N/A'}',
-            ),
-            Text(
-              'City: ${_seller?.city ?? 'N/A'}',
-            ),
-            Text(
-              'Province: ${_seller?.province ?? 'N/A'}',
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          'Seller Information not available',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      );
     }
   }
 
@@ -257,19 +209,66 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           ElevatedButton(
             onPressed: _submitReview,
             style: ElevatedButton.styleFrom(
-              primary: Colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-            ),
-            child: Text(
-              'Submit Review',
-              style: TextStyle(color: Colors.white),
-            ),
+                primary:
+                    Colors.green[200], // Change the background color to green
+                textStyle: TextStyle(color: Colors.white),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        10)) // Change the text color to white
+                ),
+            child: Text('Submit Review'),
           ),
         ],
       ),
     );
+  }
+
+  Widget buildSellerInformationSection() {
+    if (_isLoading) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CircularProgressIndicator(),
+      );
+    } else if (_seller != null) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Seller Information:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            Text(
+              'Business Name: ${_seller?.businessName ?? 'N/A'}',
+            ),
+            Text(
+              'Contact Number: ${_seller?.contactNumber ?? 'N/A'}',
+            ),
+            Text(
+              'Address: ${_seller?.address ?? 'N/A'}',
+            ),
+            Text(
+              'City: ${_seller?.city ?? 'N/A'}',
+            ),
+            Text(
+              'Province: ${_seller?.province ?? 'N/A'}',
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          'Seller Information not available',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
   }
 
   @override
@@ -277,17 +276,32 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     final double productPrice =
         double.parse(widget.product_detail_price.toString());
     return Scaffold(
+      // backgroundColor: Color.fromARGB(255, 243, 247, 241),
+      //   backgroundColor: Color.fromARGB(255, 243, 247, 241),
       appBar: AppBar(
         backgroundColor: Colors.green[100],
         title: Text(
           'Product Details',
+          /*  style: GoogleFonts.merriweather(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),*/
         ),
       ),
       body: ListView(
-        //  padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         children: [
           Container(
             height: 300,
+            /* decoration: BoxDecoration(
+              color: Color.fromARGB(255, 217, 236, 220),
+              borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(40.0),
+                //  topRight: Radius.circular(40.0),
+                bottomLeft:
+                    Radius.circular(40.0), // Circular bottom left corner
+              ),
+            ),*/
             child: GridTile(
               child: Image.network(
                 widget.product_detail_picture,
@@ -295,7 +309,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ),
               footer: Container(
                 color: Colors.white.withOpacity(0.6),
-                padding: EdgeInsets.only(left: 10),
+                padding: EdgeInsets.all(8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -308,7 +322,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      "\₹$productPrice",
+                      "\रु$productPrice",
                       style: TextStyle(
                         color: Colors.brown,
                         fontWeight: FontWeight.bold,
@@ -320,22 +334,27 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               ),
             ),
           ),
+          SizedBox(
+            height: 5,
+          ),
           Container(
+            //   margin: EdgeInsets.only(top: 20.0),
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(35.0),
-                topRight: Radius.circular(35.0),
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
+                  color: Colors.grey.withOpacity(0.5), // Color of the shadow
+                  spreadRadius: 5, // Spread radius
+                  blurRadius: 7, // Blur radius
+                  offset: Offset(0, 3), // Changes position of shadow
                 ),
               ],
+              // You can also add other decoration properties such as color, border, etc.
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,6 +376,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
+                              /* style: GoogleFonts.firaSans(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),*/
                             )),
                             SizedBox(width: 5),
                             DropdownButton<int>(
@@ -371,6 +394,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                                 setState(() {
                                   selectedQuantity = value ?? 1;
                                 });
+                                print(selectedQuantity);
+                                print(
+                                    '.............................................');
                               },
                             ),
                           ],
@@ -379,6 +405,8 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                     ),
                   ],
                 ),
+                // Divider(),
+                // Product description
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: Column(
@@ -390,6 +418,10 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
+                        /*style: GoogleFonts.firaSans(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),*/
                       ),
                     ],
                   ),
@@ -398,16 +430,26 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                   padding: const EdgeInsets.only(left: 16),
                   child: Text(
                     widget.product_detail_details,
+                    /* style: GoogleFonts.firaSans(
+                                    fontSize: 15,
+                                  ),*/
                   ),
                 ),
+                //     Divider(),
+                // Seller information section
                 buildSellerInformationSection(),
+                //Divider(),
+                // Reviews section
                 buildReviewsSection(),
+
                 Divider(),
+                // "Buy Now" and "Add to Cart" buttons
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // "Buy Now" button
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -441,6 +483,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                           ),
                         ),
                       ),
+                      // "Add to Cart" button
                       ElevatedButton(
                         onPressed: () async {
                           final user = FirebaseAuth.instance.currentUser;
@@ -449,7 +492,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                               .doc(user!.uid)
                               .collection(user.uid)
                               .doc(widget.product_detail_id)
-                              .set({'count': selectedQuantity});
+                              .set({'selectedQuantity': selectedQuantity});
                           showDialog(
                               context: context,
                               builder: (context) {

@@ -63,7 +63,7 @@ class BottomBar2 extends StatelessWidget {
       ],
       confineInSafeArea: true,
       backgroundColor:
-          Color.fromARGB(255, 200, 230, 201), // Default is Colors.white.
+          Color.fromARGB(255, 222, 233, 223), // Default is Colors.white.
       handleAndroidBackButtonPress: true, // Default is true.
       resizeToAvoidBottomInset:
           false, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
@@ -71,9 +71,21 @@ class BottomBar2 extends StatelessWidget {
       hideNavigationBarWhenKeyboardShows:
           true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
       decoration: NavBarDecoration(
-        border: Border(top: BorderSide(color: Colors.grey.shade300)),
-        colorBehindNavBar: Colors.grey.shade300,
+        border: Border(
+          top: BorderSide(
+            color: Color.fromARGB(255, 222, 233, 223),
+            width: 2.0,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
+
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,
       itemAnimationProperties: const ItemAnimationProperties(
@@ -91,5 +103,4 @@ class BottomBar2 extends StatelessWidget {
           NavBarStyle.style6, // Choose the nav bar style with this property.
     );
   }
-  
 }

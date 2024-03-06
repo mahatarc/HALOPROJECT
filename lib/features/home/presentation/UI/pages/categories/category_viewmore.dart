@@ -82,11 +82,6 @@ class CategoryScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                // Navigator.of(context, rootNavigator: true)
-                //     .pushReplacement(MaterialPageRoute(
-                //   builder: (context) =>
-                //       CategoryDetails(selectedCategory: categoriesList[index]),
-                // ));
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -124,11 +119,12 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
-const categoriesList = ['Seed', 'Tools', 'Plant', 'Fertilizer'];
+const categoriesList = ['Seed', 'Tools', 'Plant', 'Fertilizer', 'Books'];
 
 const categoryImages = [
-  'images/crops.png',
+  'images/seed.png',
   'images/gardening.png',
   'images/plants.png',
-  'images/fertilizer.png'
+  'images/fertilizer.png',
+  'images/books.png',
 ];

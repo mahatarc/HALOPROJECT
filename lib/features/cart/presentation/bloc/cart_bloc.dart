@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject/features/cart/models/cart_model.dart';
-
 part 'cart_event.dart';
 part 'cart_state.dart';
 
@@ -96,7 +95,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         final index = updatedCartItems.indexOf(event.item);
 
         if (index != -1) {
-          updatedCartItems[index].quantity++;
+          //  updatedCartItems[index].quantity++;
           emit(MyCartLoadedState(updatedCartItems));
         }
       }
@@ -116,10 +115,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
         final index = updatedCartItems.indexOf(event.item);
 
-        if (index != -1 && updatedCartItems[index].quantity > 1) {
-          updatedCartItems[index].quantity--;
-          emit(MyCartLoadedState(updatedCartItems));
-        }
+        // if (index != -1 && updatedCartItems[index].quantity > 1) {
+        //   updatedCartItems[index].quantity--;
+        emit(MyCartLoadedState(updatedCartItems));
+        // }
       }
     } catch (e) {
       print('Error decreasing quantity: $e');
@@ -188,7 +187,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
       // Add or update the cart items in Firestore
       for (var item in cartItems) {
-        await cartRef.doc(item.productId).set(item.toJson());
+        // Create a new map containing only the necessary fields for updating the document
+        Map<String, dynamic> data = {
+          'productId': item.productId,
+          'name': item.productName,
+          'image_url': item.imageUrl,
+          'price': item.price,
+          'selectedQuantity': item.selectedQuantity,
+
+          // Use the selected quantity instead of the default quantity
+        };
+        print(cartItems.first.selectedQuantity);
+        print('...................................................................');
+
+        // Set the data in Firestore using the product ID as the document ID
+        await cartRef.doc(item.productId).set(data);
       }
 
       print('Firestore cart updated successfully');

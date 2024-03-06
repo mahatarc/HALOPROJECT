@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterproject/features/driver%20mode/presentation/UI/AcceptOrdersScreen.dart';
@@ -17,10 +18,6 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
       appBar: AppBar(
         title: Text(
           'Pending Orders',
-          /* style: GoogleFonts.acme(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),*/
         ),
         backgroundColor: Colors.green[100],
       ),
@@ -63,11 +60,11 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        /*Text(
                           'Order ID: ${orders[index].id}',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                        ),*/
                         SizedBox(height: 8),
                         if (productIdList != null)
                           ...productIdList.map((productId) {
@@ -101,23 +98,161 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
                             );
                           }).toList(),
                         Text(
-                            'Customer Name: ${orderData['customerName'] ?? 'N/A'}'),
-                        Text(
-                            'Product Name: ${orderData['productName'] ?? 'N/A'}'),
-                        Text('Price: \रु ${orderData['amount'] ?? 'N/A'}'),
-                        Text(
-                            'Customer Location: ${orderData['customeraddress']}'),
-                        Text('Payment Status: ${orderData['paymentStatus']}'),
+                          'Customer Information:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Customer Name: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '${orderData['customerName'] ?? 'N/A'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Product Name: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '${orderData['productName'] ?? 'N/A'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Price: \रु ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '${orderData['amount'] ?? 'N/A'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Customer Location: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    '${orderData['customeraddress'] ?? 'N/A'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Payment Status: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '${orderData['paymentStatus'] ?? 'N/A'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
                         Text(
                           'Seller Information:',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text('Business Name: ${orderData['businessName']}'),
-                        Text('Seller Location: ${orderData['sellerAddress']}'),
-                        Text('Seller Contact: ${orderData['contactNumber']}'),
-                        Text('Seller City: ${orderData['sellerCity']}'),
-                        Text('Seller Province: ${orderData['sellerProvince']}'),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Business Name: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    '${orderData['businessName'] ?? 'Agro Market'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Seller Location: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    '${orderData['sellerAddress'] ?? 'Kalimati'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Seller Contact: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    '${orderData['contactNumber'] ?? '9851098124'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Seller City: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    '${orderData['sellerCity'] ?? 'Kathmandu'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            text: 'Seller Province: ',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '${orderData['sellerProvince'] ?? '3'}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight
+                                        .normal), // Non-bold style for children text
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -158,6 +293,7 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   }
 
   void _acceptOrder(BuildContext context, String orderId) {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance
         .collection('orders')
         .doc(orderId)
@@ -208,10 +344,11 @@ class _PendingOrdersPageState extends State<PendingOrdersPage> {
   }
 
   void _fetchAcceptedOrders(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => AcceptedOrdersPage(),
+        builder: (context) => AcceptedOrdersPage(userId: userId),
       ),
     );
   }

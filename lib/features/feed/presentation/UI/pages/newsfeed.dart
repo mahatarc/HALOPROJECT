@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -529,7 +528,7 @@ class _AddPostState extends State<AddPost> {
             style: TextStyle(color: Colors.white),
           ),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
+            primary: Colors.green[200],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),
@@ -544,7 +543,7 @@ class _AddPostState extends State<AddPost> {
           ),
           label: Text('Add Photo', style: TextStyle(color: Colors.white)),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
+            primary: Colors.green[200],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0),
             ),

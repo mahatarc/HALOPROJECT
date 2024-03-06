@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutterproject/buy_now/Payment.dart';
+import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 
 class DeliveryAddressScreen extends StatefulWidget {
   final product_detail_name;
@@ -11,6 +11,7 @@ class DeliveryAddressScreen extends StatefulWidget {
   final String? address;
   final String? city;
   final String? province;
+  final String? contact;
 
   DeliveryAddressScreen({
     this.product_detail_name,
@@ -21,21 +22,25 @@ class DeliveryAddressScreen extends StatefulWidget {
     this.address,
     this.city,
     this.province,
+    this.contact,
   });
+
   @override
   _DeliveryAddressScreenState createState() => _DeliveryAddressScreenState();
 }
 
 class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
+  String? _selectedAddress;
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController addressLine1Controller = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController postalCodeController = TextEditingController();
+  final TextEditingController contact_no_Controller = TextEditingController();
+  //final TextEditingController postalCodeController = TextEditingController();
 
   bool _isFormValid() {
     return _isValidAlphabetic(fullNameController.text) &&
-        _isValidAlphabetic(addressLine1Controller.text) &&
-        _isValidAlphabetic(cityController.text);
+        _selectedAddress != null &&
+        contact_no_Controller.text.isNotEmpty;
+    ;
   }
 
   bool _isValidAlphabetic(String text) {
@@ -47,11 +52,9 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[100],
-        title: Text(
-          'Delivery Address',
-        ),
+        title: Text('Delivery Address'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,31 +68,61 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                 ), // Adding border to text field
               ),
             ),
-            SizedBox(height: 10),
+            if (_selectedAddress != null) ...[
+              // Text(
+              //   'Selected Address: $_selectedAddress',
+              //   style: TextStyle(fontSize: 16),
+              // ),
+              SizedBox(height: 20),
+            ],
+            SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: 40,
+              width: 20,
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Navigate to the map screen
+                  final selectedAddress = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MapService(),
+                    ),
+                  );
+                  if (selectedAddress != null) {
+                    setState(() {
+                      // Update the selected address
+                      _selectedAddress = selectedAddress;
+                      addressLine1Controller.text = _selectedAddress!;
+                    });
+                  }
+                },
+                child: Text('Set Location'),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Updated text field to display selected address
             TextField(
               controller: addressLine1Controller,
+              onChanged: (value) {
+                setState(() {
+                  _selectedAddress = value;
+                });
+              },
               decoration: InputDecoration(
-                labelText: 'Address Line',
+                labelText: 'Delivery Address',
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.green),
                 ),
               ),
             ),
+
             SizedBox(height: 10),
             TextField(
-              controller: cityController,
+              controller: contact_no_Controller,
               decoration: InputDecoration(
-                labelText: 'City',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              controller: postalCodeController,
-              decoration: InputDecoration(
-                labelText: 'Postal Code',
+                labelText: 'Contact Number',
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.green),
                 ),
@@ -106,7 +139,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                           builder: (context) => PaymentPage(
                             fullName: fullNameController.text,
                             address: addressLine1Controller.text,
-                            city: cityController.text,
+                            contact: contact_no_Controller.text,
                             productName: widget.product_detail_name,
                             productPrice:
                                 double.parse(widget.product_detail_price),
