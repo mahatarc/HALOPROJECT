@@ -74,7 +74,10 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
               SizedBox(height: 20),
             ],
             SizedBox(
-              height: 30,
+              height: 20,
+            ),
+            SizedBox(
+              height: 40,
               width: 20,
               child: ElevatedButton(
                 onPressed: () async {
