@@ -37,8 +37,10 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
   //final TextEditingController postalCodeController = TextEditingController();
 
   bool _isFormValid() {
-    return _isValidAlphabetic(fullNameController.text);
-    //  _isValidAlphabetic(addressLine1Controller.text) ;
+    return _isValidAlphabetic(fullNameController.text) &&
+        _selectedAddress != null &&
+        contact_no_Controller.text.isNotEmpty;
+    ;
   }
 
   bool _isValidAlphabetic(String text) {
