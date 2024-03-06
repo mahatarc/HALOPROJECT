@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Authentication
+import 'package:flutterproject/features/feed/presentation/UI/pages/newsfeed.dart';
 import 'package:flutterproject/features/seller%20mode/model/productmodel.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/Bloc/your_products_bloc/your_products_bloc.dart';
 import 'package:flutterproject/features/seller%20mode/presentation/UI/add_products.dart';
@@ -163,7 +164,7 @@ class _SellerDashboardState extends State<SellerDashboard> {
           onDestinationSelected: (index) {
             setState(() {
               currentIndex = index;
-              if (index == 1) {
+              if (index == 2) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -172,7 +173,13 @@ class _SellerDashboardState extends State<SellerDashboard> {
                               child: YourProducts(),
                             )));
               }
-              if (index == 2) {
+              if (index == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewsFeed()),
+                );
+              }
+              if (index == 3) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -189,6 +196,8 @@ class _SellerDashboardState extends State<SellerDashboard> {
           destinations: [
             NavigationDestination(
                 icon: const Icon(Icons.home), label: 'Dashboard'),
+            NavigationDestination(
+                icon: Icon(Icons.newspaper), label: 'Newsfeed'),
             NavigationDestination(
                 icon: Icon(Icons.newspaper), label: 'Your Products'),
             NavigationDestination(
