@@ -40,7 +40,6 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
     return _isValidAlphabetic(fullNameController.text) &&
         _selectedAddress != null &&
         contact_no_Controller.text.isNotEmpty;
-    ;
   }
 
   bool _isValidAlphabetic(String text) {

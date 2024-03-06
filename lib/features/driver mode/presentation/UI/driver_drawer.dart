@@ -6,7 +6,6 @@ import 'package:flutterproject/features/authentication/presentation/bloc/sign_in
 import 'package:flutterproject/features/authentication/services/firebaseauth.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/help_support.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/settings.dart';
 
 class DriverDrawer extends StatelessWidget {
   const DriverDrawer({super.key});
@@ -66,7 +65,7 @@ class DriverDrawer extends StatelessWidget {
                   title: Text("My Information"),
                 ),
               ),
-              GestureDetector(
+              /* GestureDetector(
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(
                       MaterialPageRoute(
@@ -76,7 +75,7 @@ class DriverDrawer extends StatelessWidget {
                   leading: Icon(Icons.settings),
                   title: Text("Settings"),
                 ),
-              ),
+              ),*/
 
               // const ListTile(
               //   leading: Icon(Icons.delivery_dining),
