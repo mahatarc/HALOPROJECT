@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrderScreen extends StatelessWidget {
+  final String? businessName;
+
+  OrderScreen({this.businessName});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +36,11 @@ class OrderScreen extends StatelessWidget {
               var orderData = orders[index].data() as Map<String, dynamic>;
               var productIdList = orderData['productIdList'] as List?;
 
+              if (orderData['businessName'] != businessName) {
+                return SizedBox
+                    .shrink(); // Hide order if business names don't match
+              }
+
               return FutureBuilder<List<DocumentSnapshot>>(
                 future: _getProductDocuments(productIdList),
                 builder: (context, productSnapshot) {
@@ -47,40 +56,41 @@ class OrderScreen extends StatelessWidget {
 
                   var productDataList = productSnapshot.data;
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        title: Text('Order ID: ${orders[index].id}'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (productDataList != null)
-                              ...productDataList.map((productData) {
-                                var product =
-                                    productData.data() as Map<String, dynamic>;
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Product: ${product['name']}'),
-                                    Text('Price: \$${product['price']}'),
-                                    SizedBox(height: 8),
-                                  ],
-                                );
-                              }).toList(),
-                            Text('Customer: ${orderData['customerName']}'),
-                            Text('Location: ${orderData['customeraddress']}'),
-                            Text('Price: \$${orderData['amount'] ?? 'N/A'}'),
-                            Text(
-                                'productName: ${orderData['productName']}'), // Use 'totalAmount' with a fallback value of 'N/A' if it's null
-                            Text(
-                                'Payment Status: ${orderData['paymentStatus']}'),
-                            SizedBox(height: 16),
-                          ],
-                        ),
+                  return Card(
+                    margin:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Order ID: ${orders[index].id}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 8),
+                          if (productDataList != null)
+                            ...productDataList.map((productData) {
+                              var product =
+                                  productData.data() as Map<String, dynamic>;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Product: ${product['name']}'),
+                                  Text('Price: \$${product['price']}'),
+                                  SizedBox(height: 8),
+                                ],
+                              );
+                            }).toList(),
+                          Text('Customer: ${orderData['customerName']}'),
+                          // Text('Location: ${orderData['customeraddress']}'),
+                          Text('Price: \$${orderData['amount'] ?? 'N/A'}'),
+                          Text('productName: ${orderData['productName']}'),
+                          Text('Payment Status: ${orderData['paymentStatus']}'),
+                          SizedBox(height: 16),
+                        ],
                       ),
-                      Divider(), // Add a Divider between each order
-                    ],
+                    ),
                   );
                 },
               );

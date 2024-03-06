@@ -38,11 +38,11 @@ class PaymentService {
         'amount': productPrice,
         'paymentStatus': 'Successful',
         'timestamp': Timestamp.now(),
-        'businessName': businessName,
-        'contactNumber': contactNumber,
-        'sellerAddress': sellerAddress,
-        'sellerCity': sellerCity,
-        'sellerProvince': sellerProvince,
+        'businessName': businessName ?? 'Agro Market',
+        'contactNumber': contactNumber ?? '9851098124',
+        'sellerAddress': sellerAddress ?? 'Kalimati',
+        'sellerCity': sellerCity ?? 'Kathmandu',
+        'sellerProvince': sellerProvince ?? '3',
       });
       return true;
     } catch (e) {
@@ -70,13 +70,13 @@ class PaymentService {
         'customerAddress': address,
         'contact': contact,
         'amount': productPrice,
-        'paymentStatus': 'Pending',
+        'paymentStatus': 'Successful',
         'timestamp': Timestamp.now(),
-        'businessName': businessName,
-        'contactNumber': contactNumber,
-        'sellerAddress': sellerAddress,
-        'sellerCity': sellerCity,
-        'sellerProvince': sellerProvince,
+        'businessName': businessName ?? 'Agro Market',
+        'contactNumber': contactNumber ?? '9851098124',
+        'sellerAddress': sellerAddress ?? 'Kalimati',
+        'sellerCity': sellerCity ?? 'Kathmandu',
+        'sellerProvince': sellerProvince ?? '3',
       });
       return true;
     } catch (e) {

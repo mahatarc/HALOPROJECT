@@ -19,6 +19,7 @@ class _SellerDashboardState extends State<SellerDashboard> {
   int totalProducts = 0;
   int totalOrders = 0;
   int totalSales = 0;
+  String? businessName; // Define businessName here
 
   @override
   void initState() {
@@ -59,6 +60,15 @@ class _SellerDashboardState extends State<SellerDashboard> {
       setState(() {
         totalSales = totalSalesAmount;
       });
+
+      // Fetch business name (example)
+      DocumentSnapshot sellerDoc = await FirebaseFirestore.instance
+          .collection('sellers')
+          .doc(userId)
+          .get();
+      setState(() {
+        businessName = sellerDoc['businessName'];
+      });
     }
   }
 
@@ -75,6 +85,9 @@ class _SellerDashboardState extends State<SellerDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 30,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -85,7 +98,7 @@ class _SellerDashboardState extends State<SellerDashboard> {
               ],
             ),
             SizedBox(height: 16.0),
-            Row(
+            /* Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildInfoBox('Rating', 4, Icons.star,
@@ -93,17 +106,29 @@ class _SellerDashboardState extends State<SellerDashboard> {
                 _buildInfoBox('Total Sales', totalSales, Icons.monetization_on,
                     Colors.green),
               ],
-            ),
-            SizedBox(height: 16.0),
+            ),*/
+            SizedBox(height: 25),
             Container(
+              height: 250,
               width: double.infinity,
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
+                  SizedBox(
+                    height: 60,
+                  ),
                   Text(
                     'Add your products here!',
                     style: TextStyle(
@@ -150,7 +175,10 @@ class _SellerDashboardState extends State<SellerDashboard> {
               if (index == 2) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OrderScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => OrderScreen(
+                            businessName: businessName,
+                          )),
                 );
               }
             });
