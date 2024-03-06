@@ -6,6 +6,7 @@ import 'profile.dart';
 
 class EditProfilePage extends StatefulWidget {
   final PersonalInformation personalInfo;
+
   const EditProfilePage({Key? key, required this.personalInfo})
       : super(key: key);
 
@@ -14,12 +15,156 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Profile'),
+        centerTitle: true,
+        backgroundColor: Colors.green[100],
+      ),
+      body: ListView(
+        children: [
+          ListTile(
+            title: Text('Edit Name'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditNamePage(
+                    personalInfo: widget.personalInfo,
+                  ),
+                ),
+              );
+            },
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Change Password'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChangePasswordPage(),
+                ),
+              );
+            },
+          ),
+          Divider()
+        ],
+      ),
+    );
+  }
+}
+
+class EditNamePage extends StatefulWidget {
+  final PersonalInformation personalInfo;
+  const EditNamePage({Key? key, required this.personalInfo}) : super(key: key);
+  @override
+  _EditNamePageState createState() => _EditNamePageState();
+}
+
+class _EditNamePageState extends State<EditNamePage> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.personalInfo.name;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Name'),
+        backgroundColor: Colors.green[100],
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTextField('Name', nameController),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 172, 229, 142)),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Update name in Firestore
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update({'name': nameController.text});
+
+                        // Navigate back to previous screen
+                        Navigator.pop(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 172, 229, 142)),
+                    child: Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+        ),
+        controller: controller,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter a $label';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+}
+
+class ChangePasswordPage extends StatefulWidget {
+  const ChangePasswordPage({super.key});
+
+  @override
+  State<ChangePasswordPage> createState() => _ChangePasswordPageState();
+}
+
+class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController currentPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   bool _obscureNewPassword = true;
   bool _obscureCurrentPassword = true;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
