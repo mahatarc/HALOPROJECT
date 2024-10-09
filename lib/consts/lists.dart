@@ -13,11 +13,6 @@ const categoryImages = [
   'images/crops.png',
   'images/gardening.png',
   'images/plants.png',
-  'images/fertilizer.jpg',
-  'images/micronutrient.png',
-  'images/pesticides.jpg',
-  'images/pots.jpg',
-  'images/animal_feed.jpg',
 ];
 
 var Crops_list = [
