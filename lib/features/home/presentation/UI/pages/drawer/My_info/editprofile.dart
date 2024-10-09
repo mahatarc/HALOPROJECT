@@ -15,28 +15,18 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
-  //TextEditingController phoneNumberController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    nameController.text = widget.personalInfo.name;
-    emailController.text = widget.personalInfo.email;
-
-    // Initialize other controllers with existing data if needed.
-  }
+  TextEditingController currentPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  bool _obscureNewPassword = true;
+  bool _obscureCurrentPassword = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: Text('Reset Password'),
         centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 172, 229, 142),
+        backgroundColor: Colors.green[100],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -45,9 +35,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTextField('Name', nameController),
-              _buildTextField('Email', emailController),
-              // Add other fields as needed for editing other information.
+              _buildPasswordField('Current Password', currentPasswordController,
+                  _obscureCurrentPassword),
+              _buildPasswordField(
+                  'New Password', newPasswordController, _obscureNewPassword),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -56,28 +47,98 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('Cancel'),
+                    child:
+                        Text('Cancel', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 172, 229, 142)),
                   ),
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        PersonalInformation updatedInfo = PersonalInformation(
-                          name: nameController.text,
-                          email: emailController.text,
-                          role: widget.personalInfo.role,
-                        );
-                        Navigator.pop(context, updatedInfo);
-                        await FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .update({
-                          'name': updatedInfo.name,
-                          'email': updatedInfo.email,
-                        });
-                        Navigator.pop(context, updatedInfo);
+                        bool confirm = await _showConfirmationDialog();
+                        if (confirm) {
+                          String currentPassword =
+                              currentPasswordController.text;
+                          String newPassword = newPasswordController.text;
+
+                          if (newPassword.length < 6) {
+                            _showPasswordLengthDialog();
+                            return; // Stop further execution
+                          }
+
+                          try {
+                            AuthCredential credential =
+                                EmailAuthProvider.credential(
+                              email: FirebaseAuth.instance.currentUser!.email!,
+                              password: currentPassword,
+                            );
+                            await FirebaseAuth.instance.currentUser!
+                                .reauthenticateWithCredential(credential);
+
+                            await FirebaseAuth.instance.currentUser!
+                                .updatePassword(newPassword);
+
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Password Reset Successful",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 172, 229, 142))),
+                                  content: Text(
+                                      "Your password has been updated successfully.",
+                                      style: TextStyle(color: Colors.black)),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK",
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 172, 229, 142)))),
+                                  ],
+                                  backgroundColor: Colors.white,
+                                );
+                              },
+                            );
+
+                            currentPasswordController.clear();
+                            newPasswordController.clear();
+                          } catch (error) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Password Reset Failed",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 172, 229, 142))),
+                                  content: Text(
+                                      "Invalid current password. Please try again.",
+                                      style: TextStyle(color: Colors.black)),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("OK",
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 172, 229, 142)))),
+                                  ],
+                                  backgroundColor: Colors.white,
+                                );
+                              },
+                            );
+                          }
+                        }
                       }
                     },
-                    child: Text('Save'),
+                    child: Text('Save', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                        primary: Color.fromARGB(255, 172, 229, 142)),
                   ),
                 ],
               ),
@@ -88,14 +149,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
+  Widget _buildPasswordField(
+      String label, TextEditingController controller, bool obscureText) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         decoration: InputDecoration(
           labelText: label,
+          suffixIcon: IconButton(
+            icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+            onPressed: () {
+              setState(() {
+                if (label == 'New Password') {
+                  _obscureNewPassword = !_obscureNewPassword;
+                } else if (label == 'Current Password') {
+                  _obscureCurrentPassword = !_obscureCurrentPassword;
+                }
+              });
+            },
+          ),
         ),
         controller: controller,
+        obscureText: obscureText,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter a $label';
@@ -103,6 +178,61 @@ class _EditProfilePageState extends State<EditProfilePage> {
           return null;
         },
       ),
+    );
+  }
+
+  Future<bool> _showConfirmationDialog() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Password Change",
+              style: TextStyle(color: Color.fromARGB(255, 172, 229, 142))),
+          content: Text("Are you sure you want to change the password?",
+              style: TextStyle(color: Colors.black)),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("No",
+                    style:
+                        TextStyle(color: Color.fromARGB(255, 172, 229, 142)))),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Yes",
+                    style:
+                        TextStyle(color: Color.fromARGB(255, 172, 229, 142)))),
+          ],
+          backgroundColor: Colors.white,
+        );
+      },
+    );
+  }
+
+  void _showPasswordLengthDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Password Length",
+              style: TextStyle(color: Color.fromARGB(255, 172, 229, 142))),
+          content: Text("Please enter a password of 6 or more characters.",
+              style: TextStyle(color: Colors.black)),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK",
+                    style:
+                        TextStyle(color: Color.fromARGB(255, 172, 229, 142)))),
+          ],
+          backgroundColor: Colors.white,
+        );
+      },
     );
   }
 }

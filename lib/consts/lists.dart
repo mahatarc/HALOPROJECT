@@ -1,4 +1,13 @@
-const categoriesList = ['Seed', 'Tools', 'Plant'];
+const categoriesList = [
+  'Seed',
+  'Tools',
+  'Plant',
+  'Fertilizer',
+  'Micronutrients',
+  'Pesticides and Insecticides',
+  'Pots',
+  'Animal Feed',
+];
 
 const categoryImages = [
   'images/crops.png',

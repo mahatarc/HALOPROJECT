@@ -35,35 +35,35 @@ class _YourProductsState extends State<YourProducts> {
             final listOfProducts =
                 state.products; //access productModelList from Bloc
             return Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.green[200],
-                title: Text('Your Products'),
-              ),
-              body: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      yourProductsBloc.add(YourProductsInitialEvent());
-                    },
-                    child: Text('Refresh'),
+                appBar: AppBar(
+                  backgroundColor: Colors.green[100],
+                  title: Text('Your Products'),
+                ),
+                body: RefreshIndicator(
+                  onRefresh: () async {
+                    yourProductsBloc.add((YourProductsInitialEvent()));
+                  },
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: listOfProducts.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return SingleProduct(
+                              productname: listOfProducts[index].productname,
+                              productpicture:
+                                  listOfProducts[index].productpicture,
+                              productprice: listOfProducts[index].productprice,
+                              categorytype: listOfProducts[index].categorytype,
+                              productdetails:
+                                  listOfProducts[index].productdetails,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: listOfProducts.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return SingleProduct(
-                          productname: listOfProducts[index].productname,
-                          productpicture: listOfProducts[index].productpicture,
-                          productprice: listOfProducts[index].productprice,
-                          categorytype: listOfProducts[index].categorytype,
-                          productdetails: listOfProducts[index].productdetails,
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            );
+                ));
           } else {
             return Scaffold(); // Return a default Scaffold for other states
           }

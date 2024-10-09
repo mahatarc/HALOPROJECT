@@ -17,7 +17,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green[200],
+        backgroundColor: Colors.green[100],
         title: Text('Settings'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -31,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            _buildGeneralSettingsTile(),
+            // _buildGeneralSettingsTile(),
             _buildModeSettingsTile(),
           ],
         ),
@@ -78,10 +78,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ListTile(
           title: Text('Seller Mode'),
           onTap: () {
+            // Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+            //   builder: (context) => SellerRegistrationForm(),
+            // )
+            //     // Remove all routes from the stack
+            //     );
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SellerRegistrationForm()));
+              context,
+              MaterialPageRoute(
+                builder: (context) => SellerRegistrationForm(),
+                fullscreenDialog:
+                    true, // Set fullscreenDialog to true to remove the AppBar
+              ),
+            );
           },
         ),
         ListTile(

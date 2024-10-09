@@ -8,8 +8,25 @@ class SignUpInitialState extends SignUpState {}
 
 class SignUpLoadingState extends SignUpState {}
 
-class SignUpNavigateToHomePageActionState extends SignUpActionState {}
+// class EmailVerifiedState extends SignUpActionState {}
 
 class LoginPressedNavigateToLoginActionState extends SignUpActionState {}
 
-class SignUpErrorState extends SignUpState {}
+class EmailVerificationLoadingState extends SignUpActionState {}
+
+class VerificationEmailSentState extends SignUpActionState {
+  final String email;
+  final UserModel user;
+
+  VerificationEmailSentState(this.email, this.user);
+}
+
+class EmailVerificationInProgressState extends SignUpState {}
+
+class SignUpErrorState extends SignUpState {
+  final String errorMessage;
+
+  SignUpErrorState(this.errorMessage);
+}
+
+

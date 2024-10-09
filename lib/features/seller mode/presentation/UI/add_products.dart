@@ -153,12 +153,32 @@ class _AddProductFormState extends State<AddProductForm> {
                               child: Text('Seed'),
                             ),
                             DropdownMenuItem<String>(
+                              value: 'Tools',
+                              child: Text('Tools'),
+                            ),
+                            DropdownMenuItem<String>(
                               value: 'Plant',
                               child: Text('Plant'),
                             ),
                             DropdownMenuItem<String>(
-                              value: 'Tools',
-                              child: Text('Tools'),
+                              value: 'Fertilizer',
+                              child: Text('Fertilizer'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Micronutrients',
+                              child: Text('Micronutrients  '),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Pesticides and Insecticides',
+                              child: Text('Pesticides and Insecticides'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Books',
+                              child: Text('Books'),
+                            ),
+                            DropdownMenuItem<String>(
+                              value: 'Animal Feed',
+                              child: Text('Animal Feed'),
                             ),
                           ],
                           onChanged: (value) {

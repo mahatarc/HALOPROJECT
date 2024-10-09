@@ -23,13 +23,11 @@ class AddProductsBloc extends Bloc<AddProductsEvent, AddProductsStates> {
   FutureOr<void> addProductsButtonPressedEvent(
       AddProductsButtonPressedEvent event,
       Emitter<AddProductsStates> emit) async {
-    DocumentReference? productRef;
     try {
       {
         // Validate and parse product price
         double price = double.tryParse(event.price.text) ?? 0.0;
         if (price <= 0) {
-          // Price is not valid, display an error message
           emit(AddProductErrorState());
         }
 
@@ -44,32 +42,37 @@ class AddProductsBloc extends Bloc<AddProductsEvent, AddProductsStates> {
         // Add product data to Firestore
         final user = FirebaseAuth.instance.currentUser;
         if (user == null) {
-          // User not authenticated, handle accordingly
           return;
         }
-        productRef =
+        DocumentReference newProductRef =
             await FirebaseFirestore.instance.collection('products').add({
           'name': event.name.text,
           'price': event.price.text,
           'image_url': imageUrl,
           'product_details': event.details.text,
           'category_type': event.categorytype,
-          'user_id': user.uid,
+          'user_id': user.uid, // Store the user ID who added the product
         });
-        // Add product to categories collection
 
-        await FirebaseFirestore.instance
-            .collection('categories')
-            .doc(event.categorytype)
-            .collection('products')
-            .doc(productRef.id)
-            .set({
-          'name': event.name.text,
-          'price': event.price.text,
-          'image_url': imageUrl,
-          'product_details': event.details.text,
-          'user_id': user.uid,
-        });
+        // Get the seller's information
+        final sellerDoc = await FirebaseFirestore.instance
+            .collection('sellers')
+            .doc(user
+                .uid) // Assuming the seller's document ID is the same as their user ID
+            .get();
+
+        if (sellerDoc.exists) {
+          // Store the seller's information with the product
+          await newProductRef.update({
+            'seller': sellerDoc.data(),
+          });
+        } else {
+          print('Seller document does not exist.');
+        }
+
+        String productId = newProductRef.id;
+        print('Successful');
+        print(productId);
       }
     } catch (e) {
       print('Error uploading product: $e');

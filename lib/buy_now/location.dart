@@ -1,22 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutterproject/buy_now/Payment.dart';
+import 'package:flutterproject/features/mapservice/presentation/maps.dart';
 
 class DeliveryAddressScreen extends StatefulWidget {
+  final product_detail_name;
+  final product_detail_price;
+  final product_detail_picture;
+  final String? businessName;
+  final String? contactNumber;
+  final String? address;
+  final String? city;
+  final String? province;
+  final String? contact;
+
+  DeliveryAddressScreen({
+    this.product_detail_name,
+    this.product_detail_price,
+    this.product_detail_picture,
+    this.businessName,
+    this.contactNumber,
+    this.address,
+    this.city,
+    this.province,
+    this.contact,
+  });
+
   @override
   _DeliveryAddressScreenState createState() => _DeliveryAddressScreenState();
 }
 
 class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
+  String? _selectedAddress;
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController addressLine1Controller = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController postalCodeController = TextEditingController();
+  final TextEditingController contact_no_Controller = TextEditingController();
+  //final TextEditingController postalCodeController = TextEditingController();
 
   bool _isFormValid() {
-    return _isValidAlphabetic(fullNameController.text) &&
-        _isValidAlphabetic(addressLine1Controller.text) &&
-        _isValidAlphabetic(cityController.text);
+    return _isValidAlphabetic(fullNameController.text);
+    //  _isValidAlphabetic(addressLine1Controller.text) ;
   }
 
   bool _isValidAlphabetic(String text) {
@@ -27,139 +49,116 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.green[100],
         title: Text('Delivery Address'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: fullNameController,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Full Name'),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z\s]+$')),
-              ],
+              decoration: InputDecoration(
+                labelText: 'Full Name',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ), // Adding border to text field
+              ),
             ),
-            SizedBox(height: 10),
+            if (_selectedAddress != null) ...[
+              // Text(
+              //   'Selected Address: $_selectedAddress',
+              //   style: TextStyle(fontSize: 16),
+              // ),
+              SizedBox(height: 20),
+            ],
+            SizedBox(
+              height: 30,
+              width: 20,
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Navigate to the map screen
+                  final selectedAddress = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MapService(),
+                    ),
+                  );
+                  if (selectedAddress != null) {
+                    setState(() {
+                      // Update the selected address
+                      _selectedAddress = selectedAddress;
+                      addressLine1Controller.text = _selectedAddress!;
+                    });
+                  }
+                },
+                child: Text('Set Location'),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Updated text field to display selected address
             TextField(
               controller: addressLine1Controller,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Address Line'),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z\s]+$')),
-              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedAddress = value;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Delivery Address',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ),
+              ),
             ),
+
             SizedBox(height: 10),
             TextField(
-              controller: cityController,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'City'),
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z\s]+$')),
-              ],
-            ),
-            SizedBox(height: 10),
-            TextField(
-              controller: postalCodeController,
-              onChanged: (_) => setState(() {}),
-              decoration: InputDecoration(labelText: 'Postal Code (Optional)'),
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(5),
-                FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
-              ],
+              controller: contact_no_Controller,
+              decoration: InputDecoration(
+                labelText: 'Contact Number',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
+                ),
+              ),
+              keyboardType: TextInputType.number,
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isFormValid()
                   ? () {
-                      // Navigate to Payment screen after entering delivery address
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Payment()),
+                        MaterialPageRoute(
+                          builder: (context) => PaymentPage(
+                            fullName: fullNameController.text,
+                            address: addressLine1Controller.text,
+                            contact: contact_no_Controller.text,
+                            productName: widget.product_detail_name,
+                            productPrice:
+                                double.parse(widget.product_detail_price),
+                            productPicture: widget.product_detail_picture,
+                            businessName: widget.businessName,
+                            contactNumber: widget.contactNumber,
+                            sellerAddress: widget.address,
+                            sellerCity: widget.city,
+                            sellerProvince: widget.province,
+                          ),
+                        ),
                       );
                     }
                   : null,
-              child: Text('Proceed to Payment'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Payment extends StatelessWidget {
-  const Payment({Key? key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text('Select Payment Method'),
-        backgroundColor: Colors.green[100],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 60,
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to Credit/Debit Card payment screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CardPaymentScreen()),
-                  );
-                },
-                child: Container(
-                  // color: Colors.white,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color.fromARGB(255, 79, 214, 86)),
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.credit_card),
-                      SizedBox(width: 10),
-                      Text('Online Payment'),
-                    ],
-                  ),
+              child: Text(
+                'Proceed to Payment',
+                style: TextStyle(
+                  color: Colors.white, // Button text color
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              height: 60,
-              child: GestureDetector(
-                onTap: () {
-                  // Navigate to Pay on Delivery screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PayOnDeliveryScreen()),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 69, 68, 68)),
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.local_shipping),
-                      SizedBox(width: 10),
-                      Text('Pay on Delivery'),
-                    ],
-                  ),
+              style: ElevatedButton.styleFrom(
+                primary: _isFormValid() ? Colors.green[200] : Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
             ),

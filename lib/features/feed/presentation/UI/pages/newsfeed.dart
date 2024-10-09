@@ -1,18 +1,13 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/comments.dart';
+import 'package:flutterproject/features/feed/presentation/UI/pages/feedprofile.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-Future<void> _launchUrl(String url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
 
 class NewsFeed extends StatefulWidget {
   @override
@@ -24,9 +19,29 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.green[100],
         title: Text("Feed"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FeedProfile()),
+              );
+            },
+          ),
+          /*  IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddPost()),
+              );
+            },
+          ),*/
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('posts').snapshots(),
@@ -47,24 +62,64 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
             separatorBuilder: (context, index) => SizedBox(height: 15),
             itemBuilder: (context, index) {
               final post = postDocs[index];
-              return PostView(
-                content: post['content'],
-                imageUrl: post['image_url'],
-                //uid: post['uid'], // Pass userId here
+              final content = post['content'] as String;
+              final imageUrl = post['image_url'] as String?;
+              final postId = post.id;
+              final userId = post['user_id'] as String;
+              final likes = (post['likes'] as List<dynamic>?)?.length ?? 0;
+
+              return StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('comments')
+                    .where('postId', isEqualTo: postId)
+                    .snapshots(),
+                builder: (context, commentSnapshot) {
+                  if (commentSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  final commentsCount = commentSnapshot.data!.docs.length;
+
+                  return PostView(
+                    content: content,
+                    imageUrl: imageUrl,
+                    postId: postId,
+                    userId: userId,
+                    likes: likes,
+                    comments: commentsCount,
+                  );
+                },
               );
             },
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddPost()),
-          );
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.green[100],
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          /*FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FeedProfile()),
+              );
+            },
+            child: Icon(Icons.person),
+            backgroundColor: Colors.green[100],
+          ),*/
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddPost()),
+              );
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.green[100],
+          ),
+        ],
       ),
     );
   }
@@ -73,12 +128,18 @@ class _NewsFeedState extends State<NewsFeed> with TickerProviderStateMixin {
 class PostView extends StatefulWidget {
   final String content;
   final String? imageUrl;
-  // final String uid; // Added userId parameter
+  final String postId;
+  final String userId;
+  final int likes;
+  final int comments;
 
   const PostView({
     required this.content,
     this.imageUrl,
-    //  required this.uid, // Required userId parameter
+    required this.postId,
+    required this.userId,
+    required this.likes,
+    required this.comments,
   });
 
   @override
@@ -86,23 +147,50 @@ class PostView extends StatefulWidget {
 }
 
 class _PostViewState extends State<PostView> {
-  Future<void> _refresh() async {
-    // Simulate refreshing data
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      // Add logic to fetch updated data from Firebase or other data source
-    });
-  }
-
   bool isLiked = false;
   bool isDisliked = false;
   bool isReported = false;
+  String? selectedReason;
+
+  void _launchUrl(String? url) async {
+    if (url != null && await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not launch $url');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if the current user has already liked the post
+    _checkUserLiked();
+  }
+
+  void _checkUserLiked() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+    final postSnapshot = await postRef.get();
+    final likes = List<String>.from(postSnapshot.data()!['likes'] ?? []);
+
+    if (likes.contains(userId)) {
+      setState(() {
+        isLiked = true;
+      });
+    } else {
+      setState(() {
+        isLiked = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -110,18 +198,46 @@ class _PostViewState extends State<PostView> {
           children: [
             _buildUserInfo(),
             SizedBox(height: 8),
-            Text(
-              widget.content,
+            Linkify(
+              onOpen: (link) => _launchUrl(link.url),
+              text: widget.content,
               style: TextStyle(color: Colors.black87),
             ),
             SizedBox(height: 8),
-            _buildImageContainer(context),
-            SizedBox(height: 8),
+            if (widget.imageUrl != null) ...[
+              GestureDetector(
+                onTap: () {
+                  if (widget.imageUrl != null) {
+                    _launchUrl(widget.imageUrl!);
+                  }
+                },
+                child: Image.network(
+                  widget.imageUrl!,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return SizedBox.shrink();
+                  },
+                ),
+              ),
+              SizedBox(height: 8),
+            ],
             Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
+                /*IconButton(
                   color: isLiked ? Colors.blue : null,
                   icon: Icon(Icons.thumb_up),
                   onPressed: () {
@@ -130,20 +246,45 @@ class _PostViewState extends State<PostView> {
                       if (isDisliked) {
                         isDisliked = false;
                       }
+                      _toggleLike();
                     });
                   },
+                ),*/
+                GestureDetector(
+                  onTap: () {
+                    /*setState(() {
+                      isLiked = !isLiked;
+                      if (isDisliked) {
+                        isDisliked = false;
+                      }*/
+                    _toggleLike();
+                  },
+                  // },
+                  child: Icon(
+                    Icons.thumb_up,
+                    color: isLiked ? Colors.lightGreen : null,
+                  ),
                 ),
+                Text('${widget.likes}',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 IconButton(
                   icon: Icon(Icons.comment),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CommentsScreen(postId: widget.postId),
+                      ),
+                    );
+                  },
                 ),
                 IconButton(
                   color: isReported ? Colors.red : null,
                   icon: Icon(Icons.report),
                   onPressed: () {
-                    setState(() {
-                      isReported = !isReported;
-                    });
+                    _showReportDialog();
                   },
                 ),
               ],
@@ -155,71 +296,150 @@ class _PostViewState extends State<PostView> {
   }
 
   Widget _buildUserInfo() {
-    return RefreshIndicator(
-      onRefresh: _refresh,
-      child: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(), // Fetch user data based on userId
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox.shrink();
-          }
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          final userData = snapshot.data!.data() as Map?;
-          return Row(
-            children: [
-              CircleAvatar(
-                backgroundImage:
-                    userData != null && userData['profilePicture'] != null
-                        ? NetworkImage(userData['profilePicture'])
-                        : AssetImage('images/profile.jpg')
-                            as ImageProvider<Object>?,
-              ),
-              SizedBox(width: 8),
-              Text(
-                userData != null ? '${userData["name"]} ' : 'Unknown User',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          );
-        },
-      ),
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox.shrink();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        final userData = snapshot.data!.data() as Map?;
+        return Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: userData != null &&
+                      userData['profilePicture'] != null
+                  ? NetworkImage(userData['profilePicture'])
+                  : AssetImage('images/profile.jpg') as ImageProvider<Object>?,
+            ),
+            SizedBox(width: 8),
+            Text(
+              userData != null ? '${userData["name"]} ' : 'Unknown User',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildImageContainer(BuildContext context) {
-    if (widget.imageUrl != null && widget.imageUrl!.isNotEmpty) {
-      return Container(
-        width: double.infinity,
-        height: 200,
-        child: Image.network(
-          widget.imageUrl!,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Text('Error loading image');
-          },
-        ),
-      );
+  void _toggleLike() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final postRef =
+        FirebaseFirestore.instance.collection('posts').doc(widget.postId);
+
+    // Check if the user has already liked the post
+    final postSnapshot = await postRef.get();
+    final likes = List<String>.from(postSnapshot.data()!['likes'] ?? []);
+
+    /* if (isLiked) {
+      likes.add(userId);
     } else {
-      return SizedBox.shrink();
+      likes.remove(userId);
+    }*/
+    if (likes.contains(userId)) {
+      //User already liked the post, so remove the like
+      likes.remove(userId);
+      setState(() {
+        isLiked = false;
+      });
+      //isLiked = false;
+    } else {
+      //User hasn't liked the post yet, so add the like
+      likes.add(userId);
+      setState(() {
+        isLiked = true;
+      });
+      //isLiked = true;
     }
+
+    // Update the 'likes' field in Firestore
+    await postRef.update({'likes': likes});
+  }
+
+  void _showReportDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Report Post'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text('Inappropriate Content'),
+                  onTap: () {
+                    setState(() {
+                      selectedReason = 'Inappropriate Content';
+                    });
+                    Navigator.pop(context);
+                    _showConfirmationDialog();
+                  },
+                ),
+                ListTile(
+                  title: Text('Spam'),
+                  onTap: () {
+                    setState(() {
+                      selectedReason = 'Spam';
+                    });
+                    Navigator.pop(context);
+                    _showConfirmationDialog();
+                  },
+                ),
+                ListTile(
+                  title: Text('Other'),
+                  onTap: () {
+                    setState(() {
+                      selectedReason = 'Other';
+                    });
+                    Navigator.pop(context);
+                    _showConfirmationDialog();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure you want to report?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _reportPost();
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _reportPost() {
+    print('Post reported for: $selectedReason');
+    setState(() {
+      isReported = true;
+    });
   }
 }
 
@@ -265,7 +485,7 @@ class _AddPostState extends State<AddPost> {
         decoration: InputDecoration(
           hintText: 'What\'s on your mind?',
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(0.0),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           filled: true,
           fillColor: Colors.white,
@@ -274,13 +494,6 @@ class _AddPostState extends State<AddPost> {
         ),
         maxLines: null,
         keyboardType: TextInputType.multiline,
-        onTap: () {
-          final text = _textEditingController.text;
-          final urls = RegExp(r'https?://[^\s]+').allMatches(text);
-          for (final match in urls) {
-            _launchUrl(match.group(0)!);
-          }
-        },
       ),
     );
   }
@@ -315,9 +528,9 @@ class _AddPostState extends State<AddPost> {
             style: TextStyle(color: Colors.white),
           ),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
+            primary: Colors.green[200],
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
           ),
         ),
@@ -330,9 +543,9 @@ class _AddPostState extends State<AddPost> {
           ),
           label: Text('Add Photo', style: TextStyle(color: Colors.white)),
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 153, 231, 156),
+            primary: Colors.green[200],
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
           ),
         ),
@@ -354,19 +567,16 @@ class _AddPostState extends State<AddPost> {
         return;
       }
 
-      // Add the post to the 'posts' collection
       final newPostRef =
           await FirebaseFirestore.instance.collection('posts').add({
         'content': content,
         'image_url': imageUrl,
-        'user_id':
-            FirebaseAuth.instance.currentUser!.uid, // Add user ID to post data
+        'user_id': FirebaseAuth.instance.currentUser!.uid,
+        'likes': [],
       });
 
-      // Get the current user's ID
       final currentUserID = FirebaseAuth.instance.currentUser!.uid;
 
-      // Update the user's document with the new post ID
       await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUserID)
@@ -395,14 +605,11 @@ class _AddPostState extends State<AddPost> {
     final Reference storageRef =
         FirebaseStorage.instance.ref().child('post_images');
 
-    // Generate a unique ID for the image file
     final String uniqueID = DateTime.now().millisecondsSinceEpoch.toString();
 
-    // Upload the image file with the unique ID appended to the filename
     final TaskSnapshot uploadTask =
         await storageRef.child('image_$uniqueID').putFile(_image!);
 
-    // Get the download URL of the uploaded image
     final String imageUrl = await uploadTask.ref.getDownloadURL();
 
     return imageUrl;

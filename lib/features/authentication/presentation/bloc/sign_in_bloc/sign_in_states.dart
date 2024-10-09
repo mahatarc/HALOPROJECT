@@ -12,6 +12,15 @@ class SignInNavigateToBuyerHomePageActionState extends SignInActionState {}
 
 class SignInNavigateToSellerHomePageActionState extends SignInActionState {}
 
+class SignInNavigateToDriverHomePageActionState extends SignInActionState {}
+
 class SignUpPressedNavigateToSignUpActionState extends SignInActionState {}
 
-class SignInErrorState extends SignInStates {}
+class SignInLoadedState extends SignInStates {}
+
+class SignInErrorState extends SignInStates {
+  final String errorMessage;
+  final String errorCode;
+
+  SignInErrorState(this.errorCode,this.errorMessage);
+}
