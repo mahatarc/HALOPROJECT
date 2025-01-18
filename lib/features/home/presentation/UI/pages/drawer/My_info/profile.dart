@@ -113,8 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.grey[100], // Background color
-                    onPrimary: Colors.black, // Text color
+                    foregroundColor: Colors.black, backgroundColor: Colors.grey[100], // Text color
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(10), // Adjust the border radius
@@ -154,8 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       _saveImage();
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.grey[100], // Background color
-                      onPrimary: Colors.black, // Text color
+                      foregroundColor: Colors.black, backgroundColor: Colors.grey[100], // Text color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             10), // Adjust the border radius

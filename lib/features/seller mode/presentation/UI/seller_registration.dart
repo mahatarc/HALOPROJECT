@@ -132,8 +132,7 @@ class _SellerRegistrationFormState extends State<SellerRegistrationForm> {
                           imageUrl: ''));
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 224, 246, 220),
-                  onPrimary: Color.fromARGB(255, 11, 3, 3),
+                  foregroundColor: Color.fromARGB(255, 11, 3, 3), backgroundColor: Color.fromARGB(255, 224, 246, 220),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -171,8 +170,7 @@ class _SellerRegistrationFormState extends State<SellerRegistrationForm> {
         ElevatedButton(
           onPressed: _pickImage,
           style: ElevatedButton.styleFrom(
-            primary: Color.fromARGB(255, 224, 246, 220),
-            onPrimary: Color.fromARGB(255, 11, 3, 3),
+            foregroundColor: Color.fromARGB(255, 11, 3, 3), backgroundColor: Color.fromARGB(255, 224, 246, 220),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),

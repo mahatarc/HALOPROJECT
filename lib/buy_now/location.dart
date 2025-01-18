@@ -156,7 +156,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen> {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                primary: _isFormValid() ? Colors.green[200] : Colors.grey,
+                backgroundColor: _isFormValid() ? Colors.green[200] : Colors.grey,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

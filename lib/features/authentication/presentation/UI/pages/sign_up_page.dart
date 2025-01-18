@@ -182,8 +182,7 @@ class _SignUpPageState extends State<SignUppage> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  primary:
-                                      const Color.fromARGB(255, 156, 199, 107),
+                                  backgroundColor: const Color.fromARGB(255, 156, 199, 107),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -273,8 +272,7 @@ class _SignUpPageState extends State<SignUppage> {
                         signUpBloc.add(SignUpInitialEvent());
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.grey[100],
-                        onPrimary: Colors.black,
+                        foregroundColor: Colors.black, backgroundColor: Colors.grey[100],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -372,7 +370,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 156, 199, 107),
+                backgroundColor: const Color.fromARGB(255, 156, 199, 107),
               ),
               child: Text(
                 'Confirm Verification',
@@ -424,7 +422,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 156, 199, 107),
+                backgroundColor: const Color.fromARGB(255, 156, 199, 107),
               ),
               child: Text(
                 'Go to Dashboard',

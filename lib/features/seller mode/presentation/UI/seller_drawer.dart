@@ -6,8 +6,7 @@ import 'package:flutterproject/features/authentication/presentation/bloc/sign_in
 import 'package:flutterproject/features/authentication/services/firebaseauth.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/help_support.dart';
 import 'package:flutterproject/features/home/presentation/UI/pages/drawer/My_info/profile.dart';
-import 'package:flutterproject/features/home/presentation/UI/pages/drawer/settings.dart';
-import 'package:flutterproject/features/seller%20mode/presentation/UI/seller_settings.dart';
+
 
 class SellerDrawer extends StatelessWidget {
   const SellerDrawer({super.key});
@@ -91,7 +90,7 @@ class SellerDrawer extends StatelessWidget {
                               )));
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(255, 156, 199, 107),
+                  backgroundColor: const Color.fromARGB(255, 156, 199, 107),
                   minimumSize: const Size(20, 50),
                 ),
                 child: Text(

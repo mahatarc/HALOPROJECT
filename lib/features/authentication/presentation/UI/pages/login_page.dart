@@ -266,8 +266,7 @@ class _LoginPageState extends State<LoginPage> {
                         signInBloc.add(SignInInitialEvent());
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.grey[100],
-                        onPrimary: Colors.black,
+                        foregroundColor: Colors.black, backgroundColor: Colors.grey[100],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

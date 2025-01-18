@@ -162,8 +162,7 @@ class PaymentPage extends StatelessWidget {
                     launch('https://esewa.com.np/');
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 204, 223, 205),
-                    onPrimary: Colors.black,
+                    foregroundColor: Colors.black, backgroundColor: Color.fromARGB(255, 204, 223, 205),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -195,8 +194,7 @@ class PaymentPage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 204, 223, 205),
-                    onPrimary: Colors.black,
+                    foregroundColor: Colors.black, backgroundColor: Color.fromARGB(255, 204, 223, 205),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -245,8 +243,7 @@ class PaymentPage extends StatelessWidget {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 204, 223, 205),
-                    onPrimary: Colors.black,
+                    foregroundColor: Colors.black, backgroundColor: Color.fromARGB(255, 204, 223, 205),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -497,8 +494,7 @@ class OrderPlacedPage extends StatelessWidget {
                               )));
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  onPrimary: Colors.green[100],
+                  foregroundColor: Colors.green[100], backgroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
