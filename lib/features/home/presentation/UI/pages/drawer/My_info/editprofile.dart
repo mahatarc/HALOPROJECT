@@ -50,7 +50,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child:
                         Text('Cancel', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 172, 229, 142)),
+                        backgroundColor: Color.fromARGB(255, 172, 229, 142)),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -138,7 +138,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     },
                     child: Text('Save', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 172, 229, 142)),
+                        backgroundColor: Color.fromARGB(255, 172, 229, 142)),
                   ),
                 ],
               ),

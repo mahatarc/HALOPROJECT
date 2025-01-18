@@ -209,8 +209,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           ElevatedButton(
             onPressed: _submitReview,
             style: ElevatedButton.styleFrom(
-                primary:
-                    Colors.green[200], // Change the background color to green
+                backgroundColor: Colors.green[200], // Change the background color to green
                 textStyle: TextStyle(color: Colors.white),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
@@ -471,7 +470,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                          backgroundColor: Colors.green,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),
@@ -502,7 +501,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                               });
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                          backgroundColor: Colors.green,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0),
                           ),

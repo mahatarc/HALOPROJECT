@@ -121,8 +121,7 @@ class _SellerDashboardState extends State<SellerDashboard> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 224, 246, 220),
-                      onPrimary: const Color.fromARGB(255, 11, 3, 3),
+                      foregroundColor: const Color.fromARGB(255, 11, 3, 3), backgroundColor: Color.fromARGB(255, 224, 246, 220),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),

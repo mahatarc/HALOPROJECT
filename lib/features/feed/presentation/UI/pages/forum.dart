@@ -367,8 +367,7 @@ class CommentInput extends StatelessWidget {
             },
             child: Text('Submit'),
             style: ElevatedButton.styleFrom(
-              primary: Colors.green[400],
-              onPrimary: Colors.white,
+              foregroundColor: Colors.white, backgroundColor: Colors.green[400],
             ),
           ),
         ],

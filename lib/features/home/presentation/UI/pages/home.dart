@@ -291,11 +291,7 @@ class _HomeState extends State<Home> {
                                           .add(CategoriesPressedEvent());
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      shadowColor: Colors.lightGreenAccent,
-                                      primary:
-                                          Color.fromARGB(255, 239, 244, 249),
-                                      onPrimary:
-                                          const Color.fromARGB(255, 11, 3, 3),
+                                      foregroundColor: const Color.fromARGB(255, 11, 3, 3), backgroundColor: Color.fromARGB(255, 239, 244, 249), shadowColor: Colors.lightGreenAccent,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
